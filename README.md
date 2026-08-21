@@ -10,7 +10,7 @@ Jaquette ne doit pas être confondu avec **Jacques** : Jaquette est l’outil de
 
 ## État du projet
 
-Le développement du code n’a pas encore commencé. Le dépôt se trouve dans la **phase 0 — Préparation du projet**, sous-étape **0.1 — Initialiser le dépôt**. Il ne contient actuellement ni application, ni dépendance, ni test, ni workflow d’intégration continue.
+Le développement du code n’a pas encore commencé. Le dépôt se trouve dans la **phase 0 — Préparation du projet**, sous-étape **0.2 — Définir les données de référence**. La sous-étape **0.1 — Initialiser le dépôt** est acquise. Le dépôt ne contient actuellement ni application, ni dépendance, ni test, ni workflow d’intégration continue.
 
 La version actuelle de l’application est **`0.0.0` (pré-développement, non publiée)**. La [convention de version](docs/VERSIONING.md) explique la différence entre cette version, les jalons produit tels que V0.1 et les futures versions des formats `.jacq` et `.jacko`.
 
@@ -40,4 +40,5 @@ Ne versionnez jamais de secret, mot de passe, clé, jeton ou identifiant de conn
 
 - [Index documentaire](docs/README.md)
 - [Convention de version](docs/VERSIONING.md)
+- [Données de référence](reference-data/README.md)
 - [Plan détaillé de développement](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md)
