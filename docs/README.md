@@ -12,11 +12,13 @@ Ce dossier rassemble la documentation complémentaire et les décisions techniqu
 ## Décisions techniques du dépôt
 
 - [Convention de version](VERSIONING.md) — convention minimale, état de version actuel et séparation entre application, jalons produit et formats de fichiers.
+- [Données de référence](../reference-data/README.md) — acquisition reproductible, inventaire validé et scénario de doublage du jalon 0.2.
 
 ## État documentaire
 
 - Phase actuelle : **phase 0 — Préparation du projet**.
-- Sous-étape en cours : **0.1 — Initialiser le dépôt**.
+- Sous-étape acquise : **0.1 — Initialiser le dépôt**.
+- Sous-étape en cours : **0.2 — Définir les données de référence**.
 - Code applicatif : **non commencé**.
 - Version actuelle de l’application : **`0.0.0` (pré-développement, non publiée)**.
 
