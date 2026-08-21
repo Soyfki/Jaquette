@@ -8,13 +8,14 @@
       "id": "epub-fr-primary",
       "kind": "epub",
       "language": "fr",
-      "file": "epubs/fr-une-etude-en-rouge.epub",
-      "sourcePage": "https://www.ebooksgratuits.com/details.php?book=190",
-      "downloadUrl": "https://www.ebooksgratuits.com/newsendbook.php?format=epub&id=190",
-      "license": "Public-domain text; Ebooks libres et gratuits non-commercial and non-professional use terms",
-      "licenseUrl": "https://www.ebooksgratuits.com/index.php",
-      "sizeBytes": 144194,
-      "sha256": "96884dd772f23c5d575cc1a0213422f6d0a3a05d4f4ba385f376c5c617d00443"
+      "file": "epubs/fr-le-tour-du-monde-en-quatre-vingts-jours.epub",
+      "sourcePage": "https://www.gutenberg.org/ebooks/46541",
+      "downloadUrl": "https://www.gutenberg.org/ebooks/46541.epub.noimages",
+      "license": "Public-domain French text; Project Gutenberg License and trademark terms; France territorial review documented in INVENTORY.md",
+      "licenseUrl": "https://www.gutenberg.org/policy/license",
+      "attribution": "Jules Verne; source edition illustrators: Alphonse de Neuville and Leon Benett; digital edition: Claudine Corbasson, Hans Pieterse, and the Online Distributed Proofreading Team",
+      "sizeBytes": 272410,
+      "sha256": "d95001b2c83001fa0ab67b0d111194976890410307c6897b3d7c7450d4c1eed0"
     },
     {
       "id": "epub-en",

@@ -19,7 +19,7 @@ reference-data/
     ├── epubs/
     │   ├── ar-regime-anticancer-arabic.epub
     │   ├── en-the-adventures-of-sherlock-holmes.epub
-    │   └── fr-une-etude-en-rouge.epub
+    │   └── fr-le-tour-du-monde-en-quatre-vingts-jours.epub
     └── audio/
         ├── ambience-rain.ogg
         ├── music-fur-elise.ogg
@@ -33,7 +33,7 @@ Depuis la racine du dépôt, sous PowerShell :
 ```powershell
 New-Item -ItemType Directory -Force reference-data/files/epubs, reference-data/files/audio
 
-Invoke-WebRequest 'https://www.ebooksgratuits.com/newsendbook.php?format=epub&id=190' -OutFile 'reference-data/files/epubs/fr-une-etude-en-rouge.epub'
+Invoke-WebRequest 'https://www.gutenberg.org/ebooks/46541.epub.noimages' -OutFile 'reference-data/files/epubs/fr-le-tour-du-monde-en-quatre-vingts-jours.epub'
 Invoke-WebRequest 'https://www.gutenberg.org/ebooks/1661.epub3.images' -OutFile 'reference-data/files/epubs/en-the-adventures-of-sherlock-holmes.epub'
 Invoke-WebRequest 'https://github.com/IDPF/epub3-samples/releases/download/20230704/regime-anticancer-arabic.epub' -OutFile 'reference-data/files/epubs/ar-regime-anticancer-arabic.epub'
 
@@ -49,6 +49,8 @@ Get-ChildItem reference-data/files -Recurse -File | Get-FileHash -Algorithm SHA2
 ```
 
 Une empreinte différente signifie que la source a changé ou que le téléchargement est incomplet. Il ne faut pas accepter cette différence silencieusement : contrôler le fichier, sa source et ses droits, puis mettre à jour ensemble `manifest.json` et `INVENTORY.md` si le changement est intentionnel.
+
+La référence française est la variante officielle **EPUB sans images pour anciens lecteurs** de l’eBook Project Gutenberg nº 46541. La [fiche de l’eBook](https://www.gutenberg.org/ebooks/46541), les crédits de production, les conditions Project Gutenberg et la vérification territoriale française sont détaillés dans [`INVENTORY.md`](INVENTORY.md). L’usage professionnel de test ne dispense pas de respecter le droit moral français, les conditions liées à la marque Project Gutenberg ni de refaire l’analyse pour un autre territoire ou une redistribution.
 
 ## Contrôles à reproduire
 
