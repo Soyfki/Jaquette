@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { AppShell } from './Shell'
@@ -20,6 +20,46 @@ describe('Jaquette application shell', () => {
     render(<AppShell />)
     expect(screen.getByRole('heading', { level: 1, name: heading })).toBeVisible()
   })
+
+  it('renders the four named regions of the empty Sound Designer workspace', () => {
+    setPath('/projet')
+    render(<AppShell />)
+
+    const workspace = screen.getByLabelText('Workspace Sound Designer fictif')
+    expect(within(workspace).getByRole('region', { name: 'Bibliothèque' })).toBeVisible()
+    expect(within(workspace).getByRole('region', { name: 'Livre' })).toBeVisible()
+    expect(within(workspace).getByRole('region', { name: 'Inspecteur audio' })).toBeVisible()
+    expect(within(workspace).getByRole('region', { name: 'Simulation' })).toBeVisible()
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+  })
+
+  it('presents explicit fictive and empty states without functional project controls', () => {
+    setPath('/projet')
+    render(<AppShell />)
+
+    const workspace = screen.getByLabelText('Workspace Sound Designer fictif')
+    expect(within(workspace).getByText('Aucun dossier')).toBeVisible()
+    expect(within(workspace).getByText('Aucune occurrence sélectionnée')).toBeVisible()
+    expect(within(workspace).getByText('Inactive')).toBeVisible()
+    expect(within(workspace).getAllByText(/Aucun EPUB réel n’est chargé/)).not.toHaveLength(0)
+    expect(within(workspace).getByLabelText('Page de livre fictive non éditable')).toBeVisible()
+    expect(workspace.querySelector('[contenteditable]')).toBeNull()
+    expect(workspace.querySelector('input, textarea, select, button, audio')).toBeNull()
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
+  })
+
+  it.each(['SFX', 'Ambiance', 'Musique'])(
+    'identifies the fictive %s family with text and a pictogram',
+    (family) => {
+      setPath('/projet')
+      render(<AppShell />)
+      const item = document.querySelector(`[data-project-track="${family}"]`)
+      expect(item).not.toBeNull()
+      expect(item).toHaveTextContent(family)
+      expect(within(item as HTMLElement).getByRole('img', { name: `Pictogramme ${family}` })).toBeVisible()
+      expect(item).toHaveTextContent('Fictif')
+    },
+  )
 
   it('marks the active destination with aria-current and a textual signal', () => {
     setPath('/projet')
