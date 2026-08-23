@@ -108,27 +108,11 @@ function TrackIcon({ track }: { track: TrackDefinition }) {
   )
 }
 
-export function App() {
+export function FoundationsPage() {
   const [activeFilter, setActiveFilter] = useState('Tous')
 
   return (
-    <>
-      <a className="skip-link" href="#main-content">
-        Aller au contenu
-      </a>
-
-      <header className="site-header">
-        <a className="brand" href="#main-content" aria-label="Jaquette, retour au début de la démonstration">
-          <span className="brand__mark" aria-hidden="true">J</span>
-          <span>Jaquette</span>
-        </a>
-        <span className="status-chip">
-          <span className="status-chip__dot" aria-hidden="true" />
-          Fondations · 1.1
-        </span>
-      </header>
-
-      <main id="main-content" tabIndex={-1}>
+    <div className="foundations-page">
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero__eyebrow">Design system de base</div>
           <div className="hero__layout">
@@ -138,14 +122,14 @@ export function App() {
                 Une fondation visuelle calme et expressive pour associer le son au texte,
                 sans jamais perdre le fil de la lecture.
               </p>
-              <div className="hero__actions" aria-label="Exemples de boutons">
-                <button className="button button--primary" type="button">
+              <div className="hero__actions" aria-label="Accès aux sections des fondations">
+                <a className="button button--primary" href="#palette-title">
                   Explorer les fondations
                   <span className="button__icon"><ArrowIcon /></span>
-                </button>
-                <button className="button button--secondary" type="button">
+                </a>
+                <a className="button button--secondary" href="#book-title">
                   Voir la page du livre
-                </button>
+                </a>
                 <button className="button button--secondary" type="button" disabled>
                   Action indisponible
                 </button>
@@ -334,12 +318,6 @@ export function App() {
             <footer className="book-page__footer" aria-label="Page 14">14</footer>
           </article>
         </section>
-      </main>
-
-      <footer className="site-footer">
-        <span>Jaquette · Design system 0.0.0</span>
-        <span>Manrope · Literata · Noto Naskh Arabic</span>
-      </footer>
-    </>
+    </div>
   )
 }
