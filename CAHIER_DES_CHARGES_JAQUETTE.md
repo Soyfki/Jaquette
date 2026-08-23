@@ -1,6 +1,6 @@
 # Jaquette — Cahier des charges complet
 
-Version de cadrage : V1 Web → Electron → IA/MCP → Collaboration V2
+Version de cadrage : V1 Web → Electron → IA/MCP → Collaboration offline
 
 ## 1. Objet du document
 
@@ -39,7 +39,7 @@ Workflow principal :
 - `.jacko` est le fichier final de distribution, optimisé, signé et destiné à Jacques.
 - Les sources audio restent non destructives.
 - L’IA travaille dans un brouillon séparé avant validation humaine.
-- La collaboration temps réel arrive en V2.
+- La collaboration de contenu est locale et asynchrone, par échange de chapitres candidats.
 - Les droits dépendent du contexte de travail : workspace, équipe, projet.
 
 ## 4. Périmètre V1
@@ -62,9 +62,9 @@ La V1 Web doit fonctionner sous Chrome et permettre :
 - undo/redo limité à 50 actions ;
 - versions nommées ;
 - workflow de validation ;
-- commentaires et tickets ;
+- tâches de workflow et commentaires contextualisés ;
 - contrôle qualité ;
-- export/import `.jacq` ;
+- export/import `.jacq` et échange de chapitres `.chpt` ;
 - export `.jacko` ;
 - réouverture d’un `.jacko` en lecture seule pour contrôle ;
 - métadonnées de publication Jacques.
@@ -74,7 +74,7 @@ Hors V1 :
 - PDF ;
 - EPUB fixed-layout ;
 - Linux ;
-- collaboration temps réel ;
+- service de synchronisation directe du contenu ;
 - comptes invités cloud réels ;
 - génération audio externe par IA ;
 - mode clair.
@@ -83,28 +83,47 @@ Hors V1 :
 
 ### 5.1 `.jacq`
 
-Le `.jacq` est le projet de production éditable.
+Le `.jacq` est le projet de production complet et éditable.
 
-Il contient notamment :
+Il contient une section physique `.chpt` par chapitre. Une modification de chapitre doit pouvoir réécrire physiquement le seul `.chpt` concerné, sans réécrire les autres chapitres.
+
+Les informations communes, séparées des `.chpt`, comprennent notamment :
 
 - EPUB source original ;
-- structure textuelle normalisée ;
-- identifiants de tokens ;
-- annotations audio ;
-- sources audio réellement utilisées ;
-- réglages audio ;
-- commentaires ;
-- tickets ;
+- structure textuelle normalisée et identifiants de tokens ;
+- métadonnées du livre et du projet ;
+- paramètres généraux ;
 - affectations ;
-- états de validation ;
 - versions nommées ;
-- métadonnées projet ;
 - consentements IA ;
+- commentaires ciblant le livre ;
+- tâches ciblant le livre ;
 - historique utile à la production.
 
-Le `.jacq` peut techniquement être un conteneur ZIP versionné.
+Le projet reste autonome : les médias réellement utilisés sont embarqués et les opérations audio restent non destructives.
 
-### 5.2 `.jacko`
+Le choix technique du conteneur et les détails de sérialisation restent ouverts. Considérer automatiquement `.jacq` comme un simple ZIP n’est pas autorisé tant que la compatibilité avec la sauvegarde partielle par chapitre n’est pas démontrée. Aucun schéma physique, numéro de version ou champ de version n’est défini ici.
+
+### 5.2 `.chpt`
+
+`.chpt` est l’unité physique de sauvegarde, d’échange, d’import et de fusion d’un chapitre.
+
+Un fichier exporté transporte au minimum :
+
+- identité du projet et du livre ;
+- identifiant stable du chapitre ;
+- version de base et filiation nécessaires à la détection des conflits ;
+- données de doublage du chapitre ;
+- annotations et réglages audio ;
+- médias réellement utilisés par ce chapitre ;
+- commentaires ciblant le chapitre, son texte ou ses occurrences audio ;
+- tâches liées au chapitre ;
+- validations et leur historique ;
+- informations d’auteur, de date et d’audit nécessaires.
+
+Les détails de sérialisation, le conteneur, le schéma et la stratégie de version restent des décisions techniques ultérieures.
+
+### 5.3 `.jacko`
 
 Le `.jacko` est le fichier final destiné à Jacques.
 
@@ -472,7 +491,7 @@ La fusion conserve :
 - projets ;
 - appartenances ;
 - commentaires ;
-- tickets ;
+- tâches de workflow ;
 - historique ;
 - droits contextuels.
 
@@ -528,8 +547,9 @@ Peut :
 - modifier le `.jacq` ;
 - ajouter/modifier/supprimer des événements audio ;
 - gérer les sons utilisés ;
-- traiter les tickets ;
+- exécuter les tâches générées par le workflow ;
 - répondre aux commentaires ;
+- exporter un chapitre candidat `.chpt` ;
 - créer une nouvelle version ;
 - déclarer un chapitre terminé.
 
@@ -546,7 +566,7 @@ Peut :
 - simuler la lecture ;
 - consulter toutes les annotations ;
 - commenter ;
-- créer des tickets ;
+- sélectionner une candidate complète en cas de concurrence sur un chapitre ;
 - valider/invalider un chapitre ;
 - valider/invalider une version ;
 - soumettre au Chef d’équipe lorsque toutes les validations requises sont obtenues.
@@ -605,8 +625,7 @@ Zone centrale :
 - progression ;
 - statut ;
 - dernière activité ;
-- alertes ;
-- tickets prioritaires.
+- alertes.
 
 ## 23. Interface adaptative selon le rôle
 
@@ -616,7 +635,7 @@ Bibliothèque à gauche, livre au centre, inspecteur audio à droite.
 
 ### Réviseur
 
-Livre plus large, bibliothèque et outils de montage masqués, simulation/commentaires/tickets/validation mis en avant.
+Livre plus large, bibliothèque et outils de montage masqués, simulation/commentaires/candidates/validation mis en avant.
 
 ### Chef d’équipe
 
@@ -640,60 +659,76 @@ Historique de travail à l’intérieur d’un projet actif.
 
 Le terme `Drafts` est réservé au pool d’attente ; `Versions` désigne les versions internes du projet.
 
-## 25. Tickets
+## 25. Tâches et commentaires
 
-Un ticket est distinct d’un commentaire.
+L’ancien concept fonctionnel de ticket est abandonné et ne doit plus exister comme objet, écran, workflow ou entrée de tableau de bord.
 
-Il contient :
+### Tâches de workflow
 
-- identifiant ;
-- titre ;
-- description ;
-- projet ;
-- chapitre ;
-- plage textuelle éventuelle ;
-- annotation audio éventuelle ;
-- créateur ;
-- assigné ;
-- priorité ;
-- statut ;
-- dates ;
-- commentaires.
+Les tâches sont générées automatiquement par les affectations et les transitions du workflow. Elles ne constituent pas un gestionnaire générique de tâches libres.
 
-Statuts :
+Une tâche :
 
-- À faire ;
-- En cours ;
-- À revoir ;
-- Résolu ;
-- Fermé.
+- cible un livre ou un chapitre ;
+- possède un assigné ;
+- peut avoir une échéance ;
+- ne possède aucune priorité ;
+- possède uniquement les statuts `Pas commencé`, `En cours` et `Terminée`.
 
-Priorités :
+Elle est créée avec `Pas commencé`, passe manuellement à `En cours` lorsque l’utilisateur débute, puis automatiquement à `Terminée` lorsque l’action métier attendue est accomplie.
 
-- Faible ;
-- Normale ;
-- Haute ;
-- Bloquante.
+Les cas obligatoires sont :
 
-Cliquer sur un ticket doit ouvrir directement le passage concerné.
+- doubler un chapitre ;
+- réviser un chapitre ;
+- publier un livre dans Jacques ;
+- corriger un chapitre invalidé.
+
+Chaque invalidation crée une nouvelle occurrence de tâche de correction. Une tâche antérieure n’est ni réutilisée ni supprimée, afin de conserver l’historique de chaque cycle.
+
+Les tâches pertinentes restent dans le `.jacq` et voyagent dans le `.chpt` lorsqu’elles ciblent le chapitre exporté.
+
+### Commentaires contextualisés
+
+Un commentaire peut cibler :
+
+- le livre entier ;
+- un chapitre entier ;
+- un mot ou une plage de mots ;
+- une occurrence audio placée dans la timeline textuelle.
+
+Un commentaire sur une occurrence audio cible l’annotation ou son inspecteur, jamais le fichier de la bibliothèque audio.
+
+La présentation dépend de la cible : vue globale du projet ou de la révision pour le livre, espace du chapitre, passage textuel, ou annotation/inspecteur de l’occurrence.
+
+Les commentaires prennent en charge :
+
+- réponses en fil ;
+- états `Ouvert` et `Résolu` ;
+- historique des modifications ;
+- absence de suppression définitive ;
+- identifiants stables pour l’import et la fusion sans duplication ;
+- conservation de l’auteur et des dates.
+
+Les commentaires du chapitre, de son texte ou de ses occurrences voyagent avec son `.chpt`. Les commentaires du livre restent dans la section commune du `.jacq`.
 
 ## 26. Tableau de bord par rôle
 
 ### Sound Designer
 
-Tickets à traiter, chapitres affectés, demandes de correction, projets récents, échéances.
+Chapitres affectés, tâches de doublage ou de correction, projets récents et échéances.
 
 ### Réviseur
 
-Chapitres à réviser, versions modifiées après révision, tickets à revérifier.
+Chapitres et candidates à réviser, validations annulées après modification et tâches de révision.
 
 ### Chef d’équipe
 
-Projets bloqués, progression des équipes, livres prêts pour validation, tickets critiques, charge des membres.
+Projets bloqués, progression des équipes, livres prêts pour validation, conflits à arbitrer et charge des membres.
 
 ### Admin Maison
 
-Équipes, membres, invitations, projets, activité, droits.
+Équipes, membres, invitations, projets, activité et droits.
 
 ## 27. Progression
 
@@ -748,13 +783,15 @@ Chaque chapitre possède pour chaque Réviseur :
 - À corriger ;
 - Validé.
 
-La validation globale du chapitre exige l’approbation de tous les réviseurs affectés au projet.
+La validation globale du chapitre exige l’approbation de tous les Réviseurs affectés au projet.
 
-Une invalidation impose la création d’un commentaire ou ticket expliquant la correction demandée.
+Une invalidation impose un commentaire expliquant la correction demandée et génère une nouvelle tâche de correction.
 
-Toute modification audio effectuée après validation annule les validations du chapitre concerné et le replace en `À réviser`.
+Toute modification audio effectuée après validation annule les validations actives du chapitre concerné et le replace en `À réviser`. Les validations précédentes restent archivées dans l’historique.
 
-Les validations précédentes restent archivées dans l’historique.
+Ces règles s’appliquent aux candidates `.chpt` et aux cycles de correction offline. Deux versions concurrentes du même chapitre restent deux candidates distinctes : aucun merge détaillé d’annotations ou de réglages n’est effectué. Un Réviseur sélectionne la version complète à conserver, sans que cette sélection vaille validation. La candidate choisie doit ensuite obtenir l’approbation de tous les Réviseurs affectés.
+
+Les candidates non retenues restent consultables dans l’historique avec leur auteur, leur base, leur date et la décision prise.
 
 ## 30. Publication vers Jacques
 
@@ -840,9 +877,9 @@ Les identifiants de prototype ne doivent jamais être placés en clair dans le f
 
 Ils doivent être injectés via configuration locale, variables d’environnement ou mécanisme équivalent.
 
-## 37. Collaboration V2
+## 37. Architecture hybride et collaboration offline
 
-Architecture hybride.
+L’architecture reste local-first.
 
 ### Control plane Jaquette Cloud
 
@@ -858,23 +895,32 @@ Architecture hybride.
 
 - EPUB ;
 - `.jacq` ;
+- `.chpt` ;
 - sources audio ;
 - manuscrits ;
 - ressources sensibles.
 
-Les contenus ne sont pas stockés dans le cloud Jaquette sans décision explicite.
+Le cloud Jaquette ne stocke pas ces contenus sans décision explicite et ne synchronise pas en direct le montage. La collaboration sur le contenu repose sur l’échange contrôlé de fichiers `.chpt`. Les choix de transport, d’hébergement et de conteneur restent ouverts.
 
-## 38. Collaboration temps réel
+## 38. Collaboration offline, import et fusion
 
-La V2 affiche :
+L’ancien modèle de collaboration temps réel, avec présence, curseurs ou sélections distants et modifications live, est abandonné. Aucun utilisateur ne voit en direct le travail des autres.
 
-- utilisateurs présents ;
-- chapitre consulté ;
-- curseurs/sélections distants ;
-- couleur utilisateur ;
-- modifications récentes.
+Flux normal :
 
-Si deux utilisateurs modifient la même zone, Jaquette signale un conflit explicite. Pas de fusion métier silencieuse.
+1. un Sound Designer travaille localement sur un chapitre ;
+2. il exporte un `.chpt` candidat ;
+3. le fichier est importé pour révision sans écraser la version validée ;
+4. les Réviseurs contrôlent la candidate ;
+5. une fois toutes les validations requises obtenues, la candidate devient la version validée du chapitre dans le `.jacq`.
+
+Des contributions portant sur des chapitres différents s’intègrent sans conflit lorsque leur identité et leur filiation sont compatibles. Leur intégration ne réécrit ni n’écrase les autres chapitres. Les médias identiques restent dédupliqués par empreinte.
+
+Une origine incompatible, une filiation inconnue ou une modification concurrente d’informations communes interdit toute intégration silencieuse.
+
+Pour deux versions concurrentes du même chapitre, les candidates restent distinctes. Un Réviseur choisit la version complète à conserver ; les autres restent dans l’historique. Aucun fichier n’est détruit silencieusement.
+
+Les métadonnées du livre, paramètres généraux et autres informations communes restent hors des `.chpt`. Si deux copies les modifient différemment, le conflit est explicite, aucune valeur ne gagne automatiquement et la décision est journalisée. Le Chef d’équipe arbitre ; dans un workspace d’Auteur indépendant, l’Auteur indépendant arbitre.
 
 ## 39. Audit
 
@@ -885,8 +931,13 @@ Journaliser notamment :
 - modification projet ;
 - ajout/suppression d’événement ;
 - changement de statut ;
-- commentaire ;
-- ticket ;
+- génération, changement de statut, assignation et achèvement d’une tâche ;
+- export et import d’un `.chpt` ;
+- détection de conflit ;
+- sélection d’une candidate ;
+- intégration d’un chapitre validé ;
+- arbitrage des informations communes ;
+- création, réponse, résolution et modification d’un commentaire ;
 - validation ;
 - export ;
 - publication ;
@@ -1003,7 +1054,7 @@ Recommandations :
 
 ## 44. Stockage abstrait
 
-Créer une abstraction `ProjectStorage` dès le départ.
+Créer une abstraction `ProjectStorage` dès le départ. Elle devra permettre la sauvegarde atomique ou équivalente d’un chapitre sans réécrire les autres `.chpt` ; la forme exacte de cette capacité reste à décider.
 
 ```text
 open()
@@ -1150,17 +1201,17 @@ Web Audio, 3 SFX max, ambiances superposables, musique exclusive + crossfade, du
 Souris-regard, mots/minute, x1/x2/x4, lire sélection, lire depuis ici.
 **Acceptation :** événements déclenchés aux bonnes plages.
 
-### Étape 14 — Sauvegarde `.jacq`
-Autosave, undo 50, sources embarquées, versions, import/export `.jacq`.
-**Acceptation :** supprimer la bibliothèque d’origine puis rouvrir le `.jacq` sans perte.
+### Étape 14 — Sauvegarde `.jacq` et sections `.chpt`
+Autosave, undo 50, sources embarquées, versions, import/export `.jacq`, sauvegarde et échange par chapitre.
+**Acceptation :** supprimer la bibliothèque d’origine puis rouvrir le `.jacq` sans perte ; modifier un chapitre et constater que seul son `.chpt` est réécrit ; exporter puis réimporter une candidate sans écraser la version validée.
 
-### Étape 15 — Tickets / commentaires / workflow
-Tickets, commentaires, affectations, états et tableaux de bord métier.
-**Acceptation :** un Réviseur invalide un chapitre avec ticket obligatoire et le Sound Designer reçoit la tâche.
+### Étape 15 — Tâches / commentaires / workflow
+Tâches automatiques sans priorité, trois statuts officiels, commentaires à quatre cibles, fils, résolution et historique.
+**Acceptation :** une invalidation avec commentaire obligatoire crée une nouvelle tâche de correction et conserve le cycle précédent.
 
-### Étape 16 — Révision multi-réviseurs
-Validations individuelles et agrégées.
-**Acceptation :** un chapitre à 3 réviseurs ne devient validé qu’après 3 validations.
+### Étape 16 — Révision multi-réviseurs et candidates
+Validations individuelles et agrégées, candidates `.chpt`, choix d’une version complète en cas de concurrence et historique.
+**Acceptation :** un chapitre à 3 Réviseurs ne devient validé qu’après 3 validations ; choisir une candidate concurrente ne vaut pas validation.
 
 ### Étape 17 — Validation Chef d’équipe
 Dashboard, soumission, rejet vers Réviseur ou Sound Designer, validation finale.
@@ -1190,9 +1241,9 @@ Shell Electron, storage natif, FFmpeg natif, sécurité IPC, builds Windows/macO
 Serveur MCP local, ressources, outils, consentement, brouillon IA, diff, accept/reject.
 **Acceptation :** un agent peut analyser un chapitre et proposer un doublage sans modifier le master ni lire hors projet.
 
-### Étape 24 — Collaboration V2
-Comptes réels, organisations, invitations, Jaquette Cloud, Jaquette Node, présence, conflits.
-**Acceptation :** deux machines collaborent sur un même projet ; une modification concurrente sur une même zone produit un conflit explicite.
+### Étape 24 — Collaboration offline et fusion de `.chpt`
+Comptes réels, organisations et invitations selon les besoins de contexte ; export/import de chapitres ; vérification d’identité et de filiation ; fusion des chapitres différents ; arbitrage des candidates concurrentes et des informations communes.
+**Acceptation :** deux chapitres compatibles s’intègrent sans réécriture mutuelle ; deux versions d’un même chapitre restent distinctes jusqu’au choix puis à la validation ; un conflit commun exige l’arbitrage du rôle autorisé.
 
 ## 49. Jalons produit
 
@@ -1216,9 +1267,9 @@ Objectif : application Electron Windows/macOS.
 Étape 23.
 Objectif : premier doublage assisté par agent.
 
-### V2 Collaborative
+### V2 Collaboration offline
 Étape 24.
-Objectif : collaboration multi-utilisateur et maisons d’édition.
+Objectif : échange asynchrone de chapitres entre contributeurs et maisons d’édition, avec conflits explicites.
 
 ## 50. Risques techniques prioritaires
 
@@ -1228,8 +1279,8 @@ Objectif : collaboration multi-utilisateur et maisons d’édition.
 4. Performances d’encodage dans Chrome.
 5. Poids des `.jacko` réels.
 6. Sécurité de l’import HTML/CSS EPUB.
-7. Cohérence des validations en environnement collaboratif.
-8. Gestion des conflits V2.
+7. Cohérence des validations entre candidates et cycles offline.
+8. Détection fiable des filiations, conflits de chapitre et conflits d’informations communes.
 9. Signature et compatibilité de version du format `.jacko`.
 10. Sécurité du serveur MCP et cloisonnement des ressources.
 
@@ -1246,8 +1297,8 @@ La V1 est considérée comme validée si l’on peut réaliser de bout en bout, 
 7. Ajouter fades, ducking et spatialisation.
 8. Simuler la lecture.
 9. Sauvegarder et fermer Jaquette.
-10. Rouvrir le `.jacq` sans perte.
-11. Faire réviser le chapitre.
+10. Rouvrir le `.jacq` sans perte et confirmer qu’une modification de chapitre n’a réécrit aucun autre `.chpt`.
+11. Exporter un `.chpt` candidat, l’importer sans écraser la version validée et faire réviser le chapitre.
 12. Obtenir toutes les validations requises.
 13. Faire valider le livre par le Chef d’équipe.
 14. Renseigner les métadonnées Jacques.
