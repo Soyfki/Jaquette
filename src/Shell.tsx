@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { FoundationsPage } from './App'
 import { MaterialSymbol, type MaterialSymbolName } from './MaterialSymbol'
+import { ProjectPage } from './ProjectPage'
 
 type Navigate = (path: string) => void
 
@@ -160,29 +161,6 @@ function HomePage({ navigate }: { navigate: Navigate }) {
   )
 }
 
-function ProjectPage() {
-  return (
-    <div className="prototype-page">
-      <PageIntro
-        eyebrow="Projet fictif · Le Jardin de Minuit"
-        title="Le livre attend sa scène."
-        description="Cet écran valide uniquement la place du projet dans le shell principal. Aucun livre ni média n’est importé."
-      />
-      <section className="empty-state" aria-labelledby="empty-state-title">
-        <div className="empty-state__visual" aria-hidden="true">
-          <span>Le texte</span>
-          <i /><i /><i />
-        </div>
-        <div className="empty-state__copy">
-          <span className="prototype-label">Prochaine sous-étape · 1.3</span>
-          <h2 id="empty-state-title">Le workspace Sound Designer sera construit ici.</h2>
-          <p>La bibliothèque, le livre, l’inspecteur et les contrôles de simulation ne font pas partie de cette livraison.</p>
-        </div>
-      </section>
-    </div>
-  )
-}
-
 function SettingsPage() {
   return (
     <div className="prototype-page">
@@ -314,7 +292,13 @@ export function AppShell() {
       </aside>
       <main
         id="main-content"
-        className={path === '/fondations' ? 'app-main app-main--foundations' : 'app-main'}
+        className={
+          path === '/fondations'
+            ? 'app-main app-main--foundations'
+            : path === '/projet'
+              ? 'app-main app-main--project'
+              : 'app-main'
+        }
         tabIndex={-1}
         ref={mainRef}
       >
