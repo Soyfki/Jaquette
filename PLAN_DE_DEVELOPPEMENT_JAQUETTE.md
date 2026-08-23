@@ -694,13 +694,16 @@ Test :
 
 Objectif :
 - conserver une section physique `.chpt` par chapitre dans le `.jacq` ;
-- garder les informations communes séparées.
+- garder les informations communes séparées ;
+- classer comme commune toute information qui n’appartient pas exclusivement à un seul chapitre, la liste du cahier des charges étant un minimum normatif et non une liste exhaustive champ par champ.
 
 Test critique :
 - modifier le chapitre 2 ;
 - enregistrer ;
 - vérifier que le `.chpt` du chapitre 2 est réécrit ;
-- vérifier que les `.chpt` des autres chapitres ne sont ni réécrits ni altérés.
+- vérifier que les `.chpt` des autres chapitres ne sont ni réécrits ni altérés ;
+- vérifier qu’une donnée utilisée par plusieurs chapitres reste dans la section commune du `.jacq` ;
+- vérifier qu’une donnée clairement propre au chapitre 2 reste dans son `.chpt`.
 
 La technologie de conteneur, le schéma, la sérialisation et la stratégie de version restent à décider. Le test ne doit pas supposer que `.jacq` est un ZIP.
 
@@ -731,7 +734,8 @@ Test :
 - exporter un chapitre candidat ;
 - vérifier la présence de l’identité du projet et du livre, de l’identifiant du chapitre, de la base et de la filiation ;
 - vérifier les données de doublage, médias utilisés, tâches, commentaires, validations et informations d’audit nécessaires ;
-- vérifier l’absence des informations communes qui ne relèvent pas du chapitre.
+- vérifier que toute information n’appartenant pas exclusivement au chapitre est absente, notamment l’EPUB source, la structure textuelle globale, les métadonnées du livre et du projet, les paramètres généraux, les affectations globales, les versions nommées, les consentements IA, les commentaires et tâches du livre et toute donnée partagée par plusieurs chapitres ;
+- vérifier qu’une donnée clairement propre au chapitre reste présente.
 
 ## 10.9 Import candidat sans écrasement
 
@@ -867,9 +871,11 @@ Test :
 ## 12.4 Validation multi-réviseurs
 
 Test :
-- projet avec 3 Réviseurs ;
+- projet avec 3 Réviseurs examinant la même candidate ;
 - validation 1/3 et 2/3 ne suffit pas ;
-- 3/3 valide la candidate du chapitre.
+- 3/3 permet seul l’intégration de la candidate comme version validée ;
+- refaire le scénario avec un refus sur trois : le chapitre reste bloqué et aucune candidate n’est intégrée ;
+- vérifier qu’aucune majorité et aucun arbitrage du Chef d’équipe ne tranchent le choix éditorial.
 
 ## 12.5 Calcul de progression Révision
 
@@ -891,20 +897,25 @@ Test critique :
 - importer deux `.chpt` issus de la même base pour le même chapitre ;
 - conserver les deux candidates distinctes ;
 - vérifier qu’aucun merge détaillé d’annotations ou réglages n’est proposé ;
-- un Réviseur sélectionne la version complète à conserver ;
-- vérifier que cette sélection ne vaut pas validation.
+- vérifier que tout Réviseur affecté peut proposer une candidate comme candidate active à examiner ;
+- faire proposer simultanément une candidate différente par deux Réviseurs ;
+- vérifier qu’aucune proposition ne remplace silencieusement l’autre et que le chapitre reste bloqué tant que tous les Réviseurs n’approuvent pas la même candidate ;
+- proposer explicitement une autre candidate ;
+- vérifier qu’une proposition ne vaut ni sélection définitive ni validation.
 
 ## 12.8 Historique des candidates
 
 Test :
 - écarter une candidate ;
-- conserver son auteur, sa base, sa date et la décision ;
+- conserver toutes les candidates, propositions et décisions précédentes avec leur auteur, leur base et leur date ;
+- vérifier que deux propositions concurrentes ne se remplacent jamais silencieusement ;
 - vérifier qu’aucun fichier n’est détruit silencieusement.
 
 ## 12.9 Soumission au Chef
 
 Test :
-- bouton bloqué tant qu’un chapitre ou une candidate choisie n’est pas validé par tous ;
+- bouton bloqué tant que tous les Réviseurs n’approuvent pas la même candidate active ;
+- bouton bloqué en cas de désaccord, sans vote majoritaire ni arbitrage du Chef d’équipe sur le choix éditorial ;
 - disponible lorsque toutes les validations requises sont obtenues.
 
 ---
@@ -1358,7 +1369,18 @@ Test :
 - la version validée reste inchangée ;
 - la candidate entre dans le cycle de révision.
 
-## 22.3 Fusion de chapitres différents
+## 22.3 Correspondance des assignés importés
+
+Test documentaire :
+- importer entre deux copies ou organisations un `.chpt` dont l’assigné d’origine possède un identifiant Jaquette global strictement identique à celui de l’identité cible et les droits nécessaires dans le projet cible ;
+- vérifier que cette seule combinaison autorise la correspondance automatique ;
+- refaire l’import avec une identité inconnue ou privée des droits requis ;
+- vérifier qu’aucune correspondance silencieuse n’est faite par nom, adresse IP ou adresse électronique non vérifiée ;
+- vérifier que l’import suspend la finalisation de l’affectation jusqu’au choix explicite d’un assigné autorisé par le Chef d’équipe, ou par l’Auteur indépendant dans son workspace ;
+- conserver dans l’historique et l’audit l’identité et l’assigné d’origine ;
+- vérifier que la réaffectation explicite ne réécrit pas l’auteur historique de la contribution.
+
+## 22.4 Fusion de chapitres différents
 
 Test critique :
 - A modifie le chapitre 1 et B le chapitre 2 depuis des filiations compatibles ;
@@ -1366,46 +1388,51 @@ Test critique :
 - les contributions sont intégrables sans conflit ;
 - aucune intégration ne réécrit ou n’écrase l’autre chapitre.
 
-## 22.4 Concurrence sur un même chapitre
+## 22.5 Concurrence sur un même chapitre
 
 Test critique :
 - A et B exportent chacun une version du chapitre 1 depuis la même base ;
 - les deux restent candidates distinctes ;
 - aucun merge détaillé n’est effectué ;
-- un Réviseur choisit une version complète ;
-- l’autre reste consultable dans l’historique.
+- tout Réviseur affecté peut proposer une candidate active ;
+- aucune proposition ne remplace silencieusement l’autre et toutes restent consultables dans l’historique.
 
-## 22.5 Sélection puis validations multiples
+## 22.6 Proposition active puis validations unanimes
 
 Test :
-- sélectionner une candidate concurrente ;
-- vérifier que le chapitre n’est pas encore validé ;
-- obtenir l’approbation de tous les Réviseurs affectés ;
-- intégrer seulement alors la candidate comme version validée.
+- faire proposer une candidate concurrente comme candidate active par un Réviseur affecté ;
+- vérifier que cette proposition ne vaut ni sélection définitive ni validation ;
+- obtenir l’approbation de tous les Réviseurs affectés sur cette même candidate ;
+- intégrer seulement alors la candidate comme version validée ;
+- refaire avec un désaccord : aucune candidate n’est intégrée, sans vote majoritaire ni arbitrage du Chef d’équipe ;
+- proposer explicitement une autre candidate et conserver toutes les propositions et décisions précédentes dans l’historique.
 
-## 22.6 Origine ou filiation incompatible
+## 22.7 Origine ou filiation incompatible
 
 Test :
 - importer un `.chpt` d’un autre projet ou avec une filiation inconnue ;
 - intégration silencieuse refusée ;
 - conflit explicite et audité.
 
-## 22.7 Conflit d’informations communes
+## 22.8 Classement et conflit d’informations communes
 
 Test :
+- classer dans la section commune du `.jacq` une donnée utilisée par plusieurs chapitres et vérifier qu’elle n’est dans aucun `.chpt` ;
+- vérifier qu’une donnée clairement propre à un chapitre reste dans son `.chpt` ;
+- contrôler que l’EPUB source, la structure textuelle globale et ses identifiants de cohérence, les métadonnées du livre et du projet, les paramètres généraux, les affectations globales, les versions nommées, les consentements IA et les commentaires et tâches du livre restent communs ;
 - deux copies modifient différemment une métadonnée du livre ou un paramètre général ;
 - aucune valeur ne gagne automatiquement ;
 - le Chef d’équipe arbitre et la décision est journalisée ;
 - refaire le test en workspace Auteur indépendant avec arbitrage par l’Auteur.
 
-## 22.8 Invalidation et cycle de correction
+## 22.9 Invalidation et cycle de correction
 
 Test :
 - invalider une candidate avec un commentaire ;
 - une nouvelle tâche de correction est générée ;
 - les tâches, commentaires et validations des cycles précédents restent dans l’historique.
 
-## 22.9 Absence de fonctions live
+## 22.10 Absence de fonctions live
 
 Test :
 - vérifier qu’aucune présence distante, aucun curseur ou sélection distante et aucune modification live ne sont proposés ;
@@ -1607,7 +1634,7 @@ Risque :
 - une candidate d’origine inconnue est intégrée à tort.
 
 Réduction :
-- refuser l’intégration silencieuse et couvrir les identités, bases et filiations aux sous-étapes 10.8, 22.3 et 22.6.
+- refuser l’intégration silencieuse et couvrir les identités, bases et filiations aux sous-étapes 10.8, 22.4 et 22.7.
 
 ## Perte de candidates ou d’historique
 
@@ -1631,7 +1658,7 @@ Risque :
 - une métadonnée ou un paramètre général gagne implicitement.
 
 Réduction :
-- séparation physique hors `.chpt`, arbitrage explicite selon le workspace et audit au test 22.7.
+- séparation physique hors `.chpt`, arbitrage explicite selon le workspace et audit au test 22.8.
 
 ---
 

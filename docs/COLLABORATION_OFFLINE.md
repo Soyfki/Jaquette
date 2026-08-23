@@ -43,7 +43,21 @@ Les médias identiques sont dédupliqués par empreinte.
 
 ### Informations communes
 
-Les métadonnées du livre, paramètres généraux, commentaires ciblant le livre et autres informations communes restent hors des `.chpt`.
+Toute information qui n’appartient pas exclusivement à un seul chapitre est une information commune du `.jacq` et ne doit pas être placée dans un `.chpt`.
+
+Cela comprend au minimum :
+
+- l’EPUB source ;
+- la structure textuelle globale et les identifiants nécessaires à sa cohérence ;
+- les métadonnées du livre et du projet ;
+- les paramètres généraux ;
+- les affectations globales ;
+- les versions nommées ;
+- les consentements IA ;
+- les commentaires et tâches ciblant le livre ;
+- toute information partagée par plusieurs chapitres.
+
+Cette liste est un minimum normatif, pas une liste exhaustive champ par champ. Une donnée clairement propre à un chapitre reste dans son `.chpt`.
 
 Une divergence commune ne se résout jamais automatiquement. Le Chef d’équipe arbitre ; dans un workspace d’Auteur indépendant, l’Auteur indépendant arbitre. La décision est journalisée.
 
@@ -52,8 +66,10 @@ Une divergence commune ne se résout jamais automatiquement. Le Chef d’équipe
 1. Un Sound Designer travaille localement sur un chapitre.
 2. Il exporte un `.chpt` candidat.
 3. Le fichier est importé pour révision sans écraser la version validée.
-4. Les Réviseurs contrôlent la candidate.
-5. Après l’approbation de tous les Réviseurs affectés, la candidate devient la version validée du chapitre dans le `.jacq`.
+4. Tout Réviseur affecté peut proposer une candidate comme candidate active à examiner ; cette proposition ne vaut ni sélection définitive ni validation.
+5. Après l’approbation de tous les Réviseurs affectés sur la même candidate, elle devient la version validée du chapitre dans le `.jacq`.
+
+En cas de désaccord, le chapitre reste bloqué et aucune candidate n’est intégrée. Il n’existe ni vote majoritaire ni arbitrage du Chef d’équipe sur le choix éditorial de la candidate. Une autre candidate peut être proposée explicitement. Deux propositions concurrentes ne se remplacent jamais silencieusement et toutes les candidates et décisions précédentes restent dans l’historique.
 
 Une modification d’un chapitre déjà validé annule ses validations actives et le replace à réviser. Les validations précédentes restent dans l’historique.
 
@@ -62,12 +78,20 @@ Une modification d’un chapitre déjà validé annule ses validations actives e
 | Situation | Résultat autorisé |
 |---|---|
 | Chapitres différents, identité et filiation compatibles | Intégration sans conflit et sans réécriture des autres `.chpt` |
-| Même chapitre, deux versions concurrentes | Deux candidates distinctes ; choix d’une version complète par un Réviseur, puis validations normales |
+| Même chapitre, deux versions concurrentes | Deux candidates distinctes ; proposition explicite d’une candidate active par tout Réviseur affecté, puis approbation unanime |
 | Origine incompatible ou filiation inconnue | Intégration silencieuse refusée, conflit explicite |
 | Informations communes divergentes | Arbitrage explicite du Chef d’équipe ou de l’Auteur indépendant |
 | Média identique dans plusieurs chapitres | Déduplication par empreinte |
 
-Aucun merge détaillé des annotations ou réglages de deux candidates concurrentes n’est effectué. Le choix d’une candidate ne vaut pas validation. Une candidate écartée reste consultable avec son auteur, sa base, sa date et la décision. Aucun fichier n’est détruit silencieusement.
+Aucun merge détaillé des annotations ou réglages de deux candidates concurrentes n’est effectué. Une proposition de candidate active ne vaut ni sélection définitive ni validation. Un désaccord bloque toute intégration, sans vote majoritaire ni arbitrage du Chef d’équipe sur ce choix éditorial. Une autre candidate peut être proposée explicitement. Deux propositions concurrentes ne se remplacent jamais silencieusement. Toutes les candidates et décisions précédentes restent consultables avec leur auteur, leur base et leur date. Aucun fichier n’est détruit silencieusement.
+
+## Correspondance des assignés à l’import
+
+La correspondance automatique d’un assigné d’un `.chpt` est autorisée uniquement si l’identifiant Jaquette global est strictement identique et que cette personne possède les droits nécessaires dans le projet cible.
+
+Aucune correspondance silencieuse n’est effectuée par nom, adresse IP ou adresse électronique non vérifiée. Si l’identité d’origine n’est pas reconnue ou n’est pas autorisée, l’import ne finalise pas automatiquement l’affectation. Le Chef d’équipe choisit explicitement un assigné autorisé ; dans un workspace d’Auteur indépendant, cette décision revient à l’Auteur indépendant.
+
+L’identité et l’assigné d’origine restent dans l’historique et l’audit. La réaffectation explicite ne réécrit pas l’auteur historique de la contribution.
 
 ## Tâches de workflow
 
@@ -108,9 +132,10 @@ Une invalidation exige un commentaire expliquant la correction et déclenche la 
 Le journal comprend au minimum :
 
 - génération, changement de statut, assignation et achèvement d’une tâche ;
+- correspondance ou réaffectation explicite d’un assigné importé, avec conservation de l’identité et de l’assigné d’origine ;
 - export et import d’un `.chpt` ;
 - détection d’un conflit ;
-- sélection d’une candidate ;
+- proposition d’une candidate active, approbations et décisions associées ;
 - intégration d’un chapitre validé ;
 - arbitrage des informations communes ;
 - création, réponse, résolution et modification d’un commentaire.
@@ -131,33 +156,73 @@ Résultat attendu :
 
 Conclusion documentaire : **PASS**.
 
-### 2. Deux versions du même chapitre
+### 2. Trois Réviseurs approuvent la même candidate
 
-Préconditions : Alice et Bilal exportent chacun le chapitre A depuis la même base.
-
-Résultat attendu :
-
-- deux candidates distinctes restent consultables ;
-- aucun merge détaillé n’est effectué ;
-- un Réviseur choisit une version complète ;
-- ce choix ne la valide pas ;
-- la candidate écartée reste dans l’historique avec auteur, base, date et décision.
-
-Conclusion documentaire : **PASS**.
-
-### 3. Plusieurs Réviseurs
-
-Préconditions : trois Réviseurs sont affectés à la candidate choisie.
+Préconditions : trois Réviseurs sont affectés et examinent la même candidate active.
 
 Résultat attendu :
 
+- tout Réviseur affecté peut proposer cette candidate comme candidate active ;
+- cette proposition ne vaut ni sélection définitive ni validation ;
 - les validations 1/3 puis 2/3 ne suffisent pas ;
-- la candidate devient validée à 3/3 ;
-- elle seule peut alors être intégrée comme version validée du chapitre.
+- l’approbation 3/3 permet seule son intégration comme version validée.
 
 Conclusion documentaire : **PASS**.
 
-### 4. Invalidation et nouvelle tâche
+### 3. Un Réviseur sur trois refuse
+
+Préconditions : deux Réviseurs approuvent la candidate active et le troisième la refuse.
+
+Résultat attendu :
+
+- le chapitre reste bloqué ;
+- aucune candidate n’est intégrée ;
+- ni vote majoritaire ni arbitrage du Chef d’équipe ne tranche le choix éditorial ;
+- une autre candidate peut être proposée explicitement ;
+- les décisions précédentes restent dans l’historique.
+
+Conclusion documentaire : **PASS**.
+
+### 4. Deux Réviseurs proposent des candidates différentes
+
+Préconditions : deux candidates concurrentes existent et deux Réviseurs proposent chacun une candidate différente comme active.
+
+Résultat attendu :
+
+- les deux candidates et propositions restent distinctes ;
+- aucune proposition ne remplace silencieusement l’autre ;
+- aucune proposition ne vaut sélection définitive ou validation ;
+- le chapitre reste bloqué jusqu’à l’approbation de tous les Réviseurs affectés sur la même candidate ;
+- toutes les candidates et décisions précédentes restent dans l’historique.
+
+Conclusion documentaire : **PASS**.
+
+### 5. Assigné reconnu et autorisé
+
+Préconditions : un `.chpt` est importé entre deux copies ou organisations ; l’assigné d’origine possède un identifiant Jaquette global strictement identique et les droits nécessaires dans le projet cible.
+
+Résultat attendu :
+
+- la correspondance automatique est autorisée ;
+- l’identité et l’assigné d’origine restent dans l’historique et l’audit.
+
+Conclusion documentaire : **PASS**.
+
+### 6. Assigné inconnu ou non autorisé
+
+Préconditions : l’assigné d’origine n’existe pas dans le projet cible ou n’y possède pas les droits nécessaires.
+
+Résultat attendu :
+
+- aucune correspondance silencieuse n’est faite par nom, adresse IP ou adresse électronique non vérifiée ;
+- l’import suspend la finalisation de l’affectation ;
+- le Chef d’équipe choisit explicitement un assigné autorisé, ou l’Auteur indépendant dans son workspace ;
+- l’identité et l’assigné d’origine restent dans l’historique et l’audit ;
+- la réaffectation ne réécrit pas l’auteur historique de la contribution.
+
+Conclusion documentaire : **PASS**.
+
+### 7. Invalidation et nouvelle tâche
 
 Préconditions : une candidate est invalidée avec un commentaire explicatif.
 
@@ -171,7 +236,20 @@ Résultat attendu :
 
 Conclusion documentaire : **PASS**.
 
-### 5. Conflit sur les informations communes
+### 8. Donnée utilisée par plusieurs chapitres
+
+Préconditions : une donnée est utilisée par les chapitres A et B.
+
+Résultat attendu :
+
+- elle est classée dans la section commune du `.jacq` ;
+- elle n’est placée dans aucun `.chpt` ;
+- la liste des informations communes reste comprise comme un minimum normatif ;
+- une donnée clairement propre au chapitre A reste dans son `.chpt`.
+
+Conclusion documentaire : **PASS**.
+
+### 9. Conflit sur les informations communes
 
 Préconditions : deux copies modifient différemment une métadonnée du livre.
 

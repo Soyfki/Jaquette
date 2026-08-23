@@ -12,7 +12,7 @@ Jaquette ne doit pas être confondu avec **Jacques** : Jaquette est l’outil de
 
 La **phase 0 — Préparation du projet** et la sous-étape **1.1 — Construire le design system de base** sont acquises. La prochaine sous-étape applicative est **1.2 — Créer la structure d’écran principale** ; elle n’a pas commencé. Le recadrage produit **REC-01 — Collaboration offline** est intégré à la documentation : la collaboration repose sur des chapitres `.chpt` échangés et révisés comme candidates, sans fonctions live.
 
-La version actuelle de l’application est **`0.0.0` (pré-développement, non publiée)**. La [convention de version](docs/VERSIONING.md) explique la différence entre cette version, les jalons produit tels que V0.1 et les futures versions des formats `.jacq` et `.jacko`.
+La version actuelle de l’application est **`0.0.0` (pré-développement, non publiée)**. La [convention de version](docs/VERSIONING.md) explique la différence entre cette version, les jalons produit tels que V0.1 et les futures versions des formats `.jacq`, `.chpt` et `.jacko`.
 
 
 ## Lancer la démonstration 1.1

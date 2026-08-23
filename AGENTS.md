@@ -66,7 +66,9 @@ Les sons sont associés à des mots ou à des plages de mots, et non à une time
 - Il contient une section physique `.chpt` par chapitre.
 - Une modification de chapitre doit pouvoir réécrire physiquement son seul `.chpt` sans réécrire les autres chapitres du projet.
 - Il rend le projet autonome en embarquant les sons réellement utilisés et conserve les informations nécessaires au travail, à la révision, aux versions et au projet.
-- Les métadonnées du livre, paramètres généraux et autres informations communes restent séparés des `.chpt`.
+- Toute information qui n’appartient pas exclusivement à un seul chapitre est une information commune du `.jacq` et reste séparée des `.chpt`.
+- Cette règle couvre notamment l’EPUB source, la structure textuelle globale et les identifiants nécessaires à sa cohérence, les métadonnées du livre et du projet, les paramètres généraux, les affectations globales, les versions nommées, les consentements IA, les commentaires et tâches ciblant le livre, ainsi que toute information partagée par plusieurs chapitres. Cette liste est un minimum normatif, pas une liste exhaustive champ par champ.
+- Une donnée clairement propre à un chapitre reste dans son `.chpt`.
 - Les traitements audio de production sont non destructifs.
 - Le choix du conteneur et les détails de sérialisation restent ouverts. `.jacq` ne doit pas être considéré comme un simple ZIP tant que la compatibilité de cette technologie avec la sauvegarde partielle n’est pas démontrée.
 
@@ -88,8 +90,6 @@ Les sons sont associés à des mots ou à des plages de mots, et non à une time
 - Une modification du contenu signé doit pouvoir être détectée.
 - Jaquette doit pouvoir rouvrir un `.jacko` en **mode contrôle / lecture seule** afin de vérifier un export.
 - Un `.jacko` ouvert pour contrôle ne devient pas une source de production.
-
----
 
 ---
 
@@ -438,7 +438,7 @@ Peut notamment :
 - lancer des simulations ;
 - consulter les annotations ;
 - commenter ;
-- sélectionner la version complète à conserver lorsque plusieurs candidates concurrentes existent pour un chapitre ;
+- proposer une candidate complète comme candidate active à examiner lorsque plusieurs candidates concurrentes existent pour un chapitre ;
 - valider ou invalider un chapitre ;
 - valider ou invalider une version ;
 - soumettre le projet au Chef d’équipe une fois les validations requises obtenues.
@@ -481,6 +481,10 @@ Le Chef d’équipe **ne modifie jamais directement le montage audio**.
 - Plusieurs Sound Designers peuvent travailler sur le même projet.
 - Les Sound Designers peuvent être affectés par chapitre.
 - Un Chef d’équipe peut gérer plusieurs équipes.
+- Lors de l’import d’un `.chpt`, un assigné n’est mis en correspondance automatiquement que si son identifiant Jaquette global est strictement identique et si cette personne possède les droits nécessaires dans le projet cible.
+- Aucune correspondance silencieuse n’est effectuée par nom, adresse IP ou adresse électronique non vérifiée.
+- Si l’identité d’origine n’est pas reconnue ou n’est pas autorisée, l’import ne finalise pas automatiquement l’affectation : le Chef d’équipe choisit explicitement un assigné autorisé, ou l’Auteur indépendant dans son workspace.
+- L’identité et l’assigné d’origine restent dans l’historique et l’audit. Une réaffectation explicite ne réécrit jamais l’auteur historique de la contribution.
 
 ---
 
@@ -677,8 +681,11 @@ Règles :
 - Les validations précédentes restent conservées dans l’historique.
 - Ces règles s’appliquent à chaque candidate `.chpt` et à chaque cycle de correction offline.
 - Deux versions concurrentes du même chapitre restent des candidates distinctes. Aucun merge détaillé de leurs annotations ou réglages n’est effectué.
-- Un Réviseur choisit la version complète à conserver ; ce choix ne vaut pas validation et la candidate choisie doit encore recevoir toutes les approbations requises.
-- Les candidates écartées restent consultables avec leur auteur, leur base, leur date et la décision prise. Aucun fichier n’est détruit silencieusement.
+- Tout Réviseur affecté peut proposer une candidate complète comme candidate active à examiner. Cette proposition ne vaut ni sélection définitive ni validation.
+- La candidate active ne peut rejoindre la version validée du chapitre qu’après l’approbation de tous les Réviseurs affectés.
+- En cas de désaccord, le chapitre reste bloqué et aucune candidate n’est intégrée. Il n’existe ni vote majoritaire ni arbitrage du Chef d’équipe sur le choix éditorial de la candidate.
+- Une autre candidate peut être proposée explicitement. Deux propositions concurrentes ne se remplacent jamais silencieusement.
+- Toutes les candidates et décisions précédentes restent consultables avec leur auteur, leur base et leur date. Aucun fichier n’est détruit silencieusement.
 - Le bouton de soumission au Chef d’équipe n’est disponible que lorsque toutes les conditions de révision sont satisfaites.
 
 ---
@@ -770,9 +777,13 @@ L’historique doit être conservé.
 - Aucun utilisateur ne voit en direct le travail des autres : Jaquette n’affiche ni présence distante, ni curseur ou sélection distante, ni modification live.
 - La collaboration repose sur l’échange de fichiers `.chpt` et la validation de versions candidates.
 - Des chapitres différents peuvent être intégrés sans conflit lorsque l’identité du projet, du livre et la filiation sont compatibles, sans réécrire ou écraser les autres chapitres.
-- Deux versions concurrentes du même chapitre restent séparées jusqu’au choix explicite d’une candidate complète par un Réviseur, puis à sa validation normale.
+- Deux versions concurrentes du même chapitre restent séparées jusqu’à la proposition explicite d’une candidate complète comme candidate active, puis à sa validation normale.
+- Tout Réviseur affecté peut proposer la candidate active à examiner, sans que cette proposition vaille sélection définitive ou validation. L’unanimité des Réviseurs affectés est nécessaire pour l’intégrer ; un désaccord bloque le chapitre, sans majorité ni arbitrage du Chef d’équipe sur ce choix éditorial.
+- Une autre candidate peut être proposée explicitement. Deux propositions concurrentes ne se remplacent jamais silencieusement et toutes les candidates et décisions restent dans l’historique.
 - Une origine incompatible ou une filiation inconnue produit un conflit explicite.
-- Les informations communes restent hors des `.chpt`. Si deux copies les modifient différemment, aucune valeur ne gagne automatiquement : le Chef d’équipe arbitre, ou l’Auteur indépendant dans son workspace, et la décision est journalisée.
+- Toute information qui n’appartient pas exclusivement à un seul chapitre est commune au `.jacq` et reste hors des `.chpt`. Si deux copies la modifient différemment, aucune valeur ne gagne automatiquement : le Chef d’équipe arbitre, ou l’Auteur indépendant dans son workspace, et la décision est journalisée.
+- À l’import, la correspondance automatique d’un assigné exige un identifiant Jaquette global strictement identique et des droits valides dans le projet cible. Une identité inconnue ou non autorisée suspend la finalisation de l’affectation jusqu’au choix explicite d’un assigné autorisé par le Chef d’équipe, ou par l’Auteur indépendant dans son workspace.
+- Le nom, l’adresse IP et une adresse électronique non vérifiée ne permettent aucune correspondance silencieuse. L’identité et l’assigné d’origine restent audités et la réaffectation ne réécrit pas l’auteur historique.
 - Il n’existe aucune fusion métier silencieuse et aucun fichier n’est détruit silencieusement.
 
 ---
@@ -787,9 +798,10 @@ Les événements importants à journaliser incluent notamment :
 - création/suppression d’événements audio ;
 - changement de statut ;
 - génération, assignation, changement de statut et achèvement d’une tâche ;
+- correspondance ou réaffectation explicite d’un assigné importé, avec conservation de l’identité d’origine ;
 - export et import d’un `.chpt` ;
 - détection de conflit ;
-- sélection d’une candidate ;
+- proposition d’une candidate active, approbations et décisions associées ;
 - intégration d’un chapitre validé ;
 - arbitrage des informations communes ;
 - création, réponse, résolution et modification d’un commentaire ;
@@ -960,7 +972,7 @@ Inclut notamment :
 - export et import de `.chpt` ;
 - candidates de chapitre ;
 - fusion de chapitres différents ;
-- arbitrage explicite des versions concurrentes et des informations communes ;
+- proposition et approbation unanime des candidates concurrentes, ainsi qu’arbitrage explicite des informations communes ;
 - audit des échanges et décisions.
 
 ---

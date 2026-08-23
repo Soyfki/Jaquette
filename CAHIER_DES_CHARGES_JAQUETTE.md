@@ -87,18 +87,23 @@ Le `.jacq` est le projet de production complet et éditable.
 
 Il contient une section physique `.chpt` par chapitre. Une modification de chapitre doit pouvoir réécrire physiquement le seul `.chpt` concerné, sans réécrire les autres chapitres.
 
-Les informations communes, séparées des `.chpt`, comprennent notamment :
+Toute information qui n’appartient pas exclusivement à un seul chapitre est une information commune du `.jacq` et ne doit pas être placée dans un `.chpt`.
+
+Les informations communes comprennent au minimum :
 
 - EPUB source original ;
-- structure textuelle normalisée et identifiants de tokens ;
+- structure textuelle globale, structure textuelle normalisée et identifiants nécessaires à sa cohérence ;
 - métadonnées du livre et du projet ;
 - paramètres généraux ;
-- affectations ;
+- affectations globales ;
 - versions nommées ;
 - consentements IA ;
 - commentaires ciblant le livre ;
 - tâches ciblant le livre ;
-- historique utile à la production.
+- historique utile à la production ;
+- toute information partagée par plusieurs chapitres.
+
+Cette liste est un minimum normatif, pas une liste exhaustive champ par champ. Une donnée clairement propre à un chapitre reste dans son `.chpt`.
 
 Le projet reste autonome : les médias réellement utilisés sont embarqués et les opérations audio restent non destructives.
 
@@ -120,6 +125,8 @@ Un fichier exporté transporte au minimum :
 - tâches liées au chapitre ;
 - validations et leur historique ;
 - informations d’auteur, de date et d’audit nécessaires.
+
+Une donnée clairement propre à ce chapitre reste dans son `.chpt` ; toute information qui n’appartient pas exclusivement à ce seul chapitre relève de la section commune du `.jacq`.
 
 Les détails de sérialisation, le conteneur, le schéma et la stratégie de version restent des décisions techniques ultérieures.
 
@@ -566,7 +573,7 @@ Peut :
 - simuler la lecture ;
 - consulter toutes les annotations ;
 - commenter ;
-- sélectionner une candidate complète en cas de concurrence sur un chapitre ;
+- proposer une candidate complète comme candidate active à examiner en cas de concurrence sur un chapitre ;
 - valider/invalider un chapitre ;
 - valider/invalider une version ;
 - soumettre au Chef d’équipe lorsque toutes les validations requises sont obtenues.
@@ -789,9 +796,13 @@ Une invalidation impose un commentaire expliquant la correction demandée et gé
 
 Toute modification audio effectuée après validation annule les validations actives du chapitre concerné et le replace en `À réviser`. Les validations précédentes restent archivées dans l’historique.
 
-Ces règles s’appliquent aux candidates `.chpt` et aux cycles de correction offline. Deux versions concurrentes du même chapitre restent deux candidates distinctes : aucun merge détaillé d’annotations ou de réglages n’est effectué. Un Réviseur sélectionne la version complète à conserver, sans que cette sélection vaille validation. La candidate choisie doit ensuite obtenir l’approbation de tous les Réviseurs affectés.
+Ces règles s’appliquent aux candidates `.chpt` et aux cycles de correction offline. Deux versions concurrentes du même chapitre restent deux candidates distinctes : aucun merge détaillé d’annotations ou de réglages n’est effectué.
 
-Les candidates non retenues restent consultables dans l’historique avec leur auteur, leur base, leur date et la décision prise.
+Tout Réviseur affecté peut proposer une candidate complète comme candidate active à examiner. Cette proposition ne vaut ni sélection définitive ni validation. La candidate ne rejoint la version validée du chapitre qu’après l’approbation de tous les Réviseurs affectés.
+
+En cas de désaccord, le chapitre reste bloqué et aucune candidate n’est intégrée. Il n’existe ni vote majoritaire ni arbitrage du Chef d’équipe sur le choix éditorial de la candidate. Une autre candidate peut être proposée explicitement ; deux propositions concurrentes ne se remplacent jamais silencieusement.
+
+Toutes les candidates et décisions précédentes restent consultables dans l’historique avec leur auteur, leur base et leur date.
 
 ## 30. Publication vers Jacques
 
@@ -918,9 +929,11 @@ Des contributions portant sur des chapitres différents s’intègrent sans conf
 
 Une origine incompatible, une filiation inconnue ou une modification concurrente d’informations communes interdit toute intégration silencieuse.
 
-Pour deux versions concurrentes du même chapitre, les candidates restent distinctes. Un Réviseur choisit la version complète à conserver ; les autres restent dans l’historique. Aucun fichier n’est détruit silencieusement.
+Pour deux versions concurrentes du même chapitre, les candidates restent distinctes. Tout Réviseur affecté peut proposer une candidate complète comme candidate active à examiner ; cette proposition ne vaut ni sélection définitive ni validation. La candidate n’est intégrée qu’après l’approbation de tous les Réviseurs affectés. Un désaccord bloque le chapitre : il n’existe ni vote majoritaire ni arbitrage du Chef d’équipe sur le choix éditorial. Une autre candidate peut être proposée explicitement, sans remplacement silencieux d’une proposition concurrente. Toutes les candidates et décisions précédentes restent dans l’historique. Aucun fichier n’est détruit silencieusement.
 
-Les métadonnées du livre, paramètres généraux et autres informations communes restent hors des `.chpt`. Si deux copies les modifient différemment, le conflit est explicite, aucune valeur ne gagne automatiquement et la décision est journalisée. Le Chef d’équipe arbitre ; dans un workspace d’Auteur indépendant, l’Auteur indépendant arbitre.
+Lors de l’import d’un `.chpt`, la correspondance automatique d’un assigné n’est autorisée que si son identifiant Jaquette global est strictement identique et si la personne possède les droits nécessaires dans le projet cible. Aucune correspondance silencieuse n’est effectuée par nom, adresse IP ou adresse électronique non vérifiée. Si l’identité n’est pas reconnue ou n’est pas autorisée, l’import ne finalise pas automatiquement l’affectation : le Chef d’équipe choisit explicitement un assigné autorisé, ou l’Auteur indépendant dans son workspace. L’identité et l’assigné d’origine restent dans l’historique et l’audit ; cette réaffectation explicite ne réécrit pas l’auteur historique de la contribution.
+
+Toute information qui n’appartient pas exclusivement à un seul chapitre est une information commune du `.jacq` et ne doit pas être placée dans un `.chpt`. La liste de la section 5.1 est un minimum normatif, non une liste exhaustive champ par champ. Une donnée clairement propre à un chapitre reste dans son `.chpt`. Si deux copies modifient différemment une information commune, le conflit est explicite, aucune valeur ne gagne automatiquement et la décision est journalisée. Le Chef d’équipe arbitre ; dans un workspace d’Auteur indépendant, l’Auteur indépendant arbitre.
 
 ## 39. Audit
 
@@ -932,9 +945,10 @@ Journaliser notamment :
 - ajout/suppression d’événement ;
 - changement de statut ;
 - génération, changement de statut, assignation et achèvement d’une tâche ;
+- correspondance ou réaffectation explicite d’un assigné importé, avec conservation de l’identité et de l’assigné d’origine ;
 - export et import d’un `.chpt` ;
 - détection de conflit ;
-- sélection d’une candidate ;
+- proposition d’une candidate active, approbations et décisions associées ;
 - intégration d’un chapitre validé ;
 - arbitrage des informations communes ;
 - création, réponse, résolution et modification d’un commentaire ;
@@ -1210,8 +1224,8 @@ Tâches automatiques sans priorité, trois statuts officiels, commentaires à qu
 **Acceptation :** une invalidation avec commentaire obligatoire crée une nouvelle tâche de correction et conserve le cycle précédent.
 
 ### Étape 16 — Révision multi-réviseurs et candidates
-Validations individuelles et agrégées, candidates `.chpt`, choix d’une version complète en cas de concurrence et historique.
-**Acceptation :** un chapitre à 3 Réviseurs ne devient validé qu’après 3 validations ; choisir une candidate concurrente ne vaut pas validation.
+Validations individuelles et agrégées, candidates `.chpt`, proposition d’une candidate active en cas de concurrence, unanimité et historique.
+**Acceptation :** trois Réviseurs doivent approuver la même candidate avant son intégration ; le refus de l’un d’eux bloque le chapitre ; deux propositions concurrentes restent distinctes sans remplacement silencieux ; proposer une candidate ne vaut ni sélection définitive ni validation, et ni majorité ni arbitrage du Chef ne tranche ce choix éditorial.
 
 ### Étape 17 — Validation Chef d’équipe
 Dashboard, soumission, rejet vers Réviseur ou Sound Designer, validation finale.
@@ -1242,8 +1256,8 @@ Serveur MCP local, ressources, outils, consentement, brouillon IA, diff, accept/
 **Acceptation :** un agent peut analyser un chapitre et proposer un doublage sans modifier le master ni lire hors projet.
 
 ### Étape 24 — Collaboration offline et fusion de `.chpt`
-Comptes réels, organisations et invitations selon les besoins de contexte ; export/import de chapitres ; vérification d’identité et de filiation ; fusion des chapitres différents ; arbitrage des candidates concurrentes et des informations communes.
-**Acceptation :** deux chapitres compatibles s’intègrent sans réécriture mutuelle ; deux versions d’un même chapitre restent distinctes jusqu’au choix puis à la validation ; un conflit commun exige l’arbitrage du rôle autorisé.
+Comptes réels, organisations et invitations selon les besoins de contexte ; export/import de chapitres ; vérification d’identité et de filiation ; fusion des chapitres différents ; proposition et approbation unanime des candidates concurrentes ; arbitrage des informations communes.
+**Acceptation :** deux chapitres compatibles s’intègrent sans réécriture mutuelle ; deux versions d’un même chapitre restent distinctes jusqu’à la proposition explicite d’une candidate active puis à son approbation unanime ; un désaccord ne permet aucune intégration ; un assigné n’est rapproché automatiquement que par identifiant global strict et droits valides, sinon une réaffectation explicite est requise sans réécrire l’auteur historique ; toute donnée partagée par plusieurs chapitres reste commune au `.jacq` et un conflit commun exige l’arbitrage du rôle autorisé.
 
 ## 49. Jalons produit
 
