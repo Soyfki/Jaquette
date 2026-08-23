@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "validatedAt": "2026-08-21",
+  "committedBinaries": false,
+  "localDirectory": "reference-data/files",
+  "assets": [
+    {
+      "id": "epub-fr-primary",
+      "kind": "epub",
+      "language": "fr",
+      "file": "epubs/fr-le-tour-du-monde-en-quatre-vingts-jours.epub",
+      "sourcePage": "https://www.gutenberg.org/ebooks/46541",
+      "downloadUrl": "https://www.gutenberg.org/ebooks/46541.epub.noimages",
+      "license": "Public-domain French text; Project Gutenberg License and trademark terms; France territorial review documented in INVENTORY.md",
+      "licenseUrl": "https://www.gutenberg.org/policy/license",
+      "attribution": "Jules Verne; source edition illustrators: Alphonse de Neuville and Leon Benett; digital edition: Claudine Corbasson, Hans Pieterse, and the Online Distributed Proofreading Team",
+      "sizeBytes": 272410,
+      "sha256": "d95001b2c83001fa0ab67b0d111194976890410307c6897b3d7c7450d4c1eed0"
+    },
+    {
+      "id": "epub-en",
+      "kind": "epub",
+      "language": "en",
+      "file": "epubs/en-the-adventures-of-sherlock-holmes.epub",
+      "sourcePage": "https://www.gutenberg.org/ebooks/1661",
+      "downloadUrl": "https://www.gutenberg.org/ebooks/1661.epub3.images",
+      "license": "Public domain in the USA; Project Gutenberg license and trademark terms apply",
+      "licenseUrl": "https://www.gutenberg.org/policy/license.html",
+      "sizeBytes": 379445,
+      "sha256": "e837276635b63b808453ed833f0e34a0ffca95bc67603f43eb8ae3302713dd9a"
+    },
+    {
+      "id": "epub-ar-rtl",
+      "kind": "epub",
+      "language": "ar",
+      "file": "epubs/ar-regime-anticancer-arabic.epub",
+      "sourcePage": "https://idpf.github.io/epub3-samples/30/samples.html",
+      "downloadUrl": "https://github.com/IDPF/epub3-samples/releases/download/20230704/regime-anticancer-arabic.epub",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "sizeBytes": 110694,
+      "sha256": "5d10bf6a73f461b7b23294b6e34b72f2a1184c9543a424b4a0f737ed33967e96"
+    },
+    {
+      "id": "audio-sfx-door-knocker",
+      "kind": "audio",
+      "trackType": "SFX",
+      "file": "audio/sfx-door-knocker.ogg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Door_knocker_audio.ogg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Door_knocker_audio.ogg",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution": "Mx. Granger",
+      "sizeBytes": 30423,
+      "sha256": "3362b0bd105382bd8f5e0d268b8e7318233abd966c43449241bfee1f35b47c35"
+    },
+    {
+      "id": "audio-ambience-rain",
+      "kind": "audio",
+      "trackType": "Ambiance",
+      "file": "audio/ambience-rain.ogg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Rain_(1).ogg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Rain_%281%29.ogg",
+      "license": "Public domain",
+      "licenseUrl": "https://commons.wikimedia.org/wiki/File:Rain_(1).ogg",
+      "attribution": "ezwa",
+      "sizeBytes": 585522,
+      "sha256": "31efcbe952a3989a9276774e2d7be61a2dc98fdd785a94d1435fc19cda9a84d1"
+    },
+    {
+      "id": "audio-music-fur-elise",
+      "kind": "audio",
+      "trackType": "Musique",
+      "file": "audio/music-fur-elise.ogg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:FurElise.ogg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7b/FurElise.ogg",
+      "license": "CC0 1.0 recording; public-domain composition",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution": "Ludwig van Beethoven; V. Gao (Gaodifan)",
+      "sizeBytes": 2144088,
+      "sha256": "8deefb57df989a2b53a6bdd3e59813b6c34d61dca666caa39e53fa9597b378e3"
+    }
+  ]
+}
