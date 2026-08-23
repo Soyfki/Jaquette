@@ -8,10 +8,13 @@ Cette convention fournit un repère minimal pour versionner l’application Jaqu
 
 - Version de l’application : **`0.0.0`**.
 - État : **pré-développement, non publié**.
+- Phase 0 : **acquise**.
+- Sous-étape 1.1 : **acquise**.
+- Prochaine sous-étape applicative : **1.2, non commencée**.
+- Recadrage REC-01 : **collaboration offline intégrée à la documentation**.
 - Jalon produit visé par la roadmap : **V0.1 — Preuve du modèle textuel**.
-- Phase de travail actuelle : **phase 0, sous-étape 0.1 — Initialiser le dépôt**.
 
-La valeur `0.0.0` indique qu’aucune version exécutable de l’application n’existe encore. Elle ne signifie pas que le jalon produit V0.1 est atteint.
+La valeur `0.0.0` reste inchangée malgré l’existence de la démonstration du design system 1.1 : aucun livrable applicatif publié n’a encore reçu de version. Elle ne signifie pas que le jalon produit V0.1 est atteint.
 
 ## Version de l’application
 
@@ -27,11 +30,13 @@ Avant une première version stable, la série `0.y.z` signale un produit en dév
 
 Les libellés **V0.1**, **V0.2**, **V1** ou **V2** présents dans le cahier des charges et le plan sont des **jalons produit**. Ils regroupent des objectifs et des étapes de la roadmap. Ils ne constituent pas automatiquement une version publiée de l’application et ne commandent pas mécaniquement son numéro SemVer.
 
-## Versions des formats `.jacq` et `.jacko`
+## Versions des formats `.jacq`, `.chpt` et `.jacko`
 
-Les formats de travail `.jacq` et de distribution `.jacko` devront disposer de leur propre information de version, distincte de la version de l’application et des jalons produit. Le plan prévoit notamment un futur champ `formatVersion` pour `.jacko`.
+Les formats de travail `.jacq`, d’échange de chapitre `.chpt` et de distribution `.jacko` devront disposer des informations de compatibilité nécessaires, distinctes de la version de l’application et des jalons produit. Le plan prévoit déjà un futur champ `formatVersion` pour `.jacko`.
 
-Le schéma, la valeur initiale et les règles de compatibilité de ces versions de format restent **à définir dans les sous-étapes qui leur sont consacrées**. La présente décision n’invente aucune valeur de `formatVersion` et ne lie pas ces formats au numéro de version de l’application.
+Pour `.jacq` et `.chpt`, aucun nom de champ, numéro de format, schéma physique, valeur initiale ni règle de compatibilité n’est décidé. Ces choix restent **à définir dans les sous-étapes qui leur sont consacrées**, après validation de la sauvegarde physique partielle par chapitre.
+
+La présente décision n’invente aucune valeur de version et ne lie aucun format au numéro de version de l’application.
 
 ## Mise à jour de la version
 

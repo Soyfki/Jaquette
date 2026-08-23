@@ -10,9 +10,9 @@ Jaquette ne doit pas être confondu avec **Jacques** : Jaquette est l’outil de
 
 ## État du projet
 
-La **phase 0 — Préparation du projet** est acquise. Le dépôt se trouve dans la **phase 1 — Prototype visuel et navigation principale**, sous-étape **1.1 — Construire le design system de base**. Une première application Web exécutable démontre les fondations visuelles dans Chrome ; la navigation applicative prévue en 1.2 n’est pas encore implémentée.
+La **phase 0 — Préparation du projet** et la sous-étape **1.1 — Construire le design system de base** sont acquises. La prochaine sous-étape applicative est **1.2 — Créer la structure d’écran principale** ; elle n’a pas commencé. Le recadrage produit **REC-01 — Collaboration offline** est intégré à la documentation : la collaboration repose sur des chapitres `.chpt` échangés et révisés comme candidates, sans fonctions live.
 
-La version actuelle de l’application est **`0.0.0` (pré-développement, non publiée)**. La [convention de version](docs/VERSIONING.md) explique la différence entre cette version, les jalons produit tels que V0.1 et les futures versions des formats `.jacq` et `.jacko`.
+La version actuelle de l’application est **`0.0.0` (pré-développement, non publiée)**. La [convention de version](docs/VERSIONING.md) explique la différence entre cette version, les jalons produit tels que V0.1 et les futures versions des formats `.jacq`, `.chpt` et `.jacko`.
 
 
 ## Lancer la démonstration 1.1
@@ -62,6 +62,7 @@ Ne versionnez jamais de secret, mot de passe, clé, jeton ou identifiant de conn
 
 - [Index documentaire](docs/README.md)
 - [Convention de version](docs/VERSIONING.md)
+- [Collaboration offline et échanges `.chpt`](docs/COLLABORATION_OFFLINE.md)
 - [Données de référence](reference-data/README.md)
 - [Protocole et modèles de validation](docs/validation/README.md)
 - [Validation du design system 1.1](docs/validation/1.1-design-system.md)

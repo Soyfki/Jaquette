@@ -219,8 +219,7 @@ Inclure :
 - projets récents ;
 - Drafts ;
 - équipes ;
-- tâches ;
-- tickets fictifs ;
+- tâches de workflow fictives ;
 - statut ;
 - progression.
 
@@ -668,7 +667,7 @@ Test :
 
 ---
 
-# PHASE 10 — Sauvegarde `.jacq`
+# PHASE 10 — Sauvegarde `.jacq` et sections `.chpt`
 
 ## 10.1 Autosave
 
@@ -691,100 +690,192 @@ Test :
 - créer V2 ;
 - les deux restent identifiables.
 
-## 10.4 Export `.jacq`
+## 10.4 Structure physique par chapitre
+
+Objectif :
+- conserver une section physique `.chpt` par chapitre dans le `.jacq` ;
+- garder les informations communes séparées ;
+- classer comme commune toute information qui n’appartient pas exclusivement à un seul chapitre, la liste du cahier des charges étant un minimum normatif et non une liste exhaustive champ par champ.
+
+Test critique :
+- modifier le chapitre 2 ;
+- enregistrer ;
+- vérifier que le `.chpt` du chapitre 2 est réécrit ;
+- vérifier que les `.chpt` des autres chapitres ne sont ni réécrits ni altérés ;
+- vérifier qu’une donnée utilisée par plusieurs chapitres reste dans la section commune du `.jacq` ;
+- vérifier qu’une donnée clairement propre au chapitre 2 reste dans son `.chpt`.
+
+La technologie de conteneur, le schéma, la sérialisation et la stratégie de version restent à décider. Le test ne doit pas supposer que `.jacq` est un ZIP.
+
+## 10.5 Export `.jacq`
 
 Test :
-- exporter le projet ;
-- vérifier qu’il inclut les médias réellement utilisés.
+- exporter le projet complet ;
+- vérifier qu’il inclut les médias réellement utilisés, les sections `.chpt` et les informations communes.
 
-## 10.5 Import `.jacq`
+## 10.6 Import `.jacq`
 
 Test :
 - fermer Jaquette ;
 - rouvrir le fichier ;
-- retrouver texte, annotations, réglages, médias et métadonnées.
+- retrouver texte, annotations, réglages, médias, tâches, commentaires, validations et métadonnées.
 
-## 10.6 Projet autonome
+## 10.7 Projet autonome
 
 Test critique :
 - exporter `.jacq` ;
-- supprimer toutes les bibliothèques originales ;
+- retirer toutes les bibliothèques originales ;
 - réimporter ;
 - toutes les annotations audio fonctionnent.
 
----
-
-# PHASE 11 — Tickets, commentaires et workflow de production
-
-## 11.1 Commentaires sur une plage
+## 10.8 Export d’un chapitre `.chpt`
 
 Test :
-- sélectionner du texte ;
-- créer commentaire ;
-- rouvrir le passage via le commentaire.
+- exporter un chapitre candidat ;
+- vérifier la présence de l’identité du projet et du livre, de l’identifiant du chapitre, de la base et de la filiation ;
+- vérifier les données de doublage, médias utilisés, tâches, commentaires, validations et informations d’audit nécessaires ;
+- vérifier que toute information n’appartenant pas exclusivement au chapitre est absente, notamment l’EPUB source, la structure textuelle globale, les métadonnées du livre et du projet, les paramètres généraux, les affectations globales, les versions nommées, les consentements IA, les commentaires et tâches du livre et toute donnée partagée par plusieurs chapitres ;
+- vérifier qu’une donnée clairement propre au chapitre reste présente.
 
-## 11.2 Créer un ticket
+## 10.9 Import candidat sans écrasement
 
-Test :
-- ticket avec titre, priorité, assigné, statut ;
-- visible dans Mes tâches.
+Test critique :
+- conserver une version validée du chapitre ;
+- importer un `.chpt` candidat ;
+- vérifier que la version validée reste intacte ;
+- vérifier que la candidate est disponible pour révision.
 
-## 11.3 Ticket lié au texte
-
-Test :
-- clic ticket ;
-- navigation directe au passage.
-
-## 11.4 Statuts de ticket
+## 10.10 Déduplication à l’import
 
 Test :
-- À faire → En cours → À revoir → Résolu → Fermé.
-
-## 11.5 Priorités
-
-Test :
-- tri ou indication correcte Faible / Normale / Haute / Bloquante.
-
-## 11.6 Affectation des chapitres
-
-Test :
-- chapitre 1 assigné à A ;
-- chapitre 2 assigné à B ;
-- chacun voit sa charge correcte.
-
-## 11.7 Déclaration chapitre terminé
-
-Test :
-- Sound Designer termine un chapitre ;
-- progression Doublage mise à jour.
+- importer deux chapitres utilisant un même média ;
+- vérifier que le média identique est reconnu par empreinte sans duplication inutile.
 
 ---
 
-# PHASE 12 — Révision
+# PHASE 11 — Tâches, commentaires et workflow de production
+
+L’ancien concept fonctionnel de ticket est abandonné. Aucun objet, écran, workflow ou tableau de bord actif ne doit le réintroduire.
+
+## 11.1 Génération automatique des tâches
+
+Test :
+- affecter un Sound Designer à un chapitre ;
+- une tâche « doubler le chapitre » est créée avec `Pas commencé` ;
+- aucune tâche libre ne peut être créée hors workflow.
+
+## 11.2 Cycle de statut des tâches
+
+Test :
+- passer manuellement de `Pas commencé` à `En cours` ;
+- accomplir l’action métier attendue ;
+- la tâche passe automatiquement à `Terminée` ;
+- aucun autre statut n’est proposé.
+
+## 11.3 Propriétés des tâches
+
+Test :
+- une tâche cible un livre ou un chapitre ;
+- elle possède un assigné et accepte une échéance facultative ;
+- aucun champ ni tri de priorité n’existe.
+
+## 11.4 Cas de génération obligatoires
+
+Test :
+- affectation Sound Designer → tâche de doublage de chapitre ;
+- affectation Réviseur → tâche de révision de chapitre ;
+- passage à l’état publiable → tâche de publication du livre dans Jacques ;
+- invalidation → nouvelle tâche de correction de chapitre.
+
+## 11.5 Nouvelle tâche à chaque invalidation
+
+Test critique :
+- invalider, corriger puis terminer un premier cycle ;
+- invalider de nouveau ;
+- une nouvelle occurrence de tâche est créée ;
+- la tâche et l’historique du premier cycle restent inchangés.
+
+## 11.6 Commentaire sur le livre
+
+Test :
+- créer un commentaire depuis la vue globale du projet ou de la révision ;
+- le commentaire reste dans la section commune du `.jacq`.
+
+## 11.7 Commentaire sur le chapitre
+
+Test :
+- créer un commentaire visant le chapitre entier ;
+- l’export `.chpt` du chapitre le transporte.
+
+## 11.8 Commentaire sur le texte
+
+Test :
+- sélectionner un mot puis une plage de mots ;
+- créer un commentaire pour chaque cible ;
+- rouvrir exactement le passage depuis le commentaire.
+
+## 11.9 Commentaire sur une occurrence audio
+
+Test :
+- commenter une occurrence dans la timeline textuelle ;
+- ouvrir l’annotation ou l’inspecteur correspondant ;
+- vérifier que le fichier de la bibliothèque audio n’est pas la cible.
+
+## 11.10 Fils, états et historique
+
+Test :
+- répondre en fil ;
+- passer de `Ouvert` à `Résolu` ;
+- modifier un commentaire ;
+- vérifier l’historique, l’auteur et les dates ;
+- tenter une suppression définitive et constater son refus.
+
+## 11.11 Identifiants et transport
+
+Test :
+- exporter puis réimporter le même `.chpt` ;
+- tâches et commentaires du chapitre ne sont pas dupliqués ;
+- les commentaires du livre ne voyagent pas avec le chapitre.
+
+## 11.12 Affectation et progression
+
+Test :
+- chapitre 1 assigné à A et chapitre 2 à B ;
+- chacun voit les tâches générées pour sa charge ;
+- le Sound Designer termine un chapitre ;
+- la progression Doublage est mise à jour.
+
+---
+
+# PHASE 12 — Révision et candidates `.chpt`
 
 ## 12.1 Interface Réviseur
 
 Test :
 - aucun outil de montage ;
-- simulation, commentaires, tickets et validation disponibles.
+- simulation, commentaires, candidates et validation disponibles.
 
 ## 12.2 Statut par chapitre et par Réviseur
 
 Test :
 - Non révisé → À corriger / Validé.
 
-## 12.3 Invalidation obligatoire avec motif
+## 12.3 Invalidation obligatoire avec commentaire
 
 Test :
-- tenter “À corriger” sans commentaire/ticket ;
-- action refusée.
+- tenter `À corriger` sans commentaire ;
+- action refusée ;
+- ajouter le commentaire ;
+- l’invalidation réussit et génère une nouvelle tâche de correction.
 
 ## 12.4 Validation multi-réviseurs
 
 Test :
-- projet avec 3 Réviseurs ;
+- projet avec 3 Réviseurs examinant la même candidate ;
 - validation 1/3 et 2/3 ne suffit pas ;
-- 3/3 valide le chapitre.
+- 3/3 permet seul l’intégration de la candidate comme version validée ;
+- refaire le scénario avec un refus sur trois : le chapitre reste bloqué et aucune candidate n’est intégrée ;
+- vérifier qu’aucune majorité et aucun arbitrage du Chef d’équipe ne tranchent le choix éditorial.
 
 ## 12.5 Calcul de progression Révision
 
@@ -795,16 +886,37 @@ Test :
 
 Test critique :
 - valider un chapitre ;
-- Sound Designer modifie une annotation ;
-- validation active annulée ;
-- chapitre repasse À réviser ;
-- ancienne validation reste historique.
+- le Sound Designer modifie une annotation et exporte une nouvelle candidate ;
+- validations actives annulées ;
+- chapitre repasse `À réviser` ;
+- anciennes validations conservées dans l’historique.
 
-## 12.7 Soumission au Chef
+## 12.7 Deux candidates concurrentes
+
+Test critique :
+- importer deux `.chpt` issus de la même base pour le même chapitre ;
+- conserver les deux candidates distinctes ;
+- vérifier qu’aucun merge détaillé d’annotations ou réglages n’est proposé ;
+- vérifier que tout Réviseur affecté peut proposer une candidate comme candidate active à examiner ;
+- faire proposer simultanément une candidate différente par deux Réviseurs ;
+- vérifier qu’aucune proposition ne remplace silencieusement l’autre et que le chapitre reste bloqué tant que tous les Réviseurs n’approuvent pas la même candidate ;
+- proposer explicitement une autre candidate ;
+- vérifier qu’une proposition ne vaut ni sélection définitive ni validation.
+
+## 12.8 Historique des candidates
 
 Test :
-- bouton bloqué tant qu’un chapitre n’est pas validé par tous ;
-- disponible lorsque tout est validé.
+- écarter une candidate ;
+- conserver toutes les candidates, propositions et décisions précédentes avec leur auteur, leur base et leur date ;
+- vérifier que deux propositions concurrentes ne se remplacent jamais silencieusement ;
+- vérifier qu’aucun fichier n’est détruit silencieusement.
+
+## 12.9 Soumission au Chef
+
+Test :
+- bouton bloqué tant que tous les Réviseurs n’approuvent pas la même candidate active ;
+- bouton bloqué en cas de désaccord, sans vote majoritaire ni arbitrage du Chef d’équipe sur le choix éditorial ;
+- disponible lorsque toutes les validations requises sont obtenues.
 
 ---
 
@@ -835,7 +947,7 @@ Test :
 
 Test :
 - changement de statut ;
-- ticket/commentaire associé ;
+- commentaire explicatif et nouvelle tâche de workflow associés ;
 - projet revient au workflow approprié.
 
 ## 13.6 Rejet vers Réviseur
@@ -1029,7 +1141,7 @@ Scénario :
 9. sauvegarde ;
 10. fermeture ;
 11. réouverture `.jacq` ;
-12. ticket/révision ;
+12. candidate `.chpt`, tâches, commentaires et révision ;
 13. validations ;
 14. Chef ;
 15. métadonnées ;
@@ -1241,78 +1353,126 @@ Test :
 
 ---
 
-# PHASE 22 — Collaboration temps réel V2
+# PHASE 22 — Collaboration offline et fusion de `.chpt`
 
-## 22.1 Présence
-
-Test :
-- deux utilisateurs ouvrent le même projet ;
-- chacun voit l’autre.
-
-## 22.2 Position dans le livre
+## 22.1 Export complet d’une candidate
 
 Test :
-- chapitre consulté et sélection visibles selon les règles prévues.
+- un Sound Designer exporte un chapitre ;
+- le `.chpt` contient les identités, la base, la filiation, le doublage, les médias utilisés, les tâches, les commentaires, les validations et l’audit nécessaires ;
+- aucune information commune étrangère au chapitre n’est embarquée.
 
-## 22.3 Synchronisation d’une modification distincte
-
-Test :
-- utilisateur A modifie chapitre 1 ;
-- B modifie chapitre 2 ;
-- les deux changements apparaissent sans conflit.
-
-## 22.4 Détection de conflit
+## 22.2 Import sans écrasement
 
 Test :
-- A et B modifient la même annotation simultanément ;
-- conflit explicite.
+- importer une candidate pour un chapitre déjà validé ;
+- la version validée reste inchangée ;
+- la candidate entre dans le cycle de révision.
 
-## 22.5 Résolution de conflit
+## 22.3 Correspondance des assignés importés
+
+Test documentaire :
+- importer entre deux copies ou organisations un `.chpt` dont l’assigné d’origine possède un identifiant Jaquette global strictement identique à celui de l’identité cible et les droits nécessaires dans le projet cible ;
+- vérifier que cette seule combinaison autorise la correspondance automatique ;
+- refaire l’import avec une identité inconnue ou privée des droits requis ;
+- vérifier qu’aucune correspondance silencieuse n’est faite par nom, adresse IP ou adresse électronique non vérifiée ;
+- vérifier que l’import suspend la finalisation de l’affectation jusqu’au choix explicite d’un assigné autorisé par le Chef d’équipe, ou par l’Auteur indépendant dans son workspace ;
+- conserver dans l’historique et l’audit l’identité et l’assigné d’origine ;
+- vérifier que la réaffectation explicite ne réécrit pas l’auteur historique de la contribution.
+
+## 22.4 Fusion de chapitres différents
+
+Test critique :
+- A modifie le chapitre 1 et B le chapitre 2 depuis des filiations compatibles ;
+- importer les deux `.chpt` ;
+- les contributions sont intégrables sans conflit ;
+- aucune intégration ne réécrit ou n’écrase l’autre chapitre.
+
+## 22.5 Concurrence sur un même chapitre
+
+Test critique :
+- A et B exportent chacun une version du chapitre 1 depuis la même base ;
+- les deux restent candidates distinctes ;
+- aucun merge détaillé n’est effectué ;
+- tout Réviseur affecté peut proposer une candidate active ;
+- aucune proposition ne remplace silencieusement l’autre et toutes restent consultables dans l’historique.
+
+## 22.6 Proposition active puis validations unanimes
 
 Test :
-- utilisateur choisit la version à conserver ou traite le conflit via le mécanisme prévu ;
-- aucune fusion silencieuse.
+- faire proposer une candidate concurrente comme candidate active par un Réviseur affecté ;
+- vérifier que cette proposition ne vaut ni sélection définitive ni validation ;
+- obtenir l’approbation de tous les Réviseurs affectés sur cette même candidate ;
+- intégrer seulement alors la candidate comme version validée ;
+- refaire avec un désaccord : aucune candidate n’est intégrée, sans vote majoritaire ni arbitrage du Chef d’équipe ;
+- proposer explicitement une autre candidate et conserver toutes les propositions et décisions précédentes dans l’historique.
 
-## 22.6 Commentaires temps réel
+## 22.7 Origine ou filiation incompatible
 
 Test :
-- nouveau commentaire visible chez l’autre utilisateur.
+- importer un `.chpt` d’un autre projet ou avec une filiation inconnue ;
+- intégration silencieuse refusée ;
+- conflit explicite et audité.
 
-## 22.7 Tickets temps réel
+## 22.8 Classement et conflit d’informations communes
 
 Test :
-- changement de statut/assignation synchronisé.
+- classer dans la section commune du `.jacq` une donnée utilisée par plusieurs chapitres et vérifier qu’elle n’est dans aucun `.chpt` ;
+- vérifier qu’une donnée clairement propre à un chapitre reste dans son `.chpt` ;
+- contrôler que l’EPUB source, la structure textuelle globale et ses identifiants de cohérence, les métadonnées du livre et du projet, les paramètres généraux, les affectations globales, les versions nommées, les consentements IA et les commentaires et tâches du livre restent communs ;
+- deux copies modifient différemment une métadonnée du livre ou un paramètre général ;
+- aucune valeur ne gagne automatiquement ;
+- le Chef d’équipe arbitre et la décision est journalisée ;
+- refaire le test en workspace Auteur indépendant avec arbitrage par l’Auteur.
+
+## 22.9 Invalidation et cycle de correction
+
+Test :
+- invalider une candidate avec un commentaire ;
+- une nouvelle tâche de correction est générée ;
+- les tâches, commentaires et validations des cycles précédents restent dans l’historique.
+
+## 22.10 Absence de fonctions live
+
+Test :
+- vérifier qu’aucune présence distante, aucun curseur ou sélection distante et aucune modification live ne sont proposés ;
+- l’accueil façon Figma reste uniquement une convention d’organisation visuelle.
 
 ---
 
-# PHASE 23 — Architecture hybride Cloud / Data Plane
+# PHASE 23 — Architecture hybride et frontières de données
 
 ## 23.1 Séparer métadonnées et contenu sensible
 
 Test :
-- cloud peut lister projet et permissions ;
-- contenu du manuscrit reste hors stockage cloud Jaquette.
+- le control plane peut lister les identités, organisations, permissions, invitations et métadonnées non sensibles ;
+- EPUB, `.jacq`, `.chpt`, manuscrits et sources audio restent hors du stockage cloud Jaquette.
 
-## 23.2 Accès distant autorisé
-
-Test :
-- utilisateur distant autorisé ouvre un projet via l’infrastructure de l’organisation.
-
-## 23.3 Refus d’accès
+## 23.2 Échange explicite de contenu
 
 Test :
-- utilisateur non affecté ne peut pas lire/modifier les données protégées.
+- un collaborateur autorisé reçoit puis importe un `.chpt` par un canal d’échange choisi ;
+- aucune synchronisation directe du montage n’est requise ni supposée ;
+- le choix du canal et de l’hébergement reste ouvert.
 
-## 23.4 Audit central
-
-Test :
-- connexions, invitations, permissions et actions importantes consultables selon droits.
-
-## 23.5 Gestion de la déconnexion du data plane
+## 23.3 Autorisation à l’import
 
 Test :
-- interface indique clairement qu’un projet local/organisation est indisponible ;
-- aucune corruption de métadonnées.
+- une identité ou un projet incompatible est détecté avant intégration ;
+- l’utilisateur non autorisé ne peut pas intégrer le chapitre.
+
+## 23.4 Audit administratif et métier
+
+Test :
+- connexions, invitations et permissions sont consultables selon les droits ;
+- exports, imports, conflits, arbitrages et intégrations de chapitres sont reliés à leurs auteurs et dates.
+
+## 23.5 Indisponibilité du stockage local
+
+Test :
+- l’interface indique clairement qu’un projet local ou un fichier d’échange est indisponible ;
+- aucune métadonnée n’est corrompue ;
+- aucune copie distante du contenu n’est supposée exister.
 
 ---
 
@@ -1366,7 +1526,7 @@ Tester intégralement :
 - révision ;
 - export ;
 - signature ;
-- collaboration ;
+- collaboration offline et fusion de `.chpt` ;
 - IA ;
 - publication.
 
@@ -1415,7 +1575,7 @@ Mesurer :
 - export ;
 - ouverture ;
 - simulation ;
-- collaboration.
+- imports de `.chpt` et arbitrages de conflits.
 
 Critère :
 - seuils d’acceptabilité définis à partir des mesures réelles avant release finale.
@@ -1450,11 +1610,55 @@ La version finale est considérée prête lorsque :
 - `.jacq` est fiable et autonome ;
 - `.jacko` est optimisé, versionné et signé ;
 - les permissions multi-workspace sont cohérentes ;
-- la collaboration est utilisable ;
+- la collaboration offline et la fusion de `.chpt` sont utilisables ;
 - le MCP est cloisonné ;
 - le brouillon IA ne modifie jamais le master sans acceptation ;
 - la publication et la dépublication respectent les droits ;
 - les tests de régression passent.
+
+---
+
+# Risques transversaux liés à REC-01
+
+## Réécriture involontaire de chapitres
+
+Risque :
+- une sauvegarde de projet réécrit plusieurs `.chpt` et rend l’échange ou la fusion dangereux.
+
+Réduction :
+- instrumenter les écritures et exiger le test critique de la sous-étape 10.4 sur plusieurs chapitres.
+
+## Filiation insuffisante
+
+Risque :
+- une candidate d’origine inconnue est intégrée à tort.
+
+Réduction :
+- refuser l’intégration silencieuse et couvrir les identités, bases et filiations aux sous-étapes 10.8, 22.4 et 22.7.
+
+## Perte de candidates ou d’historique
+
+Risque :
+- le choix d’une version masque ou détruit les autres contributions, validations ou cycles de correction.
+
+Réduction :
+- conserver toutes les candidates et décisions ; tester l’historique aux sous-étapes 11.5, 12.8 et 22.8.
+
+## Duplication des médias, tâches ou commentaires
+
+Risque :
+- les imports répétés multiplient des objets identiques.
+
+Réduction :
+- empreinte pour les médias, identifiants stables pour tâches et commentaires, tests 10.10 et 11.11.
+
+## Conflits d’informations communes
+
+Risque :
+- une métadonnée ou un paramètre général gagne implicitement.
+
+Réduction :
+- séparation physique hors `.chpt`, arbitrage explicite selon le workspace et audit au test 22.8.
 
 ---
 
@@ -1482,7 +1686,7 @@ Valider le concept “texte = timeline” avec les trois pistes.
 Phases 10 à 13.
 
 Objectif :
-Travailler réellement sur un `.jacq` avec workflow humain.
+Travailler réellement sur un `.jacq` autonome, sauvegardé par `.chpt`, avec workflow humain.
 
 ## Beta Web — Export
 Phases 14 à 18.
@@ -1502,11 +1706,11 @@ Phase 20.
 Objectif :
 Premier doublage assisté et contrôlé par MCP.
 
-## V2 Comptes & Collaboration
+## V2 Comptes & Collaboration offline
 Phases 21 à 23.
 
 Objectif :
-Usage professionnel multi-utilisateur et multi-organisation.
+Usage professionnel multi-utilisateur et multi-organisation par échange asynchrone de `.chpt`.
 
 ## V2.x Jacques
 Phase 24.

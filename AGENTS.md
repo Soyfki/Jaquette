@@ -12,7 +12,10 @@ Le cahier des charges complet reste la source de référence détaillée. `AGENT
 
 ## État actuel du projet
 
-- Le développement du code n’a pas encore commencé.
+- La phase 0 et la sous-étape 1.1 sont acquises.
+- La sous-étape applicative 1.2 est la prochaine à réaliser et n’a pas commencé.
+- Le recadrage produit REC-01 sur la collaboration offline est intégré à la documentation.
+- La version de l’application reste `0.0.0`.
 - Les choix d’implémentation qui ne sont pas explicitement validés restent ouverts.
 - Les futurs agents doivent distinguer une règle produit déjà décidée d’une décision technique encore à prendre.
 
@@ -59,11 +62,23 @@ Les sons sont associés à des mots ou à des plages de mots, et non à une time
 
 ## `.jacq`
 
-- `.jacq` est le fichier de travail éditable de Jaquette.
-- Il constitue le projet de production.
-- Il doit rendre le projet autonome en embarquant les sons réellement utilisés.
-- Il conserve les informations nécessaires au travail, à la révision, aux versions et au projet.
+- `.jacq` est le fichier de travail éditable de Jaquette et représente le projet complet.
+- Il contient une section physique `.chpt` par chapitre.
+- Une modification de chapitre doit pouvoir réécrire physiquement son seul `.chpt` sans réécrire les autres chapitres du projet.
+- Il rend le projet autonome en embarquant les sons réellement utilisés et conserve les informations nécessaires au travail, à la révision, aux versions et au projet.
+- Toute information qui n’appartient pas exclusivement à un seul chapitre est une information commune du `.jacq` et reste séparée des `.chpt`.
+- Cette règle couvre notamment l’EPUB source, la structure textuelle globale et les identifiants nécessaires à sa cohérence, les métadonnées du livre et du projet, les paramètres généraux, les affectations globales, les versions nommées, les consentements IA, les commentaires et tâches ciblant le livre, ainsi que toute information partagée par plusieurs chapitres. Cette liste est un minimum normatif, pas une liste exhaustive champ par champ.
+- Une donnée clairement propre à un chapitre reste dans son `.chpt`.
 - Les traitements audio de production sont non destructifs.
+- Le choix du conteneur et les détails de sérialisation restent ouverts. `.jacq` ne doit pas être considéré comme un simple ZIP tant que la compatibilité de cette technologie avec la sauvegarde partielle n’est pas démontrée.
+
+## `.chpt`
+
+- `.chpt` est l’unité physique de sauvegarde, d’échange, d’import et de fusion d’un chapitre.
+- Un `.chpt` exporté est une version candidate : son import pour révision ne remplace pas la version validée du chapitre.
+- Il transporte au minimum l’identité du projet et du livre, l’identifiant stable du chapitre, sa base et sa filiation, les données de doublage, les annotations et réglages audio, les médias utilisés, les commentaires et tâches du chapitre, les validations et leur historique, ainsi que les informations d’auteur, de date et d’audit nécessaires.
+- Les médias identiques sont dédupliqués par empreinte lors de l’intégration.
+- Aucun schéma physique, technologie de stockage, numéro de version ou champ de version de `.jacq` ou `.chpt` n’est encore décidé.
 
 ## `.jacko`
 
@@ -333,7 +348,7 @@ Règles :
 - Une identité peut avoir plusieurs adresses e-mail vérifiées.
 - Une personne peut utiliser une adresse professionnelle et une adresse personnelle sans devoir rester définitivement séparée en deux identités.
 - Plusieurs comptes existants doivent pouvoir être liés/fusionnés après vérification du contrôle des adresses concernées.
-- La fusion doit conserver projets, appartenances, commentaires, tickets, historique et droits contextuels.
+- La fusion doit conserver projets, appartenances, commentaires, tâches de workflow, historique et droits contextuels.
 - Aucune fusion automatique ne doit être faite sur le nom ou l’adresse IP.
 - L’adresse IP n’est pas un identifiant utilisateur.
 
@@ -401,9 +416,10 @@ Peut notamment :
 - éditer le `.jacq` ;
 - créer, modifier et supprimer des événements audio ;
 - gérer les sons utilisés ;
-- traiter des tickets ;
+- exécuter les tâches générées par le workflow ;
 - répondre aux commentaires ;
 - créer une version ;
+- exporter un chapitre candidat au format `.chpt` ;
 - déclarer un chapitre terminé.
 
 Ne peut pas :
@@ -422,7 +438,7 @@ Peut notamment :
 - lancer des simulations ;
 - consulter les annotations ;
 - commenter ;
-- créer des tickets ;
+- proposer une candidate complète comme candidate active à examiner lorsque plusieurs candidates concurrentes existent pour un chapitre ;
 - valider ou invalider un chapitre ;
 - valider ou invalider une version ;
 - soumettre le projet au Chef d’équipe une fois les validations requises obtenues.
@@ -465,6 +481,10 @@ Le Chef d’équipe **ne modifie jamais directement le montage audio**.
 - Plusieurs Sound Designers peuvent travailler sur le même projet.
 - Les Sound Designers peuvent être affectés par chapitre.
 - Un Chef d’équipe peut gérer plusieurs équipes.
+- Lors de l’import d’un `.chpt`, un assigné n’est mis en correspondance automatiquement que si son identifiant Jaquette global est strictement identique et si cette personne possède les droits nécessaires dans le projet cible.
+- Aucune correspondance silencieuse n’est effectuée par nom, adresse IP ou adresse électronique non vérifiée.
+- Si l’identité d’origine n’est pas reconnue ou n’est pas autorisée, l’import ne finalise pas automatiquement l’affectation : le Chef d’équipe choisit explicitement un assigné autorisé, ou l’Auteur indépendant dans son workspace.
+- L’identité et l’assigné d’origine restent dans l’historique et l’audit. Une réaffectation explicite ne réécrit jamais l’auteur historique de la contribution.
 
 ---
 
@@ -480,7 +500,6 @@ Il doit mettre en évidence :
 - Drafts ;
 - projets récents ;
 - tâches personnelles ;
-- tickets prioritaires ;
 - collaborateurs ;
 - progression ;
 - statut ;
@@ -510,7 +529,7 @@ Vue centrée sur :
 - livre plus large ;
 - simulation ;
 - commentaires ;
-- tickets ;
+- candidates de chapitre ;
 - validation.
 
 Les outils de montage et la bibliothèque peuvent être masqués.
@@ -540,7 +559,7 @@ Vue centrée sur :
 
 ---
 
-# 21. Drafts, versions, commentaires et tickets
+# 21. Drafts, versions, tâches et commentaires
 
 ## Drafts
 
@@ -552,45 +571,26 @@ Le mot **Versions** désigne les états de travail successifs d’un projet acti
 
 Ne pas confondre les deux concepts.
 
+## Tâches
+
+- Le concept fonctionnel de ticket est abandonné : il ne doit exister ni comme objet, ni comme écran, ni comme workflow, ni comme entrée de tableau de bord.
+- Les tâches sont générées automatiquement par les affectations et le workflow ; elles ne forment pas un gestionnaire de tâches libres.
+- Une tâche cible un livre ou un chapitre, possède un assigné, peut avoir une échéance et ne possède aucune priorité.
+- Ses seuls statuts sont `Pas commencé`, `En cours` et `Terminée`.
+- Elle est créée avec `Pas commencé`, passe manuellement à `En cours`, puis automatiquement à `Terminée` lorsque l’action métier attendue est accomplie.
+- Les cas obligatoires comprennent : doubler un chapitre, réviser un chapitre, publier un livre dans Jacques et corriger un chapitre invalidé.
+- Une invalidation crée une nouvelle occurrence de tâche de correction. Elle ne réutilise pas l’ancienne tâche et ne détruit pas l’historique des cycles précédents.
+- Les tâches pertinentes voyagent dans le `.jacq` et dans le `.chpt` lorsqu’elles ciblent le chapitre exporté.
+
 ## Commentaires
 
-Les commentaires servent à la discussion et à la révision.
-
-## Tickets
-
-Les tickets représentent du travail actionnable.
-
-Un ticket peut contenir notamment :
-
-- titre ;
-- description ;
-- projet ;
-- chapitre ;
-- plage textuelle ;
-- annotation audio concernée ;
-- auteur ;
-- personne assignée ;
-- priorité ;
-- statut ;
-- dates ;
-- commentaires liés.
-
-Statuts définis :
-
-- À faire ;
-- En cours ;
-- À revoir ;
-- Résolu ;
-- Fermé.
-
-Priorités définies :
-
-- Faible ;
-- Normale ;
-- Haute ;
-- Bloquante.
-
-Lorsqu’un ticket cible une plage du livre, il doit permettre de revenir directement au passage concerné.
+- Un commentaire peut cibler le livre entier, un chapitre entier, un mot ou une plage de mots, ou une occurrence audio placée dans la timeline textuelle.
+- Un commentaire sur une occurrence audio ne cible jamais le fichier de la bibliothèque.
+- Sa présentation dépend de sa cible : vue globale du projet ou de la révision, espace du chapitre, passage textuel, annotation ou inspecteur de l’occurrence.
+- Les réponses sont organisées en fil et les seuls états sont `Ouvert` et `Résolu`.
+- L’historique des modifications, l’auteur et les dates sont conservés ; aucune suppression définitive n’est autorisée.
+- Les identifiants sont stables afin d’éviter les duplications pendant l’import ou la fusion.
+- Les commentaires du chapitre, de son texte ou de ses occurrences voyagent avec son `.chpt`. Les commentaires du livre restent dans la section commune du `.jacq`.
 
 ---
 
@@ -651,6 +651,15 @@ Retours autorisés :
 - Chef d’équipe → Réviseur ;
 - Chef d’équipe → Sound Designer.
 
+## Cycle offline d’un chapitre
+
+1. Le Sound Designer travaille localement sur un chapitre et exporte un `.chpt` candidat.
+2. La candidate est importée pour révision sans écraser la version validée.
+3. Les Réviseurs la contrôlent.
+4. Après toutes les approbations requises, elle devient la version validée du chapitre dans le `.jacq`.
+
+Des contributions sur des chapitres différents s’intègrent sans conflit lorsque leur identité et leur filiation sont compatibles. Une origine incompatible, une filiation inconnue ou une modification concurrente des informations communes interdit toute intégration silencieuse.
+
 ---
 
 # 24. Règles de révision
@@ -666,10 +675,17 @@ Règles :
 - Tous les Réviseurs affectés doivent approuver le chapitre.
 - S’il y a 1 Réviseur, 1 validation est nécessaire.
 - S’il y en a 3, 3 validations sont nécessaires.
-- Une invalidation doit être accompagnée d’un commentaire ou d’un ticket expliquant la correction attendue.
+- Une invalidation doit être accompagnée d’un commentaire expliquant la correction attendue et génère une nouvelle tâche de correction.
 - Si un Sound Designer modifie l’audio d’un chapitre déjà validé, les validations actives de ce chapitre sont annulées.
 - Le chapitre repasse alors à l’état `À réviser`.
 - Les validations précédentes restent conservées dans l’historique.
+- Ces règles s’appliquent à chaque candidate `.chpt` et à chaque cycle de correction offline.
+- Deux versions concurrentes du même chapitre restent des candidates distinctes. Aucun merge détaillé de leurs annotations ou réglages n’est effectué.
+- Tout Réviseur affecté peut proposer une candidate complète comme candidate active à examiner. Cette proposition ne vaut ni sélection définitive ni validation.
+- La candidate active ne peut rejoindre la version validée du chapitre qu’après l’approbation de tous les Réviseurs affectés.
+- En cas de désaccord, le chapitre reste bloqué et aucune candidate n’est intégrée. Il n’existe ni vote majoritaire ni arbitrage du Chef d’équipe sur le choix éditorial de la candidate.
+- Une autre candidate peut être proposée explicitement. Deux propositions concurrentes ne se remplacent jamais silencieusement.
+- Toutes les candidates et décisions précédentes restent consultables avec leur auteur, leur base et leur date. Aucun fichier n’est détruit silencieusement.
 - Le bouton de soumission au Chef d’équipe n’est disponible que lorsque toutes les conditions de révision sont satisfaites.
 
 ---
@@ -750,27 +766,25 @@ L’historique doit être conservé.
 - Les manuscrits peuvent être confidentiels.
 - Le fonctionnement doit rester local-first pour les livres et bibliothèques audio.
 - En V2, le cloud Jaquette gère principalement les identités, droits, invitations et métadonnées non sensibles.
-- Les EPUB, `.jacq`, manuscrits et sources audio restent sur le stockage local ou l’infrastructure de l’éditeur / auteur sauf choix explicite contraire.
-- Un accès distant autorisé peut transmettre les données nécessaires sans pour autant les stocker dans le cloud Jaquette.
+- Les EPUB, `.jacq`, `.chpt`, manuscrits et sources audio restent sur le stockage local ou l’infrastructure de l’éditeur / auteur sauf choix explicite contraire.
+- La collaboration sur le contenu repose sur l’échange explicite de fichiers `.chpt`, sans synchronisation en direct du manuscrit ou du montage.
 
 ---
 
-# 28. Collaboration V2
+# 28. Collaboration offline et conflits
 
-La collaboration temps réel est prévue en V2.
-
-Elle doit permettre de voir notamment :
-
-- utilisateurs présents ;
-- chapitre consulté ;
-- sélection ou curseur distant ;
-- couleur utilisateur ;
-- activité récente.
-
-Règle de conflit :
-
-- Si deux utilisateurs modifient la même zone de manière concurrente, Jaquette doit signaler explicitement le conflit.
-- Ne pas effectuer de fusion métier silencieuse dans ce cas.
+- L’ancien modèle de collaboration temps réel est abandonné.
+- Aucun utilisateur ne voit en direct le travail des autres : Jaquette n’affiche ni présence distante, ni curseur ou sélection distante, ni modification live.
+- La collaboration repose sur l’échange de fichiers `.chpt` et la validation de versions candidates.
+- Des chapitres différents peuvent être intégrés sans conflit lorsque l’identité du projet, du livre et la filiation sont compatibles, sans réécrire ou écraser les autres chapitres.
+- Deux versions concurrentes du même chapitre restent séparées jusqu’à la proposition explicite d’une candidate complète comme candidate active, puis à sa validation normale.
+- Tout Réviseur affecté peut proposer la candidate active à examiner, sans que cette proposition vaille sélection définitive ou validation. L’unanimité des Réviseurs affectés est nécessaire pour l’intégrer ; un désaccord bloque le chapitre, sans majorité ni arbitrage du Chef d’équipe sur ce choix éditorial.
+- Une autre candidate peut être proposée explicitement. Deux propositions concurrentes ne se remplacent jamais silencieusement et toutes les candidates et décisions restent dans l’historique.
+- Une origine incompatible ou une filiation inconnue produit un conflit explicite.
+- Toute information qui n’appartient pas exclusivement à un seul chapitre est commune au `.jacq` et reste hors des `.chpt`. Si deux copies la modifient différemment, aucune valeur ne gagne automatiquement : le Chef d’équipe arbitre, ou l’Auteur indépendant dans son workspace, et la décision est journalisée.
+- À l’import, la correspondance automatique d’un assigné exige un identifiant Jaquette global strictement identique et des droits valides dans le projet cible. Une identité inconnue ou non autorisée suspend la finalisation de l’affectation jusqu’au choix explicite d’un assigné autorisé par le Chef d’équipe, ou par l’Auteur indépendant dans son workspace.
+- Le nom, l’adresse IP et une adresse électronique non vérifiée ne permettent aucune correspondance silencieuse. L’identité et l’assigné d’origine restent audités et la réaffectation ne réécrit pas l’auteur historique.
+- Il n’existe aucune fusion métier silencieuse et aucun fichier n’est détruit silencieusement.
 
 ---
 
@@ -783,8 +797,14 @@ Les événements importants à journaliser incluent notamment :
 - modifications de projet ;
 - création/suppression d’événements audio ;
 - changement de statut ;
-- commentaire ;
-- ticket ;
+- génération, assignation, changement de statut et achèvement d’une tâche ;
+- correspondance ou réaffectation explicite d’un assigné importé, avec conservation de l’identité d’origine ;
+- export et import d’un `.chpt` ;
+- détection de conflit ;
+- proposition d’une candidate active, approbations et décisions associées ;
+- intégration d’un chapitre validé ;
+- arbitrage des informations communes ;
+- création, réponse, résolution et modification d’un commentaire ;
 - validation ;
 - export ;
 - publication ;
@@ -929,7 +949,7 @@ Doit valider de bout en bout :
 - bibliothèque locale ;
 - édition audio légère ;
 - simulation ;
-- sauvegarde `.jacq` ;
+- sauvegarde `.jacq` et sauvegarde physique par chapitre `.chpt` ;
 - workflow de révision ;
 - contrôle qualité ;
 - métadonnées de publication ;
@@ -944,23 +964,22 @@ Après validation de la version Web, Jaquette doit être porté sur desktop via 
 
 Arrive après le socle de production et la version desktop initiale.
 
-## Collaboration V2
+## Collaboration offline
 
 Inclut notamment :
 
-- comptes réels ;
-- invitations ;
-- organisations ;
-- collaboration multi-utilisateur ;
-- présence ;
-- gestion des conflits ;
-- accès distant.
+- comptes réels, invitations et organisations lorsque ce contexte est nécessaire ;
+- export et import de `.chpt` ;
+- candidates de chapitre ;
+- fusion de chapitres différents ;
+- proposition et approbation unanime des candidates concurrentes, ainsi qu’arbitrage explicite des informations communes ;
+- audit des échanges et décisions.
 
 ---
 
 # 34. Critère fondamental de stabilité
 
-Avant de complexifier Jaquette avec la collaboration, l’IA ou la publication, le socle suivant doit fonctionner de manière robuste :
+Avant de complexifier Jaquette avec l’IA ou la publication, le socle suivant doit fonctionner de manière robuste :
 
 1. importer l’EPUB de référence ;
 2. générer des ancres textuelles stables ;
@@ -972,6 +991,8 @@ Avant de complexifier Jaquette avec la collaboration, l’IA ou la publication, 
 8. retrouver exactement la même association.
 
 Ce comportement est un invariant fondamental du produit.
+
+La sauvegarde par chapitre doit en outre permettre de modifier puis réécrire le `.chpt` concerné sans réécrire les autres chapitres du `.jacq`.
 
 ---
 
