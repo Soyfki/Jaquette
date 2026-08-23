@@ -1,6 +1,6 @@
 # Inventaire des données de référence
 
-Validation effectuée le **21 août 2026**. Les tailles et empreintes portent sur les fichiers téléchargés depuis les URL directes indiquées. Les binaires restent locaux sous `reference-data/files/` et ne sont pas versionnés.
+Validation effectuée les **21 et 23 août 2026**. Les tailles et empreintes portent sur les fichiers téléchargés depuis les URL directes indiquées. Les binaires restent locaux sous `reference-data/files/` et ne sont pas versionnés.
 
 ## EPUB
 
@@ -14,9 +14,9 @@ Validation effectuée le **21 août 2026**. Les tailles et empreintes portent su
 
 | Fichier | Format et structure | Navigation | Contenu notable | EPUBCheck 5.3.0 | Lecteur indépendant |
 |---|---|---|---|---|---|
-| Français | EPUB 2.0 reflowable ; 11 éléments de spine ; 2 feuilles de style ; 1 couverture générée ; aucune ressource chiffrée | NCX présent ; 42 destinations, toutes résolues | 37 chapitres ; `dc:language=fr` ; crédits auteur et illustrateurs dans le package ; variante sans les illustrations de l’édition source | 0 fatal, 0 erreur, 0 avertissement | SumatraPDF 3.6.1 : archive ouverte et rendu des pages 1 à 20, code de sortie 0 ; navigation humaine à confirmer |
+| Français | EPUB 2.0 reflowable ; 11 éléments de spine ; 2 feuilles de style ; 1 couverture générée ; aucune ressource chiffrée | NCX présent ; 42 destinations, toutes résolues | 37 chapitres ; `dc:language=fr` ; crédits auteur et illustrateurs dans le package ; variante sans les illustrations de l’édition source | 0 fatal, 0 erreur, 0 avertissement | SumatraPDF 3.6.1 : archive ouverte et rendu des pages 1 à 20, code de sortie 0. Contrôle humain de repli dans Google Chrome 151.0.7922.170 après extraction temporaire sans altération du XHTML : navigation vers les chapitres I, IV et IX réussie ; les trois passages de `SCENARIO.md`, y compris leurs limites de plage, sont visibles et correspondent exactement. |
 | Anglais | EPUB 3.0 reflowable ; 15 éléments de spine ; 3 feuilles de style ; 1 image valide ; aucune ressource chiffrée | Navigation EPUB 3 et NCX ; 36 destinations cumulées, toutes résolues | Recueil structuré en nouvelles | 0 fatal, 0 erreur, 0 avertissement | SumatraPDF 3.6.1, rendu des pages 1 à 20, code de sortie 0 |
-| Arabe | EPUB 3.0 reflowable ; 3 éléments de spine ; 1 feuille de style ; 2 images valides ; aucune ressource chiffrée | Navigation EPUB 3 et NCX ; 8 destinations cumulées, toutes résolues | `dc:language=ar`, progression du spine `rtl`, balisage RTL et plus de 23 000 caractères arabes | 0 fatal, 0 erreur, 0 avertissement | SumatraPDF 3.6.1, rendu des pages 1 à 20, code de sortie 0 |
+| Arabe | EPUB 3.0 reflowable ; 3 éléments de spine ; 1 feuille de style ; 2 images valides ; aucune ressource chiffrée | Navigation EPUB 3 et NCX ; 8 destinations cumulées, toutes résolues | `dc:language=ar`, progression du spine `rtl`, balisage RTL et plus de 23 000 caractères arabes | 0 fatal, 0 erreur, 0 avertissement | Thorium Reader EDRLab 3.4.0 installé, mais fermeture immédiate avant affichage dans l’environnement de contrôle. Contrôle humain de repli dans Google Chrome 151.0.7922.170 après extraction temporaire sans altération du XHTML : police arabe système disponible, glyphes lisibles et liés sans rectangles, paragraphes rendus en RTL, plusieurs sections parcourues et destinations de navigation cohérentes. |
 
 Contrôles communs réussis : archive ZIP lisible, entrée `mimetype` en première position et non compressée, valeur `application/epub+zip`, `container.xml` et package lisibles, spine non vide, aucune déclaration fixed-layout et aucune ressource `encryption.xml`.
 
@@ -45,8 +45,7 @@ Le décodage intégral avec Chrome/Web Audio a réussi pour les trois fichiers. 
 - L’EPUB français est volontairement un EPUB 2 avec navigation NCX : il complète les deux références EPUB 3 et permet de tester une structure reflowable ancienne mais valide. La variante sans images ne représente pas les illustrations de l’édition source.
 - Les droits de domaine public dépendent du territoire. Les fichiers ne doivent pas être redistribués sans une nouvelle vérification juridique adaptée au contexte ; le dépôt ne les embarque pas.
 - L’échantillon arabe est court et soumis à CC BY-SA 3.0. Il valide le contenu arabe et le balisage RTL, mais ne représente pas à lui seul toute la diversité éditoriale arabe.
+- SumatraPDF 3.6.1 affiche l’échantillon arabe sous forme de rectangles malgré une archive valide et un rendu correct dans Chrome 151.0.7922.170 avec une police arabe système disponible. Cette différence est classée comme une incompatibilité de rendu du lecteur, et non comme un défaut démontré de l’EPUB. Thorium Reader EDRLab 3.4.0 n’a pas pu servir de second contrôle, car il s’est fermé avant l’affichage du livre dans l’environnement de validation.
 - Les contrôles audio automatisés prouvent l’intégrité et le décodage, pas la pertinence perceptive. Une personne doit encore écouter les trois médias et confirmer que leur contenu correspond respectivement aux catégories SFX, Ambiance et Musique.
 - Les passages du scénario sont identifiés par leur chapitre et leur texte exact. Les futurs identifiants de tokens stables devront être générés par l’import Jaquette ; aucune coordonnée d’affichage n’est utilisée comme ancre.
-- **Validation humaine requise — arabe :** une personne doit confirmer visuellement que le texte arabe apparaît réellement en RTL dans un lecteur indépendant.
 - **Validation humaine requise — audio :** une personne doit écouter le SFX, l’Ambiance et la Musique et confirmer que leur contenu correspond à leur catégorie.
-- **Validation humaine requise — scénario français :** une personne doit ouvrir l’EPUB dans un lecteur indépendant, naviguer vers les chapitres I, IV et IX et retrouver les trois passages exacts consignés dans `SCENARIO.md`.
