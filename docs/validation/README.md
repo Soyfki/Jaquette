@@ -8,6 +8,9 @@ Ce dossier définit la méthode commune pour valider chaque sous-étape de Jaque
 2. Copier le [`BUG_REPORT.md`](BUG_REPORT.md) pour chaque défaut reproductible.
 3. Copier le [`VALIDATION_REPORT.md`](VALIDATION_REPORT.md) pour rendre la décision finale.
 
+
+La campagne propre à la page exécutable du design system est décrite dans [`1.1-design-system.md`](1.1-design-system.md).
+
 Les copies remplies peuvent être conservées dans la pull request ou dans l'outil de suivi retenu par l'équipe. Elles ne doivent contenir ni secret, ni donnée privée, ni manuscrit confidentiel.
 
 ## Responsabilités

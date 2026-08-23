@@ -10,9 +10,31 @@ Jaquette ne doit pas être confondu avec **Jacques** : Jaquette est l’outil de
 
 ## État du projet
 
-Le développement du code n’a pas encore commencé. Le dépôt se trouve dans la **phase 0 — Préparation du projet**, sous-étape **0.3 — Définir le protocole de validation**. Les sous-étapes **0.1 — Initialiser le dépôt** et **0.2 — Définir les données de référence** sont acquises. Le dépôt ne contient actuellement ni application, ni dépendance, ni test, ni workflow d’intégration continue.
+La **phase 0 — Préparation du projet** est acquise. Le dépôt se trouve dans la **phase 1 — Prototype visuel et navigation principale**, sous-étape **1.1 — Construire le design system de base**. Une première application Web exécutable démontre les fondations visuelles dans Chrome ; la navigation applicative prévue en 1.2 n’est pas encore implémentée.
 
 La version actuelle de l’application est **`0.0.0` (pré-développement, non publiée)**. La [convention de version](docs/VERSIONING.md) explique la différence entre cette version, les jalons produit tels que V0.1 et les futures versions des formats `.jacq` et `.jacko`.
+
+
+## Lancer la démonstration 1.1
+
+Pré-requis : Node.js 24 ou plus récent et Chrome. Le projet fixe pnpm 11.19.0 dans `package.json` et embarque les polices via des dépendances locales ; aucun service de polices distant n’est requis à l’exécution.
+
+```powershell
+corepack pnpm install --frozen-lockfile
+corepack pnpm dev
+```
+
+Ouvrir ensuite <http://127.0.0.1:5173> dans Chrome.
+
+Vérifications techniques :
+
+```powershell
+corepack pnpm validate
+corepack pnpm test:e2e
+git diff --check
+```
+
+`test:e2e` lance la page dans Google Chrome aux largeurs définies dans la configuration Playwright. Les instructions complètes se trouvent dans la [validation de la sous-étape 1.1](docs/validation/1.1-design-system.md).
 
 ## Sources de vérité
 
@@ -42,4 +64,6 @@ Ne versionnez jamais de secret, mot de passe, clé, jeton ou identifiant de conn
 - [Convention de version](docs/VERSIONING.md)
 - [Données de référence](reference-data/README.md)
 - [Protocole et modèles de validation](docs/validation/README.md)
+- [Validation du design system 1.1](docs/validation/1.1-design-system.md)
+- [Décision de socle Web](docs/decisions/0001-web-foundation.md)
 - [Plan détaillé de développement](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md)

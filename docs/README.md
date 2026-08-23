@@ -12,15 +12,17 @@ Ce dossier rassemble la documentation complémentaire et les décisions techniqu
 ## Décisions techniques du dépôt
 
 - [Convention de version](VERSIONING.md) — convention minimale, état de version actuel et séparation entre application, jalons produit et formats de fichiers.
+- [Socle Web de la démonstration 1.1](decisions/0001-web-foundation.md) — choix révisable de React, TypeScript, Vite et pnpm pour le premier exécutable.
 - [Données de référence](../reference-data/README.md) — acquisition reproductible, inventaire validé et scénario de doublage du jalon 0.2.
 - [Protocole de validation](validation/README.md) — méthode commune, checklist et modèles de rapports pour valider chaque livraison.
+- [Validation du design system 1.1](validation/1.1-design-system.md) — contrôles automatisés et revue humaine de la page de démonstration.
 
 ## État documentaire
 
-- Phase actuelle : **phase 0 — Préparation du projet**.
-- Sous-étapes acquises : **0.1 — Initialiser le dépôt** et **0.2 — Définir les données de référence**.
-- Sous-étape en cours : **0.3 — Définir le protocole de validation**.
-- Code applicatif : **non commencé**.
+- Phase acquise : **phase 0 — Préparation du projet**.
+- Phase actuelle : **phase 1 — Prototype visuel et navigation principale**.
+- Sous-étape en cours : **1.1 — Construire le design system de base**.
+- Code applicatif : **démonstration Web du design system uniquement**.
 - Version actuelle de l’application : **`0.0.0` (pré-développement, non publiée)**.
 
 Cet index n’ajoute aucune règle métier et ne remplace pas les documents de référence.
