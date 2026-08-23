@@ -1,0 +1,40 @@
+:root {
+  color-scheme: dark;
+
+  --color-background: #1B1B3A;
+  --color-text: #EFF2FF;
+  --color-accent: #FFDFB2;
+  --color-secondary: #74A4BC;
+  --color-validation: #CFF2EC;
+
+  --color-track-sfx: #FFAF87;
+  --color-track-ambience: #E56399;
+  --color-track-music: #9358FF;
+
+  --color-success-dark: #83B692;
+  --color-success-light: #355A40;
+  --color-error: #A20021;
+
+  --font-interface: 'Manrope', sans-serif;
+  --font-book: 'Literata', serif;
+  --font-arabic: 'Noto Naskh Arabic', 'Amiri', serif;
+
+  --radius-book: 0.5rem;
+  --radius-control: 1.125rem;
+  --radius-card: 1.75rem;
+  --radius-pill: 999px;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: 7rem;
+
+  --content-width: 76rem;
+  --transition-fast: 160ms ease;
+  --shadow-elevated: 0 1.5rem 4rem rgba(7, 7, 28, 0.25);
+}
