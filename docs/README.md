@@ -13,12 +13,13 @@ Ce dossier rassemble la documentation complémentaire et les décisions techniqu
 
 - [Convention de version](VERSIONING.md) — convention minimale, état de version actuel et séparation entre application, jalons produit et formats de fichiers.
 - [Données de référence](../reference-data/README.md) — acquisition reproductible, inventaire validé et scénario de doublage du jalon 0.2.
+- [Protocole de validation](validation/README.md) — méthode commune, checklist et modèles de rapports pour valider chaque livraison.
 
 ## État documentaire
 
 - Phase actuelle : **phase 0 — Préparation du projet**.
-- Sous-étape acquise : **0.1 — Initialiser le dépôt**.
-- Sous-étape en cours : **0.2 — Définir les données de référence**.
+- Sous-étapes acquises : **0.1 — Initialiser le dépôt** et **0.2 — Définir les données de référence**.
+- Sous-étape en cours : **0.3 — Définir le protocole de validation**.
 - Code applicatif : **non commencé**.
 - Version actuelle de l’application : **`0.0.0` (pré-développement, non publiée)**.
 
