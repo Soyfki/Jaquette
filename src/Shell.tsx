@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { FoundationsPage } from './App'
+import { MaterialSymbol, type MaterialSymbolName } from './MaterialSymbol'
 
 type Navigate = (path: string) => void
 
@@ -7,21 +8,21 @@ type RouteDefinition = {
   label: string
   path: string
   title: string
-  marker: string
+  icon: MaterialSymbolName
 }
 
 const routes: RouteDefinition[] = [
-  { label: 'Connexion', path: '/connexion', title: 'Connexion', marker: 'CO' },
-  { label: 'Accueil', path: '/accueil', title: 'Accueil', marker: 'AC' },
-  { label: 'Projet', path: '/projet', title: 'Projet', marker: 'PR' },
-  { label: 'Paramètres', path: '/parametres', title: 'Paramètres', marker: 'PA' },
+  { label: 'Connexion', path: '/connexion', title: 'Connexion', icon: 'login' },
+  { label: 'Accueil', path: '/accueil', title: 'Accueil', icon: 'home' },
+  { label: 'Projet', path: '/projet', title: 'Projet', icon: 'book_2' },
+  { label: 'Paramètres', path: '/parametres', title: 'Paramètres', icon: 'settings' },
 ]
 
 const foundationsRoute: RouteDefinition = {
   label: 'Fondations 1.1',
   path: '/fondations',
   title: 'Fondations',
-  marker: 'F1',
+  icon: 'palette',
 }
 
 function normalizePath(pathname: string) {
@@ -74,7 +75,9 @@ function RouteLink({
       aria-current={isCurrent ? 'page' : undefined}
       onClick={handleClick}
     >
-      <span className="nav-link__marker" aria-hidden="true">{route.marker}</span>
+      <span className="nav-link__marker" aria-hidden="true">
+        <MaterialSymbol name={route.icon} />
+      </span>
       <span>{route.label}</span>
       {isCurrent && <span className="nav-link__current">Écran actif</span>}
     </a>

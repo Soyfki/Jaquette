@@ -54,6 +54,15 @@ test('opens every primary URL directly with a stable, accessible shell', async (
   expect(errors.pageErrors).toEqual([])
 })
 
+test('uses semantic Material Symbols Rounded in every navigation marker', async ({ page }) => {
+  await page.goto('/accueil')
+  await expect(page.locator('[data-material-style="rounded-outlined"]')).toHaveCount(5)
+  expect(await page.locator('[data-material-symbol]').evaluateAll((symbols) => (
+    symbols.map((symbol) => symbol.getAttribute('data-material-symbol'))
+  ))).toEqual(['login', 'home', 'book_2', 'settings', 'palette'])
+  expect(await page.locator('.nav-link__marker').allTextContents()).toEqual(['', '', '', '', ''])
+})
+
 test('navigates without reload and restores history, URL, title and focus', async ({ page }) => {
   const errors = collectErrors(page)
   await page.goto('/accueil')

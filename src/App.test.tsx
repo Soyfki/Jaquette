@@ -29,6 +29,21 @@ describe('Jaquette application shell', () => {
     expect(screen.getByRole('link', { name: 'Accueil' })).not.toHaveAttribute('aria-current')
   })
 
+  it('uses the expected unfilled Material Symbols Rounded instead of initials', () => {
+    render(<AppShell />)
+    const symbols = Array.from(document.querySelectorAll<SVGElement>('[data-material-symbol]'))
+
+    expect(symbols.map((symbol) => symbol.dataset.materialSymbol)).toEqual([
+      'login',
+      'home',
+      'book_2',
+      'settings',
+      'palette',
+    ])
+    expect(symbols.every((symbol) => symbol.dataset.materialStyle === 'rounded-outlined')).toBe(true)
+    expect(Array.from(document.querySelectorAll('.nav-link__marker')).every((marker) => marker.textContent === '')).toBe(true)
+  })
+
   it('navigates internally and updates the URL, title and focus', async () => {
     const user = userEvent.setup()
     render(<AppShell />)
