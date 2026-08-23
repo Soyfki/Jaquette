@@ -47,6 +47,13 @@ test('loads the design system in Chrome without visual overflow or console error
   expect(focusOutline.style).not.toBe('none')
   expect(Number.parseFloat(focusOutline.width)).toBeGreaterThan(0)
 
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('button', { name: 'Voir la page du livre' })).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('searchbox', { name: 'Rechercher dans les sons' })).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('button', { name: 'Tous' })).toBeFocused()
+
   await page.getByRole('button', { name: 'Musique' }).click()
   await expect(page.getByRole('button', { name: 'Musique' })).toHaveAttribute('aria-pressed', 'true')
   await expect(page.getByRole('link', { name: 'Aller au contenu' })).toHaveCSS('opacity', '0')
