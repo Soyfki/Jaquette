@@ -1,6 +1,6 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { AppShell } from './Shell'
 
 function setPath(path: string) {
@@ -8,6 +8,7 @@ function setPath(path: string) {
 }
 
 describe('Jaquette application shell', () => {
+  afterEach(() => vi.useRealTimers())
   beforeEach(() => setPath('/accueil'))
 
   it.each([
@@ -79,6 +80,31 @@ describe('Jaquette application shell', () => {
     expect(within(tree).getByText(/Prévu · démonstration uniquement/)).toBeVisible()
   })
 
+  it('selects, replaces and clears local file metadata without reading audio', async () => {
+    const user = userEvent.setup()
+    setPath('/projet')
+    render(<AppShell />)
+    const input = screen.getByLabelText('Ouvrir un fichier local') as HTMLInputElement
+    const firstFile = new File([new Uint8Array([1, 2, 3])], 'pas-test.wav', { type: 'audio/wav' })
+    const readSpy = vi.spyOn(firstFile, 'arrayBuffer')
+
+    fireEvent.change(input, { target: { files: [firstFile] } })
+    expect(screen.getByText('pas-test.wav')).toBeVisible()
+    expect(screen.getByText('audio/wav · 1 Ko')).toBeVisible()
+    expect(screen.getByText('sélection locale de démonstration — fichier non importé')).toBeVisible()
+    expect(readSpy).not.toHaveBeenCalled()
+    expect(document.querySelector('audio')).toBeNull()
+
+    const replacement = new File([new Uint8Array([1, 2, 3, 4])], 'ambiance-test.ogg', { type: 'audio/ogg' })
+    fireEvent.change(screen.getByLabelText('Remplacer le fichier local'), { target: { files: [replacement] } })
+    expect(screen.queryByText('pas-test.wav')).not.toBeInTheDocument()
+    expect(screen.getByText('ambiance-test.ogg')).toBeVisible()
+
+    await user.click(screen.getByRole('button', { name: 'Effacer la sélection' }))
+    expect(screen.queryByText('ambiance-test.ogg')).not.toBeInTheDocument()
+    expect(screen.getByLabelText('Ouvrir un fichier local')).toBeVisible()
+  })
+
   it('filters only the fictive library names and presents an empty state', async () => {
     const user = userEvent.setup()
     setPath('/projet')
@@ -92,23 +118,92 @@ describe('Jaquette application shell', () => {
     expect(screen.getByText('Aucun résultat dans les données fictives.')).toBeVisible()
   })
 
-  it('updates the fictive chapter and page controls', async () => {
+  it('keeps chapter selection separate from synchronized page navigation', async () => {
     const user = userEvent.setup()
     setPath('/projet')
     render(<AppShell />)
     const chapter = screen.getByRole('combobox', { name: 'Chapitre' })
     const slider = screen.getByRole('slider', { name: 'Page fictive' })
-    expect(screen.getByText('L’heure bleue', { selector: 'h3' })).toBeVisible()
+    const previousPage = screen.getByRole('button', { name: 'Page précédente' })
+    const nextPage = screen.getByRole('button', { name: 'Page suivante' })
 
+    expect(screen.queryByRole('button', { name: 'Chapitre précédent' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Chapitre suivant' })).not.toBeInTheDocument()
+    expect(previousPage).toBeDisabled()
+    expect(nextPage).toBeEnabled()
+
+    await user.click(nextPage)
+    expect(slider).toHaveValue('2')
+    expect(slider).toHaveAttribute('aria-valuetext', 'Page 2 sur 12')
+    expect(screen.getByText('Page 2 sur 12')).toBeVisible()
+    expect(previousPage).toBeEnabled()
+
+    await user.click(previousPage)
+    expect(slider).toHaveValue('1')
+    expect(screen.getByText('Page 1 sur 12')).toBeVisible()
+
+    fireEvent.change(slider, { target: { value: '12' } })
+    expect(nextPage).toBeDisabled()
     await user.selectOptions(chapter, '1')
     expect(screen.getByText('Le pavillon fermé', { selector: 'h3' })).toBeVisible()
+    expect(slider).toHaveValue('1')
+    expect(slider).toHaveAttribute('aria-valuetext', 'Page 1 sur 9')
     expect(screen.getByText('Page 1 sur 9')).toBeVisible()
-    await user.click(screen.getByRole('button', { name: 'Chapitre suivant' }))
-    expect(screen.getByText('La dernière cloche', { selector: 'h3' })).toBeVisible()
-    await user.click(screen.getByRole('button', { name: 'Chapitre précédent' }))
-    expect(screen.getByText('Le pavillon fermé', { selector: 'h3' })).toBeVisible()
-    fireEvent.change(slider, { target: { value: '4' } })
-    expect(screen.getByText('Page 4 sur 9')).toBeVisible()
+  })
+
+  it('launches, pauses, resumes and manually advances the text simulation', async () => {
+    const user = userEvent.setup()
+    setPath('/projet')
+    render(<AppShell />)
+    const x1 = screen.getByRole('button', { name: 'x1' })
+    const x2 = screen.getByRole('button', { name: 'x2' })
+    const x4 = screen.getByRole('button', { name: 'x4' })
+
+    expect(x1).toHaveAttribute('aria-pressed', 'true')
+    expect(x2).toHaveAttribute('aria-pressed', 'false')
+    await user.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
+    expect(screen.getByRole('button', { name: 'Mettre en pause' })).toBeVisible()
+    expect(screen.getByRole('status', { name: 'État de la simulation : En cours' })).toBeVisible()
+    expect(document.querySelector('[data-active-word="true"]')).toHaveTextContent('À')
+    await user.click(screen.getByRole('button', { name: 'Mettre en pause' }))
+    expect(screen.getByRole('status', { name: 'État de la simulation : En pause' })).toBeVisible()
+
+    await user.click(screen.getByRole('button', { name: 'Mot suivant' }))
+    expect(document.querySelector('[data-active-word="true"]')).toHaveTextContent('l’instant')
+    await user.click(screen.getByRole('button', { name: 'Mot précédent' }))
+    expect(document.querySelector('[data-active-word="true"]')).toHaveTextContent('À')
+
+    await user.click(x2)
+    expect(x2).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByText('Multiplicateur actif : x2')).toBeVisible()
+    await user.click(x4)
+    expect(x4).toHaveAttribute('aria-pressed', 'true')
+    await user.click(x1)
+    expect(x1).toHaveAttribute('aria-pressed', 'true')
+
+    await user.click(screen.getByRole('button', { name: 'Reprendre la simulation' }))
+    expect(screen.getByRole('button', { name: 'Mettre en pause' })).toBeVisible()
+  })
+
+  it('stops at the last word and clears the simulation timer on unmount', () => {
+    vi.useFakeTimers()
+    const clearIntervalSpy = vi.spyOn(window, 'clearInterval')
+    setPath('/projet')
+    const firstRender = render(<AppShell />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
+    act(() => vi.advanceTimersByTime(20_000))
+    expect(screen.getByRole('status', { name: 'État de la simulation : Inactive' })).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Lancer la simulation' })).toBeVisible()
+    expect(document.querySelector('[data-active-word="true"]')).toHaveTextContent('pluie.')
+    firstRender.unmount()
+
+    const secondRender = render(<AppShell />)
+    fireEvent.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
+    clearIntervalSpy.mockClear()
+    secondRender.unmount()
+    expect(clearIntervalSpy).toHaveBeenCalled()
+    clearIntervalSpy.mockRestore()
   })
 
   it('opens and closes the fictive project history', async () => {

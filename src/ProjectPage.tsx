@@ -3,6 +3,10 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNod
 type TrackName = 'SFX' | 'Ambiance' | 'Musique'
 type AudioFolder = { name: string; files: string[] }
 type LibraryFamily = { name: TrackName; token: string; icon: ReactNode; folders: AudioFolder[] }
+type LocalFileMetadata = { name: string; size: number; type: string }
+type SimulationState = 'inactive' | 'paused' | 'playing'
+
+const BASE_WORDS_PER_MINUTE = 180
 
 const libraryFamilies: LibraryFamily[] = [
   {
@@ -138,6 +142,8 @@ function FolderToggle({
 
 function LibraryPanel() {
   const [query, setQuery] = useState('')
+  const [localFile, setLocalFile] = useState<LocalFileMetadata | null>(null)
+  const localFileInputRef = useRef<HTMLInputElement>(null)
   const [expanded, setExpanded] = useState<Record<string, boolean>>({
     local: true,
     SFX: true,
@@ -163,6 +169,10 @@ function LibraryPanel() {
   const hasResults = filteredFamilies.length > 0 || showDrive
   const isOpen = (key: string) => Boolean(expanded[key]) || Boolean(normalizedQuery)
   const toggle = (key: string) => setExpanded((current) => ({ ...current, [key]: !current[key] }))
+  const clearLocalFile = () => {
+    setLocalFile(null)
+    if (localFileInputRef.current) localFileInputRef.current.value = ''
+  }
 
   return (
     <section className="sound-panel sound-library" aria-labelledby="sound-library-title" data-workspace-region="library">
@@ -176,6 +186,30 @@ function LibraryPanel() {
           <span aria-hidden="true">⌕</span>
           <input id="library-search" type="search" value={query} placeholder="Nom d’un son…" onChange={(event) => setQuery(event.target.value)} />
         </div>
+      </div>
+      <div className="local-file-picker">
+        <input
+          ref={localFileInputRef}
+          className="local-file-input"
+          id="local-audio-file"
+          type="file"
+          accept="audio/mpeg,audio/mp4,audio/ogg,audio/opus,audio/wav,audio/webm,.aac,.flac,.m4a,.mp3,.oga,.ogg,.opus,.wav,.webm"
+          onChange={(event) => {
+            const file = event.target.files?.[0]
+            setLocalFile(file ? { name: file.name, size: file.size, type: file.type || 'Type audio non renseigné' } : null)
+          }}
+        />
+        <label className="local-file-trigger" id="local-audio-file-label" htmlFor="local-audio-file">
+          {localFile ? 'Remplacer le fichier local' : 'Ouvrir un fichier local'}
+        </label>
+        {localFile && (
+          <div className="local-file-selection" role="status" aria-live="polite">
+            <strong>{localFile.name}</strong>
+            <span>{localFile.type} · {Math.max(1, Math.ceil(localFile.size / 1024))} Ko</span>
+            <span>sélection locale de démonstration — fichier non importé</span>
+            <button type="button" onClick={clearLocalFile}>Effacer la sélection</button>
+          </div>
+        )}
       </div>
       {hasResults ? (
         <ul className="library-tree" aria-label="Arborescence audio fictive">
@@ -224,8 +258,9 @@ function LibraryPanel() {
   )
 }
 
-function BookPanel({ chapterIndex, page }: { chapterIndex: number; page: number }) {
+function BookPanel({ activeWordIndex, chapterIndex, page }: { activeWordIndex: number | null; chapterIndex: number; page: number }) {
   const chapter = chapters[chapterIndex]
+  let wordIndex = 0
   return (
     <section className="sound-panel sound-book" aria-labelledby="sound-book-title" data-workspace-region="book">
       <header className="sound-panel__header sound-book__header">
@@ -237,7 +272,18 @@ function BookPanel({ chapterIndex, page }: { chapterIndex: number; page: number 
         <div className="project-book-page__content">
           <span className="project-book-page__kicker">Le Jardin de Minuit · contenu fictif</span>
           <h3>{chapter.title}</h3>
-          {chapter.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          {chapter.paragraphs.map((paragraph) => (
+            <p key={paragraph}>
+              {paragraph.match(/\S+|\s+/g)?.map((part) => {
+                if (/^\s+$/.test(part)) return part
+                const currentWordIndex = wordIndex
+                wordIndex += 1
+                return currentWordIndex === activeWordIndex
+                  ? <mark className="active-demo-word" data-active-word="true" aria-current="true" key={`${currentWordIndex}-${part}`}>{part}</mark>
+                  : <span className="demo-word" key={`${currentWordIndex}-${part}`}>{part}</span>
+              })}
+            </p>
+          ))}
           <aside className="text-timeline-note" aria-label="Principe de la timeline textuelle">
             <span className="text-timeline-note__icon"><CursorIcon /></span>
             <p><strong>Le texte sera la timeline.</strong> Les sons s’attacheront aux mots, jamais à une échelle en secondes.</p>
@@ -267,46 +313,134 @@ function InspectorPanel() {
 }
 
 function SimulationControls({
+  activeWordIndex,
   chapterIndex,
   historyOpen,
   page,
+  setActiveWordIndex,
   setChapterIndex,
   setHistoryOpen,
   setPage,
   historyButtonRef,
 }: {
+  activeWordIndex: number | null
   chapterIndex: number
   historyOpen: boolean
   page: number
+  setActiveWordIndex: React.Dispatch<React.SetStateAction<number | null>>
   setChapterIndex: (value: number) => void
   setHistoryOpen: (value: boolean) => void
   setPage: (value: number) => void
   historyButtonRef: React.RefObject<HTMLButtonElement | null>
 }) {
   const chapter = chapters[chapterIndex]
+  const [simulationState, setSimulationState] = useState<SimulationState>('inactive')
+  const [speedMultiplier, setSpeedMultiplier] = useState(1)
+  const wordCount = useMemo(() => chapter.paragraphs.join(' ').match(/\S+/g)?.length ?? 0, [chapter])
+  const lastWordIndex = Math.max(0, wordCount - 1)
   const moveChapter = (next: number) => {
     setChapterIndex(next)
     setPage(1)
+    setActiveWordIndex(null)
+    setSimulationState('inactive')
   }
+
+  useEffect(() => {
+    if (simulationState !== 'playing') return
+    const timer = window.setInterval(() => {
+      setActiveWordIndex((current) => {
+        const next = current === null ? 0 : current + 1
+        if (next >= lastWordIndex) {
+          setSimulationState('inactive')
+          return lastWordIndex
+        }
+        return next
+      })
+    }, 60_000 / (BASE_WORDS_PER_MINUTE * speedMultiplier))
+    return () => window.clearInterval(timer)
+  }, [lastWordIndex, setActiveWordIndex, simulationState, speedMultiplier])
+
+  const toggleSimulation = () => {
+    if (simulationState === 'playing') {
+      setSimulationState('paused')
+      return
+    }
+    if (activeWordIndex === null || activeWordIndex >= lastWordIndex) setActiveWordIndex(0)
+    setSimulationState('playing')
+  }
+  const moveActiveWord = (direction: -1 | 1) => {
+    const next = Math.min(lastWordIndex, Math.max(0, (activeWordIndex ?? (direction > 0 ? -1 : 1)) + direction))
+    setActiveWordIndex(next)
+    if (next === lastWordIndex) setSimulationState('inactive')
+  }
+  const simulationLabel = simulationState === 'playing' ? 'En cours' : simulationState === 'paused' ? 'En pause' : 'Inactive'
+  const simulationButtonLabel = simulationState === 'playing'
+    ? 'Mettre en pause'
+    : simulationState === 'paused'
+      ? 'Reprendre la simulation'
+      : 'Lancer la simulation'
+
   return (
     <section className="sound-panel sound-controls" aria-labelledby="sound-controls-title" data-workspace-region="simulation">
       <div className="controls-title">
-        <div><span className="sound-panel__index">04 · Navigation fictive</span><h2 id="sound-controls-title">Simulation/Contrôles</h2></div>
-        <span className="simulation-status" aria-label="État de la simulation"><span aria-hidden="true" /><strong>Inactive</strong></span>
+        <div><span className="sound-panel__index">04 · Démonstrations locales</span><h2 id="sound-controls-title">Simulation/Contrôles</h2></div>
       </div>
-      <div className="book-navigation" aria-label="Navigation fictive du livre">
-        <button type="button" className="icon-button" aria-label="Chapitre précédent" disabled={chapterIndex === 0} onClick={() => moveChapter(chapterIndex - 1)}>←</button>
-        <label className="chapter-select">Chapitre
-          <select value={chapterIndex} onChange={(event) => moveChapter(Number(event.target.value))}>
-            {chapters.map((item, index) => <option key={item.label} value={index}>{item.label}</option>)}
-          </select>
-        </label>
-        <button type="button" className="icon-button" aria-label="Chapitre suivant" disabled={chapterIndex === chapters.length - 1} onClick={() => moveChapter(chapterIndex + 1)}>→</button>
-        <label className="page-slider" htmlFor="book-page-slider">Page fictive
-          <input id="book-page-slider" type="range" min="1" max={chapter.pages} value={page} onChange={(event) => setPage(Number(event.target.value))} />
-        </label>
-        <output className="page-output" htmlFor="book-page-slider" aria-live="polite">Page {page} sur {chapter.pages}</output>
-        <button ref={historyButtonRef} type="button" className="history-button" aria-expanded={historyOpen} aria-controls="project-history" onClick={() => setHistoryOpen(!historyOpen)}>Historique</button>
+      <div className="control-demonstrations">
+        <div className="book-navigation" aria-labelledby="book-navigation-title">
+          <h3 id="book-navigation-title">Navigation fictive du livre</h3>
+          <div className="chapter-history-row">
+            <label className="chapter-select">Chapitre
+              <select value={chapterIndex} onChange={(event) => moveChapter(Number(event.target.value))}>
+                {chapters.map((item, index) => <option key={item.label} value={index}>{item.label}</option>)}
+              </select>
+            </label>
+            <button ref={historyButtonRef} type="button" className="history-button" aria-expanded={historyOpen} aria-controls="project-history" onClick={() => setHistoryOpen(!historyOpen)}>Historique</button>
+          </div>
+          <div className="page-navigation-group" role="group" aria-label="Pagination fictive du livre">
+            <button type="button" className="icon-button" aria-label="Page précédente" disabled={page === 1} onClick={() => setPage(page - 1)}>←</button>
+            <label className="page-slider" htmlFor="book-page-slider">Page fictive
+              <input
+                id="book-page-slider"
+                aria-label="Page fictive"
+                type="range"
+                min="1"
+                max={chapter.pages}
+                value={page}
+                aria-valuetext={`Page ${page} sur ${chapter.pages}`}
+                onChange={(event) => setPage(Number(event.target.value))}
+              />
+              <output className="page-output" htmlFor="book-page-slider" aria-live="polite">Page {page} sur {chapter.pages}</output>
+            </label>
+            <button type="button" className="icon-button" aria-label="Page suivante" disabled={page === chapter.pages} onClick={() => setPage(page + 1)}>→</button>
+          </div>
+        </div>
+        <div className="text-simulation" aria-labelledby="text-simulation-title">
+          <div className="text-simulation__heading">
+            <h3 id="text-simulation-title">Simulation fictive du texte</h3>
+            <span className={`simulation-status simulation-status--${simulationState}`} role="status" aria-live="polite" aria-label={`État de la simulation : ${simulationLabel}`}>
+              <span aria-hidden="true" /><strong>{simulationLabel}</strong>
+            </span>
+          </div>
+          <div className="simulation-actions">
+            <button type="button" className="simulation-toggle" onClick={toggleSimulation}>{simulationButtonLabel}</button>
+            <button type="button" className="simulation-step" disabled={activeWordIndex === null || activeWordIndex === 0} onClick={() => moveActiveWord(-1)}>Mot précédent</button>
+            <button type="button" className="simulation-step" disabled={activeWordIndex === lastWordIndex} onClick={() => moveActiveWord(1)}>Mot suivant</button>
+          </div>
+          <div className="simulation-speed" aria-label="Vitesse de la simulation">
+            <span>Base : {BASE_WORDS_PER_MINUTE} mots par minute</span>
+            <div className="speed-buttons" role="group" aria-label="Multiplicateur de vitesse">
+              {[1, 2, 4].map((multiplier) => (
+                <button
+                  type="button"
+                  key={multiplier}
+                  aria-pressed={speedMultiplier === multiplier}
+                  onClick={() => setSpeedMultiplier(multiplier)}
+                >x{multiplier}</button>
+              ))}
+            </div>
+            <strong>Multiplicateur actif : x{speedMultiplier}</strong>
+          </div>
+        </div>
       </div>
       {historyOpen && (
         <div id="project-history" className="project-history" role="region" aria-label="Historique fictif du projet">
@@ -322,6 +456,7 @@ function SimulationControls({
 
 export function ProjectPage() {
   const [chapterIndex, setChapterIndex] = useState(0)
+  const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null)
   const [page, setPage] = useState(1)
   const [historyOpen, setHistoryOpen] = useState(false)
   const historyButtonRef = useRef<HTMLButtonElement>(null)
@@ -344,12 +479,14 @@ export function ProjectPage() {
       </header>
       <div className="sound-workspace" aria-label="Workspace Sound Designer fictif">
         <LibraryPanel />
-        <BookPanel chapterIndex={chapterIndex} page={page} />
+        <BookPanel activeWordIndex={activeWordIndex} chapterIndex={chapterIndex} page={page} />
         <InspectorPanel />
         <SimulationControls
+          activeWordIndex={activeWordIndex}
           chapterIndex={chapterIndex}
           historyOpen={historyOpen}
           page={page}
+          setActiveWordIndex={setActiveWordIndex}
           setChapterIndex={setChapterIndex}
           setHistoryOpen={setHistoryOpen}
           setPage={setPage}

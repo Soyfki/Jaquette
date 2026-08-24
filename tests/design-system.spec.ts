@@ -116,7 +116,7 @@ test('keeps the Sound Designer panels aligned around a dominant book', async ({ 
   expect(errors.pageErrors).toEqual([])
 })
 
-test('uses the fictive library, book controls, menu and history', async ({ page }) => {
+test('uses the local picker, synchronized pagination, chapter select, menu and history', async ({ page }) => {
   const errors = collectErrors(page)
   await page.goto('/projet')
 
@@ -128,22 +128,50 @@ test('uses the fictive library, book controls, menu and history', async ({ page 
   await expect(page.getByText('Aucun résultat dans les données fictives.')).toBeVisible()
   await search.fill('')
 
+  const fileInput = page.getByLabel('Ouvrir un fichier local')
+  await fileInput.setInputFiles({ name: 'selection-synthetique.wav', mimeType: 'audio/wav', buffer: Buffer.from('synthetic') })
+  await expect(page.getByText('selection-synthetique.wav')).toBeVisible()
+  await expect(page.getByText('sélection locale de démonstration — fichier non importé')).toBeVisible()
+  await expect(page.locator('audio')).toHaveCount(0)
+  await page.getByRole('button', { name: 'Effacer la sélection' }).click()
+  await expect(page.getByText('selection-synthetique.wav')).toHaveCount(0)
+
   const familyToggle = page.getByRole('button', { name: 'Replier SFX' })
   await familyToggle.click()
   await expect(page.getByRole('button', { name: 'Déplier SFX' })).toBeVisible()
   await page.getByRole('button', { name: 'Déplier SFX' }).click()
   await expect(page.getByText('pas-gravier.wav')).toBeVisible()
 
+  const previousPage = page.getByRole('button', { name: 'Page précédente' })
+  const slider = page.getByRole('slider', { name: 'Page fictive' })
+  const nextPage = page.getByRole('button', { name: 'Page suivante' })
+  const pageGroup = page.getByRole('group', { name: 'Pagination fictive du livre' })
+  await expect(previousPage).toBeDisabled()
+  await expect(nextPage).toBeEnabled()
+  await expect(page.getByRole('button', { name: 'Chapitre précédent' })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Chapitre suivant' })).toHaveCount(0)
+  await expect(previousPage.locator('xpath=..')).toHaveAttribute('aria-label', 'Pagination fictive du livre')
+  await expect(pageGroup.locator(':scope > *')).toHaveCount(3)
+
+  const geometry = await Promise.all([previousPage, slider, nextPage].map((locator) => locator.boundingBox()))
+  expect(geometry.every(Boolean)).toBe(true)
+  expect(geometry[0]!.x + geometry[0]!.width).toBeLessThanOrEqual(geometry[1]!.x)
+  expect(geometry[1]!.x + geometry[1]!.width).toBeLessThanOrEqual(geometry[2]!.x)
+
+  await nextPage.click()
+  await expect(slider).toHaveValue('2')
+  await expect(slider).toHaveAttribute('aria-valuetext', 'Page 2 sur 12')
+  await expect(page.getByText('Page 2 sur 12')).toBeVisible()
+  await previousPage.click()
+  await expect(slider).toHaveValue('1')
+  await expect(page.getByText('Page 1 sur 12')).toBeVisible()
+
+  await slider.fill('4')
   const chapter = page.getByRole('combobox', { name: 'Chapitre' })
   await chapter.selectOption('1')
   await expect(page.locator('.project-book-page h3')).toHaveText('Le pavillon fermé')
-  await page.getByRole('button', { name: 'Chapitre suivant' }).click()
-  await expect(page.locator('.project-book-page h3')).toHaveText('La dernière cloche')
-  await page.getByRole('button', { name: 'Chapitre précédent' }).click()
-  await expect(page.locator('.project-book-page h3')).toHaveText('Le pavillon fermé')
-  const slider = page.getByRole('slider', { name: 'Page fictive' })
-  await slider.fill('4')
-  await expect(page.getByText('Page 4 sur 9')).toBeVisible()
+  await expect(slider).toHaveValue('1')
+  await expect(page.getByText('Page 1 sur 9')).toBeVisible()
 
   const history = page.getByRole('button', { name: 'Historique' })
   await history.click()
@@ -161,22 +189,83 @@ test('uses the fictive library, book controls, menu and history', async ({ page 
   expect(errors.pageErrors).toEqual([])
 })
 
-test('offers a coherent visible keyboard path in the project', async ({ page }) => {
+test('runs and pauses the local text simulation without audio', async ({ page }) => {
+  const errors = collectErrors(page)
+  await page.goto('/projet')
+
+  await page.getByRole('button', { name: 'Lancer la simulation' }).click()
+  await expect(page.getByRole('button', { name: 'Mettre en pause' })).toBeVisible()
+  await expect(page.getByRole('status', { name: 'État de la simulation : En cours' })).toBeVisible()
+  const activeWord = page.locator('[data-active-word="true"]')
+  await expect(activeWord).toBeVisible()
+  const initialWord = await activeWord.textContent()
+  await expect.poll(() => activeWord.textContent()).not.toBe(initialWord)
+
+  await page.getByRole('button', { name: 'Mettre en pause' }).click()
+  await expect(page.getByRole('status', { name: 'État de la simulation : En pause' })).toBeVisible()
+  const pausedWord = await activeWord.textContent()
+  await page.waitForTimeout(500)
+  expect(await activeWord.textContent()).toBe(pausedWord)
+
+  await page.getByRole('button', { name: 'Mot suivant' }).click()
+  expect(await activeWord.textContent()).not.toBe(pausedWord)
+
+  for (const multiplier of ['x1', 'x2', 'x4']) {
+    const speed = page.getByRole('button', { name: multiplier })
+    await speed.click()
+    await expect(speed).toHaveAttribute('aria-pressed', 'true')
+    await expect(page.getByText(`Multiplicateur actif : ${multiplier}`)).toBeVisible()
+  }
+
+  await expect(page.locator('audio')).toHaveCount(0)
+  expect(errors.consoleErrors).toEqual([])
+  expect(errors.pageErrors).toEqual([])
+})
+
+test('offers visible keyboard focus on the project and its new controls', async ({ page }) => {
   await page.goto('/projet')
   const menu = page.getByRole('button', { name: 'Ouvrir la navigation générale' })
   await menu.focus()
   await expect(menu).toBeFocused()
-  const menuFocus = await menu.evaluate((element) => {
-    const style = getComputedStyle(element)
-    return { style: style.outlineStyle, width: Number.parseFloat(style.outlineWidth) }
-  })
-  expect(menuFocus.style).not.toBe('none')
-  expect(menuFocus.width).toBeGreaterThan(0)
 
   await page.keyboard.press('Tab')
   await expect(page.getByRole('link', { name: 'Jaquette, aller à l’accueil' })).toBeFocused()
   await page.keyboard.press('Tab')
   await expect(page.getByRole('searchbox', { name: 'Rechercher dans la bibliothèque fictive' })).toBeFocused()
+
+  await page.getByRole('button', { name: 'Page suivante' }).click()
+  const focusTargets = [
+    page.getByRole('combobox', { name: 'Chapitre' }),
+    page.getByRole('button', { name: 'Page précédente' }),
+    page.getByRole('slider', { name: 'Page fictive' }),
+    page.getByRole('button', { name: 'Page suivante' }),
+    page.getByRole('button', { name: 'Historique' }),
+    page.getByRole('button', { name: 'Lancer la simulation' }),
+  ]
+  for (const target of focusTargets) {
+    await target.focus()
+    await expect(target).toBeFocused()
+    await page.keyboard.press('Shift+Tab')
+    await page.keyboard.press('Tab')
+    const focus = await target.evaluate((element) => {
+      const style = getComputedStyle(element)
+      return { style: style.outlineStyle, width: Number.parseFloat(style.outlineWidth) }
+    })
+    expect(focus.style).not.toBe('none')
+    expect(focus.width).toBeGreaterThan(0)
+  }
+
+  const fileInput = page.getByLabel('Ouvrir un fichier local')
+  await fileInput.focus()
+  await expect(fileInput).toBeFocused()
+  await page.keyboard.press('Shift+Tab')
+  await page.keyboard.press('Tab')
+  const fileTriggerFocus = await page.locator('label[for="local-audio-file"]').evaluate((element) => {
+    const style = getComputedStyle(element)
+    return { style: style.outlineStyle, width: Number.parseFloat(style.outlineWidth) }
+  })
+  expect(fileTriggerFocus.style).not.toBe('none')
+  expect(fileTriggerFocus.width).toBeGreaterThan(0)
 })
 
 test('navigates without reload and restores history, URL, title and focus', async ({ page }) => {
