@@ -53,21 +53,17 @@ test('opens every primary URL directly with its accessible shell', async ({ page
   expect(errors.pageErrors).toEqual([])
 })
 
-test('keeps the Sound Designer panels aligned around a dominant book', async ({ page }, testInfo) => {
+test('preserves desktop geometry and uses overlay drawers in the reduced workspace', async ({ page }, testInfo) => {
   const errors = collectErrors(page)
   await page.goto('/projet')
-  const library = page.locator('[data-workspace-region="library"]')
   const book = page.locator('[data-workspace-region="book"]')
-  const inspector = page.locator('[data-workspace-region="inspector"]')
   const controls = page.locator('[data-workspace-region="simulation"]')
-  for (const region of [library, book, inspector, controls]) await expect(region).toBeVisible()
+  const viewport = page.viewportSize()!
 
-  await expect(page.getByRole('region', { name: 'Bibliothèque' })).toBeVisible()
+  await expect(book).toBeVisible()
+  await expect(controls).toBeVisible()
   await expect(page.getByRole('region', { name: 'Livre' })).toBeVisible()
-  await expect(page.getByRole('region', { name: 'Inspecteur audio' })).toBeVisible()
   await expect(page.getByRole('region', { name: 'Simulation/Contrôles' })).toBeVisible()
-  await expect(page.locator('[data-project-track]')).toHaveCount(3)
-  await expect(page.getByText('Aucune occurrence sélectionnée')).toBeVisible()
   await expect(page.getByText('Inactive')).toBeVisible()
   await expect(page.locator('.project-book-page')).toHaveCSS('background-color', 'rgb(239, 242, 255)')
   await expect(page.locator('.project-book-page__content')).toHaveCSS('font-family', /Literata/)
@@ -76,49 +72,121 @@ test('keeps the Sound Designer panels aligned around a dominant book', async ({ 
   await expect(page.locator('.app-sidebar')).toHaveCount(0)
   await expectNoOverflow(page)
 
-  const rectangles = await page.locator('[data-workspace-region]').evaluateAll((regions) => (
-    Object.fromEntries(regions.map((region) => {
-      const rect = region.getBoundingClientRect()
-      return [region.getAttribute('data-workspace-region'), {
-        bottom: rect.bottom,
-        left: rect.left,
-        right: rect.right,
-        top: rect.top,
-        width: rect.width,
-      }]
-    }))
-  )) as Record<string, { bottom: number; left: number; right: number; top: number; width: number }>
-
-  expect(rectangles.library.left).toBeLessThan(rectangles.book.left)
-  expect(rectangles.book.left).toBeLessThan(rectangles.inspector.left)
-  expect(Math.abs(rectangles.library.top - rectangles.book.top)).toBeLessThanOrEqual(2)
-  expect(Math.abs(rectangles.book.top - rectangles.inspector.top)).toBeLessThanOrEqual(2)
-  expect(rectangles.book.width).toBeGreaterThan(rectangles.library.width)
-  expect(rectangles.book.width).toBeGreaterThan(rectangles.inspector.width)
-  expect(rectangles.simulation.top).toBeGreaterThanOrEqual(rectangles.book.bottom)
-  expect(rectangles.simulation.left).toBeGreaterThanOrEqual(rectangles.library.right)
-  expect(rectangles.simulation.right).toBeLessThanOrEqual(rectangles.inspector.left)
-
   if (testInfo.project.name === 'chrome-desktop') {
-    const largestSide = Math.max(rectangles.library.width, rectangles.inspector.width)
-    expect(Math.abs(rectangles.library.width - rectangles.inspector.width)).toBeLessThanOrEqual(largestSide * 0.22)
+    const library = page.locator('[data-workspace-region="library"]')
+    const inspector = page.locator('[data-workspace-region="inspector"]')
+    await expect(library).toBeVisible()
+    await expect(inspector).toBeVisible()
+    await expect(page.getByRole('region', { name: 'Bibliothèque' })).toBeVisible()
+    await expect(page.getByRole('region', { name: 'Inspecteur audio' })).toBeVisible()
+    await expect(page.locator('.responsive-panel-toolbar')).toHaveCount(0)
+    await expect(page.locator('[data-project-track]')).toHaveCount(3)
+    await expect(page.getByText('Aucune occurrence sélectionnée')).toBeVisible()
+
+    const [libraryRect, bookRect, inspectorRect, controlsRect] = await Promise.all(
+      [library, book, inspector, controls].map((region) => region.boundingBox()),
+    )
+    expect(libraryRect && bookRect && inspectorRect && controlsRect).toBeTruthy()
+    expect(libraryRect!.x).toBeLessThan(bookRect!.x)
+    expect(bookRect!.x).toBeLessThan(inspectorRect!.x)
+    expect(Math.abs(libraryRect!.y - bookRect!.y)).toBeLessThanOrEqual(2)
+    expect(Math.abs(bookRect!.y - inspectorRect!.y)).toBeLessThanOrEqual(2)
+    expect(bookRect!.width).toBeGreaterThan(libraryRect!.width)
+    expect(bookRect!.width).toBeGreaterThan(inspectorRect!.width)
+    expect(controlsRect!.y).toBeGreaterThanOrEqual(bookRect!.y + bookRect!.height)
+    const largestSide = Math.max(libraryRect!.width, inspectorRect!.width)
+    expect(Math.abs(libraryRect!.width - inspectorRect!.width)).toBeLessThanOrEqual(largestSide * 0.22)
+
+    await page.screenshot({
+      path: `test-results/visual/projet-workspace-${testInfo.project.name}-${viewport.width}x${viewport.height}.png`,
+      fullPage: true,
+    })
   } else {
-    expect(rectangles.library.width).toBeGreaterThanOrEqual(170)
-    expect(rectangles.inspector.width).toBeGreaterThanOrEqual(135)
+    const libraryToggle = page.locator('.responsive-panel-toolbar button[aria-controls="sound-library-drawer"]')
+    const inspectorToggle = page.locator('.responsive-panel-toolbar button[aria-controls="sound-inspector-drawer"]')
+    await expect(libraryToggle).toBeVisible()
+    await expect(inspectorToggle).toBeVisible()
+    await expect(libraryToggle).toHaveAttribute('aria-expanded', 'false')
+    await expect(inspectorToggle).toHaveAttribute('aria-expanded', 'false')
+    await expect(page.getByRole('region', { name: 'Bibliothèque' })).toHaveCount(0)
+    await expect(page.getByRole('region', { name: 'Inspecteur audio' })).toHaveCount(0)
+
+    const bookBefore = await book.boundingBox()
+    const controlsRect = await controls.boundingBox()
+    expect(bookBefore && controlsRect).toBeTruthy()
+    expect(bookBefore!.width).toBeGreaterThanOrEqual(viewport.width * 0.85)
+    expect(Math.abs(bookBefore!.width - controlsRect!.width)).toBeLessThanOrEqual(2)
+    expect(Math.abs((bookBefore!.x + bookBefore!.width / 2) - viewport.width / 2)).toBeLessThanOrEqual(2)
+    expect(Math.abs((controlsRect!.x + controlsRect!.width / 2) - viewport.width / 2)).toBeLessThanOrEqual(2)
+
+    await page.screenshot({
+      path: `test-results/visual/projet-workspace-${testInfo.project.name}-${viewport.width}x${viewport.height}.png`,
+      fullPage: true,
+    })
+
+    await libraryToggle.click()
+    const libraryDrawer = page.locator('#sound-library-drawer')
+    await expect(libraryDrawer).toBeVisible()
+    await expect(page.getByRole('region', { name: 'Bibliothèque' })).toBeVisible()
+    await expect(libraryToggle).toHaveAttribute('aria-expanded', 'true')
+    await expect(libraryDrawer.getByRole('button', { name: 'Fermer la bibliothèque' })).toBeFocused()
+    const libraryDrawerRect = await libraryDrawer.boundingBox()
+    const bookWithLibrary = await book.boundingBox()
+    expect(libraryDrawerRect && bookWithLibrary).toBeTruthy()
+    expect(libraryDrawerRect!.width).toBeLessThanOrEqual(viewport.width * 0.48)
+    expect(libraryDrawerRect!.x).toBeLessThanOrEqual(bookBefore!.x + 2)
+    expect(libraryDrawerRect!.x + libraryDrawerRect!.width).toBeGreaterThan(bookBefore!.x)
+    expect(Math.abs(bookWithLibrary!.x - bookBefore!.x)).toBeLessThanOrEqual(2)
+    expect(Math.abs(bookWithLibrary!.y - bookBefore!.y)).toBeLessThanOrEqual(2)
+    expect(Math.abs(bookWithLibrary!.width - bookBefore!.width)).toBeLessThanOrEqual(2)
+    expect(Math.abs(bookWithLibrary!.height - bookBefore!.height)).toBeLessThanOrEqual(2)
+    await expectNoOverflow(page)
+    await page.screenshot({
+      path: `test-results/visual/projet-library-drawer-${testInfo.project.name}-${viewport.width}x${viewport.height}.png`,
+      fullPage: true,
+    })
+
+    await page.keyboard.press('Escape')
+    await expect(libraryDrawer).toHaveCount(0)
+    await expect(libraryToggle).toBeFocused()
+    await libraryToggle.click()
+    await inspectorToggle.click()
+    const inspectorDrawer = page.locator('#sound-inspector-drawer')
+    await expect(page.getByRole('region', { name: 'Bibliothèque' })).toHaveCount(0)
+    await expect(page.getByRole('region', { name: 'Inspecteur audio' })).toBeVisible()
+    await expect(page.getByText('Aucune occurrence sélectionnée')).toBeVisible()
+    await expect(inspectorDrawer.getByRole('button', { name: 'Fermer l’inspecteur audio' })).toBeFocused()
+    const inspectorDrawerRect = await inspectorDrawer.boundingBox()
+    const bookWithInspector = await book.boundingBox()
+    expect(inspectorDrawerRect && bookWithInspector).toBeTruthy()
+    expect(inspectorDrawerRect!.width).toBeLessThanOrEqual(viewport.width * 0.48)
+    expect(Math.abs(inspectorDrawerRect!.x + inspectorDrawerRect!.width - (bookBefore!.x + bookBefore!.width))).toBeLessThanOrEqual(2)
+    expect(inspectorDrawerRect!.x).toBeLessThan(bookBefore!.x + bookBefore!.width)
+    expect(Math.abs(bookWithInspector!.x - bookBefore!.x)).toBeLessThanOrEqual(2)
+    expect(Math.abs(bookWithInspector!.y - bookBefore!.y)).toBeLessThanOrEqual(2)
+    expect(Math.abs(bookWithInspector!.width - bookBefore!.width)).toBeLessThanOrEqual(2)
+    expect(Math.abs(bookWithInspector!.height - bookBefore!.height)).toBeLessThanOrEqual(2)
+    await expectNoOverflow(page)
+    await page.screenshot({
+      path: `test-results/visual/projet-inspector-drawer-${testInfo.project.name}-${viewport.width}x${viewport.height}.png`,
+      fullPage: true,
+    })
+    await page.keyboard.press('Escape')
+    await expect(inspectorDrawer).toHaveCount(0)
+    await expect(inspectorToggle).toBeFocused()
   }
 
-  const viewport = page.viewportSize()!
-  await page.screenshot({
-    path: `test-results/visual/projet-workspace-${testInfo.project.name}-${viewport.width}x${viewport.height}.png`,
-    fullPage: true,
-  })
   expect(errors.consoleErrors).toEqual([])
   expect(errors.pageErrors).toEqual([])
 })
 
-test('uses the local picker, synchronized pagination, chapter select, menu and history', async ({ page }) => {
+test('uses the local picker, synchronized pagination, chapter select, menu and history', async ({ page }, testInfo) => {
   const errors = collectErrors(page)
   await page.goto('/projet')
+
+  if (testInfo.project.name === 'chrome-reduced') {
+    await page.getByRole('button', { name: 'Ouvrir la bibliothèque' }).click()
+  }
 
   const search = page.getByRole('searchbox', { name: 'Rechercher dans la bibliothèque fictive' })
   await search.fill('pluie')
@@ -141,6 +209,10 @@ test('uses the local picker, synchronized pagination, chapter select, menu and h
   await expect(page.getByRole('button', { name: 'Déplier SFX' })).toBeVisible()
   await page.getByRole('button', { name: 'Déplier SFX' }).click()
   await expect(page.getByText('pas-gravier.wav')).toBeVisible()
+
+  if (testInfo.project.name === 'chrome-reduced') {
+    await page.keyboard.press('Escape')
+  }
 
   const previousPage = page.getByRole('button', { name: 'Page précédente' })
   const slider = page.getByRole('slider', { name: 'Page fictive' })
@@ -222,7 +294,7 @@ test('runs and pauses the local text simulation without audio', async ({ page })
   expect(errors.pageErrors).toEqual([])
 })
 
-test('offers visible keyboard focus on the project and its new controls', async ({ page }) => {
+test('offers visible keyboard focus on the project and its new controls', async ({ page }, testInfo) => {
   await page.goto('/projet')
   const menu = page.getByRole('button', { name: 'Ouvrir la navigation générale' })
   await menu.focus()
@@ -231,7 +303,16 @@ test('offers visible keyboard focus on the project and its new controls', async 
   await page.keyboard.press('Tab')
   await expect(page.getByRole('link', { name: 'Jaquette, aller à l’accueil' })).toBeFocused()
   await page.keyboard.press('Tab')
-  await expect(page.getByRole('searchbox', { name: 'Rechercher dans la bibliothèque fictive' })).toBeFocused()
+  const search = page.getByRole('searchbox', { name: 'Rechercher dans la bibliothèque fictive' })
+  if (testInfo.project.name === 'chrome-reduced') {
+    const libraryToggle = page.getByRole('button', { name: 'Ouvrir la bibliothèque' })
+    await expect(libraryToggle).toBeFocused()
+    await libraryToggle.click()
+    await expect(page.locator('#sound-library-drawer').getByRole('button', { name: 'Fermer la bibliothèque' })).toBeFocused()
+    await search.focus()
+  } else {
+    await expect(search).toBeFocused()
+  }
 
   await page.getByRole('button', { name: 'Page suivante' }).click()
   const focusTargets = [

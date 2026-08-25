@@ -5,7 +5,9 @@ type AudioFolder = { name: string; files: string[] }
 type LibraryFamily = { name: TrackName; token: string; icon: ReactNode; folders: AudioFolder[] }
 type LocalFileMetadata = { name: string; size: number; type: string }
 type SimulationState = 'inactive' | 'paused' | 'playing'
+type ResponsiveDrawer = 'library' | 'inspector' | null
 
+const REDUCED_WORKSPACE_QUERY = '(max-width: 56rem)'
 const BASE_WORDS_PER_MINUTE = 180
 
 const libraryFamilies: LibraryFamily[] = [
@@ -106,6 +108,31 @@ function SlidersIcon() {
       <circle cx="14" cy="18" r="2" />
     </svg>
   )
+}
+
+function LibraryIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M3.5 6.5h6l1.6 2H20.5v9h-17v-11Z" />
+      <path d="M3.5 9h17" />
+    </svg>
+  )
+}
+
+function useMediaQuery(query: string) {
+  const getMatches = () => typeof window.matchMedia === 'function' && window.matchMedia(query).matches
+  const [matches, setMatches] = useState(getMatches)
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return
+    const mediaQuery = window.matchMedia(query)
+    const updateMatches = () => setMatches(mediaQuery.matches)
+    updateMatches()
+    mediaQuery.addEventListener('change', updateMatches)
+    return () => mediaQuery.removeEventListener('change', updateMatches)
+  }, [query])
+
+  return matches
 }
 
 function normalizeSearch(value: string) {
@@ -459,17 +486,80 @@ export function ProjectPage() {
   const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null)
   const [page, setPage] = useState(1)
   const [historyOpen, setHistoryOpen] = useState(false)
+  const [responsiveDrawer, setResponsiveDrawer] = useState<ResponsiveDrawer>(null)
+  const isReducedWorkspace = useMediaQuery(REDUCED_WORKSPACE_QUERY)
   const historyButtonRef = useRef<HTMLButtonElement>(null)
+  const libraryButtonRef = useRef<HTMLButtonElement>(null)
+  const inspectorButtonRef = useRef<HTMLButtonElement>(null)
+  const libraryCloseButtonRef = useRef<HTMLButtonElement>(null)
+  const inspectorCloseButtonRef = useRef<HTMLButtonElement>(null)
+
+  const closeResponsiveDrawer = (restoreFocus = true) => {
+    const drawerToClose = responsiveDrawer
+    setResponsiveDrawer(null)
+    if (!restoreFocus) return
+    if (drawerToClose === 'library') libraryButtonRef.current?.focus()
+    if (drawerToClose === 'inspector') inspectorButtonRef.current?.focus()
+  }
 
   useEffect(() => {
-    const closeHistory = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape' || !historyOpen) return
-      setHistoryOpen(false)
-      historyButtonRef.current?.focus()
+    if (typeof window.matchMedia !== 'function') return
+    const mediaQuery = window.matchMedia(REDUCED_WORKSPACE_QUERY)
+    const closeDrawerOnDesktop = (event: MediaQueryListEvent) => {
+      if (!event.matches) setResponsiveDrawer(null)
     }
-    window.addEventListener('keydown', closeHistory)
-    return () => window.removeEventListener('keydown', closeHistory)
-  }, [historyOpen])
+    mediaQuery.addEventListener('change', closeDrawerOnDesktop)
+    return () => mediaQuery.removeEventListener('change', closeDrawerOnDesktop)
+  }, [])
+
+  useEffect(() => {
+    if (!isReducedWorkspace || !responsiveDrawer) return
+    const focusTarget = responsiveDrawer === 'library' ? libraryCloseButtonRef : inspectorCloseButtonRef
+    focusTarget.current?.focus()
+  }, [isReducedWorkspace, responsiveDrawer])
+
+  useEffect(() => {
+    const closeOverlay = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      if (responsiveDrawer) {
+        setResponsiveDrawer(null)
+        if (responsiveDrawer === 'library') libraryButtonRef.current?.focus()
+        if (responsiveDrawer === 'inspector') inspectorButtonRef.current?.focus()
+        return
+      }
+      if (historyOpen) {
+        setHistoryOpen(false)
+        historyButtonRef.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', closeOverlay)
+    return () => window.removeEventListener('keydown', closeOverlay)
+  }, [historyOpen, responsiveDrawer])
+
+  const toolbar = isReducedWorkspace && (
+    <div className="responsive-panel-toolbar" aria-label="Panneaux de l’atelier">
+      <button
+        ref={libraryButtonRef}
+        type="button"
+        aria-controls="sound-library-drawer"
+        aria-expanded={responsiveDrawer === 'library'}
+        onClick={() => responsiveDrawer === 'library' ? closeResponsiveDrawer(false) : setResponsiveDrawer('library')}
+      >
+        <span className="responsive-panel-toolbar__icon"><LibraryIcon /></span>
+        <span>{responsiveDrawer === 'library' ? 'Fermer la bibliothèque' : 'Ouvrir la bibliothèque'}</span>
+      </button>
+      <button
+        ref={inspectorButtonRef}
+        type="button"
+        aria-controls="sound-inspector-drawer"
+        aria-expanded={responsiveDrawer === 'inspector'}
+        onClick={() => responsiveDrawer === 'inspector' ? closeResponsiveDrawer(false) : setResponsiveDrawer('inspector')}
+      >
+        <span className="responsive-panel-toolbar__icon"><SlidersIcon /></span>
+        <span>{responsiveDrawer === 'inspector' ? 'Fermer l’inspecteur audio' : 'Ouvrir l’inspecteur audio'}</span>
+      </button>
+    </div>
+  )
 
   return (
     <div className="prototype-page project-workspace-page">
@@ -478,9 +568,22 @@ export function ProjectPage() {
         <p><strong>Le Jardin de Minuit</strong><span>Aucun EPUB ni média réel</span></p>
       </header>
       <div className="sound-workspace" aria-label="Workspace Sound Designer fictif">
-        <LibraryPanel />
+        {toolbar}
+        {!isReducedWorkspace && <LibraryPanel />}
+        {isReducedWorkspace && responsiveDrawer === 'library' && (
+          <div id="sound-library-drawer" className="sound-drawer sound-drawer--left">
+            <button ref={libraryCloseButtonRef} className="drawer-close-button" type="button" onClick={() => closeResponsiveDrawer()}>Fermer la bibliothèque</button>
+            <LibraryPanel />
+          </div>
+        )}
         <BookPanel activeWordIndex={activeWordIndex} chapterIndex={chapterIndex} page={page} />
-        <InspectorPanel />
+        {!isReducedWorkspace && <InspectorPanel />}
+        {isReducedWorkspace && responsiveDrawer === 'inspector' && (
+          <div id="sound-inspector-drawer" className="sound-drawer sound-drawer--right">
+            <button ref={inspectorCloseButtonRef} className="drawer-close-button" type="button" onClick={() => closeResponsiveDrawer()}>Fermer l’inspecteur audio</button>
+            <InspectorPanel />
+          </div>
+        )}
         <SimulationControls
           activeWordIndex={activeWordIndex}
           chapterIndex={chapterIndex}

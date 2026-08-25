@@ -7,8 +7,24 @@ function setPath(path: string) {
   window.history.replaceState(null, '', path)
 }
 
+function mockReducedWorkspace() {
+  vi.stubGlobal('matchMedia', vi.fn().mockImplementation((query: string) => ({
+    matches: query === '(max-width: 56rem)',
+    media: query,
+    onchange: null,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })))
+}
+
 describe('Jaquette application shell', () => {
-  afterEach(() => vi.useRealTimers())
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.unstubAllGlobals()
+  })
   beforeEach(() => setPath('/accueil'))
 
   it.each([
@@ -31,6 +47,50 @@ describe('Jaquette application shell', () => {
     expect(within(workspace).getByRole('region', { name: 'Inspecteur audio' })).toBeVisible()
     expect(within(workspace).getByRole('region', { name: 'Simulation/Contrôles' })).toBeVisible()
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+  })
+
+  it('uses exclusive accessible drawers in the reduced workspace', async () => {
+    const user = userEvent.setup()
+    mockReducedWorkspace()
+    setPath('/projet')
+    render(<AppShell />)
+
+    const libraryToggle = screen.getByRole('button', { name: 'Ouvrir la bibliothèque' })
+    const inspectorToggle = screen.getByRole('button', { name: 'Ouvrir l’inspecteur audio' })
+    expect(libraryToggle).toHaveAttribute('aria-expanded', 'false')
+    expect(libraryToggle).toHaveAttribute('aria-controls', 'sound-library-drawer')
+    expect(inspectorToggle).toHaveAttribute('aria-expanded', 'false')
+    expect(inspectorToggle).toHaveAttribute('aria-controls', 'sound-inspector-drawer')
+    expect(screen.queryByRole('region', { name: 'Bibliothèque' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Inspecteur audio' })).not.toBeInTheDocument()
+    expect(screen.getByRole('region', { name: 'Livre' })).toBeVisible()
+    expect(screen.getByRole('region', { name: 'Simulation/Contrôles' })).toBeVisible()
+
+    await user.click(libraryToggle)
+    expect(libraryToggle).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getByRole('region', { name: 'Bibliothèque' })).toBeVisible()
+    expect(screen.queryByRole('region', { name: 'Inspecteur audio' })).not.toBeInTheDocument()
+    const libraryDrawer = document.querySelector('#sound-library-drawer') as HTMLElement
+    expect(within(libraryDrawer).getByRole('button', { name: 'Fermer la bibliothèque' })).toHaveFocus()
+
+    await user.type(within(libraryDrawer).getByRole('searchbox', { name: 'Rechercher dans la bibliothèque fictive' }), 'pluie')
+    expect(within(libraryDrawer).getByText('jardin-pluie.ogg')).toBeVisible()
+    await user.click(inspectorToggle)
+    expect(screen.queryByRole('region', { name: 'Bibliothèque' })).not.toBeInTheDocument()
+    expect(screen.getByRole('region', { name: 'Inspecteur audio' })).toBeVisible()
+    const inspectorDrawer = document.querySelector('#sound-inspector-drawer') as HTMLElement
+    expect(within(inspectorDrawer).getByText('Aucune occurrence sélectionnée')).toBeVisible()
+    expect(within(inspectorDrawer).getByRole('button', { name: 'Fermer l’inspecteur audio' })).toHaveFocus()
+
+    await user.keyboard('{Escape}')
+    expect(screen.queryByRole('region', { name: 'Inspecteur audio' })).not.toBeInTheDocument()
+    expect(inspectorToggle).toHaveAttribute('aria-expanded', 'false')
+    expect(inspectorToggle).toHaveFocus()
+
+    await user.click(libraryToggle)
+    await user.click(libraryToggle)
+    expect(screen.queryByRole('region', { name: 'Bibliothèque' })).not.toBeInTheDocument()
+    expect(libraryToggle).toHaveAttribute('aria-expanded', 'false')
   })
 
   it('opens and closes the project menu while preserving SPA navigation', async () => {
