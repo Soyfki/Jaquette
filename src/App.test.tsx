@@ -7,17 +7,29 @@ function setPath(path: string) {
   window.history.replaceState(null, '', path)
 }
 
-function mockReducedWorkspace() {
-  vi.stubGlobal('matchMedia', vi.fn().mockImplementation((query: string) => ({
-    matches: query === '(max-width: 56rem)',
-    media: query,
+function mockWorkspaceMedia(initialReduced: boolean) {
+  let matches = initialReduced
+  const listeners = new Set<(event: MediaQueryListEvent) => void>()
+  const mediaQuery = {
+    get matches() { return matches },
+    media: '(max-width: 56rem)',
     onchange: null,
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
+    addEventListener: (_type: string, listener: (event: MediaQueryListEvent) => void) => listeners.add(listener),
+    removeEventListener: (_type: string, listener: (event: MediaQueryListEvent) => void) => listeners.delete(listener),
     addListener: vi.fn(),
     removeListener: vi.fn(),
     dispatchEvent: vi.fn(),
-  })))
+  }
+  vi.stubGlobal('matchMedia', vi.fn().mockReturnValue(mediaQuery))
+  return (reduced: boolean) => {
+    matches = reduced
+    const event = { matches, media: mediaQuery.media } as MediaQueryListEvent
+    listeners.forEach((listener) => listener(event))
+  }
+}
+
+function mockReducedWorkspace() {
+  return mockWorkspaceMedia(true)
 }
 
 describe('Jaquette application shell', () => {
@@ -38,15 +50,49 @@ describe('Jaquette application shell', () => {
     expect(screen.getByRole('heading', { level: 1, name: heading })).toBeVisible()
   })
 
-  it('renders one h1 and the four named Sound Designer regions', () => {
+  it('opens the three desktop panels with synchronized compact controls', () => {
     setPath('/projet')
     render(<AppShell />)
     const workspace = screen.getByLabelText('Workspace Sound Designer fictif')
     expect(within(workspace).getByRole('region', { name: 'Bibliothèque' })).toBeVisible()
     expect(within(workspace).getByRole('region', { name: 'Livre' })).toBeVisible()
     expect(within(workspace).getByRole('region', { name: 'Inspecteur audio' })).toBeVisible()
-    expect(within(workspace).getByRole('region', { name: 'Simulation/Contrôles' })).toBeVisible()
+    expect(within(workspace).getByRole('region', { name: 'Simulation/Navigation' })).toBeVisible()
+    expect(within(workspace).getByRole('button', { name: 'Masquer la bibliothèque' })).toHaveAttribute('aria-expanded', 'true')
+    expect(within(workspace).getByRole('button', { name: 'Masquer l’inspecteur audio' })).toHaveAttribute('aria-expanded', 'true')
+    expect(within(workspace).getByRole('button', { name: 'Masquer Simulation/Navigation' })).toHaveAttribute('aria-expanded', 'true')
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+  })
+
+  it('collapses and restores desktop panels independently and resets a hidden simulation', async () => {
+    const user = userEvent.setup()
+    setPath('/projet')
+    render(<AppShell />)
+
+    const libraryToggle = screen.getByRole('button', { name: 'Masquer la bibliothèque' })
+    const inspectorToggle = screen.getByRole('button', { name: 'Masquer l’inspecteur audio' })
+    const simulationToggle = screen.getByRole('button', { name: 'Masquer Simulation/Navigation' })
+    await user.click(libraryToggle)
+    expect(libraryToggle).toHaveAccessibleName('Afficher la bibliothèque')
+    expect(libraryToggle).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.queryByRole('region', { name: 'Bibliothèque' })).not.toBeInTheDocument()
+    expect(screen.getByRole('region', { name: 'Inspecteur audio' })).toBeVisible()
+    expect(screen.getByRole('region', { name: 'Simulation/Navigation' })).toBeVisible()
+
+    await user.click(inspectorToggle)
+    expect(screen.queryByRole('region', { name: 'Inspecteur audio' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Bibliothèque' })).not.toBeInTheDocument()
+    await user.click(libraryToggle)
+    expect(screen.getByRole('region', { name: 'Bibliothèque' })).toBeVisible()
+    expect(screen.queryByRole('region', { name: 'Inspecteur audio' })).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
+    expect(document.querySelector('[data-active-word="true"]')).toBeInTheDocument()
+    await user.click(simulationToggle)
+    expect(screen.queryByRole('region', { name: 'Simulation/Navigation' })).not.toBeInTheDocument()
+    expect(document.querySelector('[data-active-word="true"]')).not.toBeInTheDocument()
+    await user.click(simulationToggle)
+    expect(screen.getByRole('status', { name: 'État de la simulation : Inactive' })).toBeVisible()
   })
 
   it('uses exclusive accessible drawers in the reduced workspace', async () => {
@@ -57,14 +103,17 @@ describe('Jaquette application shell', () => {
 
     const libraryToggle = screen.getByRole('button', { name: 'Ouvrir la bibliothèque' })
     const inspectorToggle = screen.getByRole('button', { name: 'Ouvrir l’inspecteur audio' })
+    const simulationToggle = screen.getByRole('button', { name: 'Ouvrir Simulation/Navigation' })
     expect(libraryToggle).toHaveAttribute('aria-expanded', 'false')
     expect(libraryToggle).toHaveAttribute('aria-controls', 'sound-library-drawer')
     expect(inspectorToggle).toHaveAttribute('aria-expanded', 'false')
     expect(inspectorToggle).toHaveAttribute('aria-controls', 'sound-inspector-drawer')
+    expect(simulationToggle).toHaveAttribute('aria-expanded', 'false')
+    expect(simulationToggle).toHaveAttribute('aria-controls', 'sound-simulation-drawer')
     expect(screen.queryByRole('region', { name: 'Bibliothèque' })).not.toBeInTheDocument()
     expect(screen.queryByRole('region', { name: 'Inspecteur audio' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Simulation/Navigation' })).not.toBeInTheDocument()
     expect(screen.getByRole('region', { name: 'Livre' })).toBeVisible()
-    expect(screen.getByRole('region', { name: 'Simulation/Contrôles' })).toBeVisible()
 
     await user.click(libraryToggle)
     expect(libraryToggle).toHaveAttribute('aria-expanded', 'true')
@@ -87,10 +136,58 @@ describe('Jaquette application shell', () => {
     expect(inspectorToggle).toHaveAttribute('aria-expanded', 'false')
     expect(inspectorToggle).toHaveFocus()
 
+    await user.click(simulationToggle)
+    const simulationDrawer = document.querySelector('#sound-simulation-drawer') as HTMLElement
+    expect(screen.getByRole('region', { name: 'Simulation/Navigation' })).toBeVisible()
+    expect(screen.queryByRole('region', { name: 'Bibliothèque' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Inspecteur audio' })).not.toBeInTheDocument()
+    expect(within(simulationDrawer).getByRole('button', { name: 'Fermer Simulation/Navigation' })).toHaveFocus()
+    await user.click(within(simulationDrawer).getByRole('button', { name: 'Lancer la simulation' }))
+    expect(document.querySelector('[data-active-word="true"]')).toBeInTheDocument()
+    await user.keyboard('{Escape}')
+    expect(screen.queryByRole('region', { name: 'Simulation/Navigation' })).not.toBeInTheDocument()
+    expect(document.querySelector('[data-active-word="true"]')).not.toBeInTheDocument()
+    expect(simulationToggle).toHaveFocus()
+    await user.click(simulationToggle)
+    expect(screen.getByRole('status', { name: 'État de la simulation : Inactive' })).toBeVisible()
+    await user.click(simulationToggle)
+
     await user.click(libraryToggle)
     await user.click(libraryToggle)
     expect(screen.queryByRole('region', { name: 'Bibliothèque' })).not.toBeInTheDocument()
     expect(libraryToggle).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('closes everything when reduced and restores the initial desktop panels at the breakpoint', async () => {
+    const user = userEvent.setup()
+    const setReduced = mockWorkspaceMedia(false)
+    setPath('/projet')
+    render(<AppShell />)
+
+    await user.click(screen.getByRole('button', { name: 'Masquer la bibliothèque' }))
+    await user.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
+    expect(document.querySelector('[data-active-word="true"]')).toBeInTheDocument()
+
+    act(() => setReduced(true))
+    await waitFor(() => {
+      expect(screen.queryByRole('region', { name: 'Bibliothèque' })).not.toBeInTheDocument()
+      expect(screen.queryByRole('region', { name: 'Inspecteur audio' })).not.toBeInTheDocument()
+      expect(screen.queryByRole('region', { name: 'Simulation/Navigation' })).not.toBeInTheDocument()
+    })
+    expect(screen.getByRole('region', { name: 'Livre' })).toBeVisible()
+    expect(document.querySelector('[data-active-word="true"]')).not.toBeInTheDocument()
+
+    act(() => setReduced(false))
+    await waitFor(() => {
+      expect(screen.getByRole('region', { name: 'Bibliothèque' })).toBeVisible()
+      expect(screen.getByRole('region', { name: 'Inspecteur audio' })).toBeVisible()
+      expect(screen.getByRole('region', { name: 'Simulation/Navigation' })).toBeVisible()
+    })
+    expect(screen.getAllByRole('button', { expanded: true })).toEqual(expect.arrayContaining([
+      screen.getByRole('button', { name: 'Masquer la bibliothèque' }),
+      screen.getByRole('button', { name: 'Masquer l’inspecteur audio' }),
+      screen.getByRole('button', { name: 'Masquer Simulation/Navigation' }),
+    ]))
   })
 
   it('opens and closes the project menu while preserving SPA navigation', async () => {
@@ -245,7 +342,7 @@ describe('Jaquette application shell', () => {
     expect(screen.getByRole('button', { name: 'Mettre en pause' })).toBeVisible()
   })
 
-  it('stops at the last word and clears the simulation timer on unmount', () => {
+  it('stops at the last word and clears the simulation timer when its panel closes', () => {
     vi.useFakeTimers()
     const clearIntervalSpy = vi.spyOn(window, 'clearInterval')
     setPath('/projet')
@@ -261,8 +358,12 @@ describe('Jaquette application shell', () => {
     const secondRender = render(<AppShell />)
     fireEvent.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
     clearIntervalSpy.mockClear()
-    secondRender.unmount()
+    fireEvent.click(screen.getByRole('button', { name: 'Masquer Simulation/Navigation' }))
     expect(clearIntervalSpy).toHaveBeenCalled()
+    expect(document.querySelector('[data-active-word="true"]')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Afficher Simulation/Navigation' }))
+    expect(screen.getByRole('status', { name: 'État de la simulation : Inactive' })).toBeVisible()
+    secondRender.unmount()
     clearIntervalSpy.mockRestore()
   })
 

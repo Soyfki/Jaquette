@@ -5,7 +5,9 @@ type AudioFolder = { name: string; files: string[] }
 type LibraryFamily = { name: TrackName; token: string; icon: ReactNode; folders: AudioFolder[] }
 type LocalFileMetadata = { name: string; size: number; type: string }
 type SimulationState = 'inactive' | 'paused' | 'playing'
-type ResponsiveDrawer = 'library' | 'inspector' | null
+type WorkspacePanel = 'library' | 'inspector' | 'simulation'
+type ResponsiveDrawer = WorkspacePanel | null
+type DesktopPanelState = Record<WorkspacePanel, boolean>
 
 const REDUCED_WORKSPACE_QUERY = '(max-width: 56rem)'
 const BASE_WORDS_PER_MINUTE = 180
@@ -167,7 +169,7 @@ function FolderToggle({
   )
 }
 
-function LibraryPanel() {
+function LibraryPanel({ id }: { id?: string }) {
   const [query, setQuery] = useState('')
   const [localFile, setLocalFile] = useState<LocalFileMetadata | null>(null)
   const localFileInputRef = useRef<HTMLInputElement>(null)
@@ -202,7 +204,7 @@ function LibraryPanel() {
   }
 
   return (
-    <section className="sound-panel sound-library" aria-labelledby="sound-library-title" data-workspace-region="library">
+    <section id={id} className="sound-panel sound-library" aria-labelledby="sound-library-title" data-workspace-region="library">
       <header className="sound-panel__header">
         <div><span className="sound-panel__index">01 · Sources fictives</span><h2 id="sound-library-title">Bibliothèque</h2></div>
         <span className="fiction-chip fiction-chip--static">Démo</span>
@@ -322,9 +324,9 @@ function BookPanel({ activeWordIndex, chapterIndex, page }: { activeWordIndex: n
   )
 }
 
-function InspectorPanel() {
+function InspectorPanel({ id }: { id?: string }) {
   return (
-    <section className="sound-panel sound-inspector" aria-labelledby="sound-inspector-title" data-workspace-region="inspector">
+    <section id={id} className="sound-panel sound-inspector" aria-labelledby="sound-inspector-title" data-workspace-region="inspector">
       <header className="sound-panel__header"><div><span className="sound-panel__index">03</span><h2 id="sound-inspector-title">Inspecteur audio</h2></div></header>
       <div className="inspector-empty">
         <span className="inspector-empty__icon"><SlidersIcon /></span>
@@ -340,6 +342,7 @@ function InspectorPanel() {
 }
 
 function SimulationControls({
+  id,
   activeWordIndex,
   chapterIndex,
   historyOpen,
@@ -350,6 +353,7 @@ function SimulationControls({
   setPage,
   historyButtonRef,
 }: {
+  id?: string
   activeWordIndex: number | null
   chapterIndex: number
   historyOpen: boolean
@@ -408,9 +412,9 @@ function SimulationControls({
       : 'Lancer la simulation'
 
   return (
-    <section className="sound-panel sound-controls" aria-labelledby="sound-controls-title" data-workspace-region="simulation">
+    <section id={id} className="sound-panel sound-controls" aria-labelledby="sound-controls-title" data-workspace-region="simulation">
       <div className="controls-title">
-        <div><span className="sound-panel__index">04 · Démonstrations locales</span><h2 id="sound-controls-title">Simulation/Contrôles</h2></div>
+        <div><span className="sound-panel__index">04 · Démonstrations locales</span><h2 id="sound-controls-title">Simulation/Navigation</h2></div>
       </div>
       <div className="control-demonstrations">
         <div className="book-navigation" aria-labelledby="book-navigation-title">
@@ -486,77 +490,145 @@ export function ProjectPage() {
   const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null)
   const [page, setPage] = useState(1)
   const [historyOpen, setHistoryOpen] = useState(false)
+  const [desktopPanels, setDesktopPanels] = useState<DesktopPanelState>({
+    library: true,
+    inspector: true,
+    simulation: true,
+  })
   const [responsiveDrawer, setResponsiveDrawer] = useState<ResponsiveDrawer>(null)
   const isReducedWorkspace = useMediaQuery(REDUCED_WORKSPACE_QUERY)
   const historyButtonRef = useRef<HTMLButtonElement>(null)
   const libraryButtonRef = useRef<HTMLButtonElement>(null)
   const inspectorButtonRef = useRef<HTMLButtonElement>(null)
+  const simulationButtonRef = useRef<HTMLButtonElement>(null)
   const libraryCloseButtonRef = useRef<HTMLButtonElement>(null)
   const inspectorCloseButtonRef = useRef<HTMLButtonElement>(null)
+  const simulationCloseButtonRef = useRef<HTMLButtonElement>(null)
+
+  const resetSimulation = () => {
+    setActiveWordIndex(null)
+    setHistoryOpen(false)
+  }
 
   const closeResponsiveDrawer = (restoreFocus = true) => {
     const drawerToClose = responsiveDrawer
+    if (drawerToClose === 'simulation') resetSimulation()
     setResponsiveDrawer(null)
     if (!restoreFocus) return
     if (drawerToClose === 'library') libraryButtonRef.current?.focus()
     if (drawerToClose === 'inspector') inspectorButtonRef.current?.focus()
+    if (drawerToClose === 'simulation') simulationButtonRef.current?.focus()
   }
 
   useEffect(() => {
     if (typeof window.matchMedia !== 'function') return
     const mediaQuery = window.matchMedia(REDUCED_WORKSPACE_QUERY)
-    const closeDrawerOnDesktop = (event: MediaQueryListEvent) => {
-      if (!event.matches) setResponsiveDrawer(null)
+    const resetPanelsAtBreakpoint = (event: MediaQueryListEvent) => {
+      setResponsiveDrawer(null)
+      setActiveWordIndex(null)
+      setHistoryOpen(false)
+      if (!event.matches) {
+        setDesktopPanels({ library: true, inspector: true, simulation: true })
+      }
     }
-    mediaQuery.addEventListener('change', closeDrawerOnDesktop)
-    return () => mediaQuery.removeEventListener('change', closeDrawerOnDesktop)
+    mediaQuery.addEventListener('change', resetPanelsAtBreakpoint)
+    return () => mediaQuery.removeEventListener('change', resetPanelsAtBreakpoint)
   }, [])
 
   useEffect(() => {
     if (!isReducedWorkspace || !responsiveDrawer) return
-    const focusTarget = responsiveDrawer === 'library' ? libraryCloseButtonRef : inspectorCloseButtonRef
+    const focusTarget = responsiveDrawer === 'library'
+      ? libraryCloseButtonRef
+      : responsiveDrawer === 'inspector'
+        ? inspectorCloseButtonRef
+        : simulationCloseButtonRef
     focusTarget.current?.focus()
   }, [isReducedWorkspace, responsiveDrawer])
 
   useEffect(() => {
     const closeOverlay = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return
+      if (historyOpen) {
+        setHistoryOpen(false)
+        historyButtonRef.current?.focus()
+        return
+      }
       if (responsiveDrawer) {
         setResponsiveDrawer(null)
         if (responsiveDrawer === 'library') libraryButtonRef.current?.focus()
         if (responsiveDrawer === 'inspector') inspectorButtonRef.current?.focus()
+        if (responsiveDrawer === 'simulation') {
+          resetSimulation()
+          simulationButtonRef.current?.focus()
+        }
         return
-      }
-      if (historyOpen) {
-        setHistoryOpen(false)
-        historyButtonRef.current?.focus()
       }
     }
     window.addEventListener('keydown', closeOverlay)
     return () => window.removeEventListener('keydown', closeOverlay)
   }, [historyOpen, responsiveDrawer])
 
-  const toolbar = isReducedWorkspace && (
+  const isPanelOpen = (panel: WorkspacePanel) => isReducedWorkspace
+    ? responsiveDrawer === panel
+    : desktopPanels[panel]
+  const togglePanel = (panel: WorkspacePanel) => {
+    if (isReducedWorkspace) {
+      if (responsiveDrawer === panel) {
+        closeResponsiveDrawer(false)
+      } else {
+        if (responsiveDrawer === 'simulation') resetSimulation()
+        setResponsiveDrawer(panel)
+      }
+      return
+    }
+    if (panel === 'simulation' && desktopPanels.simulation) resetSimulation()
+    setDesktopPanels((current) => ({ ...current, [panel]: !current[panel] }))
+  }
+  const panelAction = (panel: WorkspacePanel, name: string) => {
+    if (isReducedWorkspace) return `${isPanelOpen(panel) ? 'Fermer' : 'Ouvrir'} ${name}`
+    return `${isPanelOpen(panel) ? 'Masquer' : 'Afficher'} ${name}`
+  }
+  const panelControlId = (panel: WorkspacePanel) => isReducedWorkspace
+    ? `sound-${panel}-drawer`
+    : `sound-${panel}-panel`
+  const workspaceClasses = [
+    'sound-workspace',
+    `sound-workspace--library-${desktopPanels.library ? 'open' : 'closed'}`,
+    `sound-workspace--inspector-${desktopPanels.inspector ? 'open' : 'closed'}`,
+    `sound-workspace--simulation-${desktopPanels.simulation ? 'open' : 'closed'}`,
+  ].join(' ')
+
+  const toolbar = (
     <div className="responsive-panel-toolbar" aria-label="Panneaux de l’atelier">
       <button
         ref={libraryButtonRef}
         type="button"
-        aria-controls="sound-library-drawer"
-        aria-expanded={responsiveDrawer === 'library'}
-        onClick={() => responsiveDrawer === 'library' ? closeResponsiveDrawer(false) : setResponsiveDrawer('library')}
+        aria-controls={panelControlId('library')}
+        aria-expanded={isPanelOpen('library')}
+        onClick={() => togglePanel('library')}
       >
         <span className="responsive-panel-toolbar__icon"><LibraryIcon /></span>
-        <span>{responsiveDrawer === 'library' ? 'Fermer la bibliothèque' : 'Ouvrir la bibliothèque'}</span>
+        <span>{panelAction('library', 'la bibliothèque')}</span>
       </button>
       <button
         ref={inspectorButtonRef}
         type="button"
-        aria-controls="sound-inspector-drawer"
-        aria-expanded={responsiveDrawer === 'inspector'}
-        onClick={() => responsiveDrawer === 'inspector' ? closeResponsiveDrawer(false) : setResponsiveDrawer('inspector')}
+        aria-controls={panelControlId('inspector')}
+        aria-expanded={isPanelOpen('inspector')}
+        onClick={() => togglePanel('inspector')}
       >
         <span className="responsive-panel-toolbar__icon"><SlidersIcon /></span>
-        <span>{responsiveDrawer === 'inspector' ? 'Fermer l’inspecteur audio' : 'Ouvrir l’inspecteur audio'}</span>
+        <span>{panelAction('inspector', 'l’inspecteur audio')}</span>
+      </button>
+      <button
+        ref={simulationButtonRef}
+        type="button"
+        aria-controls={panelControlId('simulation')}
+        aria-expanded={isPanelOpen('simulation')}
+        onClick={() => togglePanel('simulation')}
+      >
+        <span className="responsive-panel-toolbar__icon"><CursorIcon /></span>
+        <span>{panelAction('simulation', 'Simulation/Navigation')}</span>
       </button>
     </div>
   )
@@ -567,9 +639,9 @@ export function ProjectPage() {
         <div><span className="page-intro__eyebrow">Projet fictif · Sound Designer</span><h1 tabIndex={-1}>Le livre attend sa scène.</h1></div>
         <p><strong>Le Jardin de Minuit</strong><span>Aucun EPUB ni média réel</span></p>
       </header>
-      <div className="sound-workspace" aria-label="Workspace Sound Designer fictif">
+      <div className={workspaceClasses} aria-label="Workspace Sound Designer fictif">
         {toolbar}
-        {!isReducedWorkspace && <LibraryPanel />}
+        {!isReducedWorkspace && desktopPanels.library && <LibraryPanel id="sound-library-panel" />}
         {isReducedWorkspace && responsiveDrawer === 'library' && (
           <div id="sound-library-drawer" className="sound-drawer sound-drawer--left">
             <button ref={libraryCloseButtonRef} className="drawer-close-button" type="button" onClick={() => closeResponsiveDrawer()}>Fermer la bibliothèque</button>
@@ -577,24 +649,43 @@ export function ProjectPage() {
           </div>
         )}
         <BookPanel activeWordIndex={activeWordIndex} chapterIndex={chapterIndex} page={page} />
-        {!isReducedWorkspace && <InspectorPanel />}
+        {!isReducedWorkspace && desktopPanels.inspector && <InspectorPanel id="sound-inspector-panel" />}
         {isReducedWorkspace && responsiveDrawer === 'inspector' && (
           <div id="sound-inspector-drawer" className="sound-drawer sound-drawer--right">
             <button ref={inspectorCloseButtonRef} className="drawer-close-button" type="button" onClick={() => closeResponsiveDrawer()}>Fermer l’inspecteur audio</button>
             <InspectorPanel />
           </div>
         )}
-        <SimulationControls
-          activeWordIndex={activeWordIndex}
-          chapterIndex={chapterIndex}
-          historyOpen={historyOpen}
-          page={page}
-          setActiveWordIndex={setActiveWordIndex}
-          setChapterIndex={setChapterIndex}
-          setHistoryOpen={setHistoryOpen}
-          setPage={setPage}
-          historyButtonRef={historyButtonRef}
-        />
+        {!isReducedWorkspace && desktopPanels.simulation && (
+          <SimulationControls
+            id="sound-simulation-panel"
+            activeWordIndex={activeWordIndex}
+            chapterIndex={chapterIndex}
+            historyOpen={historyOpen}
+            page={page}
+            setActiveWordIndex={setActiveWordIndex}
+            setChapterIndex={setChapterIndex}
+            setHistoryOpen={setHistoryOpen}
+            setPage={setPage}
+            historyButtonRef={historyButtonRef}
+          />
+        )}
+        {isReducedWorkspace && responsiveDrawer === 'simulation' && (
+          <div id="sound-simulation-drawer" className="sound-drawer sound-drawer--bottom">
+            <button ref={simulationCloseButtonRef} className="drawer-close-button" type="button" onClick={() => closeResponsiveDrawer()}>Fermer Simulation/Navigation</button>
+            <SimulationControls
+              activeWordIndex={activeWordIndex}
+              chapterIndex={chapterIndex}
+              historyOpen={historyOpen}
+              page={page}
+              setActiveWordIndex={setActiveWordIndex}
+              setChapterIndex={setChapterIndex}
+              setHistoryOpen={setHistoryOpen}
+              setPage={setPage}
+              historyButtonRef={historyButtonRef}
+            />
+          </div>
+        )}
       </div>
     </div>
   )

@@ -1888,11 +1888,120 @@ svg {
 .sound-workspace {
   min-height: 0;
   grid-template-areas:
+    'toolbar toolbar toolbar'
     'library book inspector'
     'library simulation inspector';
   grid-template-columns: minmax(13.5rem, 0.8fr) minmax(30rem, 2.55fr) minmax(13.5rem, 0.8fr);
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 0.55rem;
+}
+
+.sound-workspace--library-closed.sound-workspace--inspector-open {
+  grid-template-areas:
+    'toolbar toolbar'
+    'book inspector'
+    'simulation inspector';
+  grid-template-columns: minmax(30rem, 1fr) minmax(13.5rem, 0.32fr);
+}
+
+.sound-workspace--library-open.sound-workspace--inspector-closed {
+  grid-template-areas:
+    'toolbar toolbar'
+    'library book'
+    'library simulation';
+  grid-template-columns: minmax(13.5rem, 0.32fr) minmax(30rem, 1fr);
+}
+
+.sound-workspace--library-closed.sound-workspace--inspector-closed {
+  grid-template-areas:
+    'toolbar'
+    'book'
+    'simulation';
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.sound-workspace--simulation-closed {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.sound-workspace--library-open.sound-workspace--inspector-open.sound-workspace--simulation-closed {
+  grid-template-areas:
+    'toolbar toolbar toolbar'
+    'library book inspector';
+}
+
+.sound-workspace--library-closed.sound-workspace--inspector-open.sound-workspace--simulation-closed {
+  grid-template-areas:
+    'toolbar toolbar'
+    'book inspector';
+}
+
+.sound-workspace--library-open.sound-workspace--inspector-closed.sound-workspace--simulation-closed {
+  grid-template-areas:
+    'toolbar toolbar'
+    'library book';
+}
+
+.sound-workspace--library-closed.sound-workspace--inspector-closed.sound-workspace--simulation-closed {
+  grid-template-areas:
+    'toolbar'
+    'book';
+}
+
+.responsive-panel-toolbar {
+  display: flex;
+  min-width: 0;
+  grid-area: toolbar;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.responsive-panel-toolbar button,
+.drawer-close-button {
+  display: inline-flex;
+  min-height: 2.15rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--color-secondary) 35%, transparent);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-secondary) 9%, var(--color-background));
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.58rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.responsive-panel-toolbar button:hover,
+.drawer-close-button:hover {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 12%, var(--color-background));
+}
+
+.responsive-panel-toolbar button[aria-expanded="true"] {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.responsive-panel-toolbar__icon {
+  display: grid;
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  place-items: center;
+}
+
+.responsive-panel-toolbar__icon svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
 }
 
 .sound-library,
@@ -2260,14 +2369,15 @@ svg {
   }
 
   .app-main--project {
-    height: auto;
-    min-height: calc(100vh - 3.75rem);
+    height: calc(100vh - 3.75rem);
+    min-height: 0;
     padding: 0.45rem 0.5rem 0.6rem;
-    overflow: visible;
+    overflow: hidden;
   }
 
   .project-workspace-page {
-    height: auto;
+    height: 100%;
+    min-height: 0;
   }
 
   .project-workspace-intro {
@@ -2299,66 +2409,22 @@ svg {
   .sound-workspace {
     position: relative;
     width: 100%;
+    min-height: 0;
     grid-template-areas:
       'toolbar'
-      'book'
-      'simulation';
+      'book';
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto;
+    grid-template-rows: auto minmax(0, 1fr);
   }
 
   .responsive-panel-toolbar {
-    display: flex;
-    grid-area: toolbar;
-    justify-content: center;
-    gap: var(--space-2);
+    gap: 0.35rem;
   }
 
-  .responsive-panel-toolbar button,
-  .drawer-close-button {
-    display: inline-flex;
-    min-height: 2.35rem;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    padding: 0.4rem 0.75rem;
-    border: 1px solid color-mix(in srgb, var(--color-secondary) 35%, transparent);
-    border-radius: var(--radius-pill);
-    background: color-mix(in srgb, var(--color-secondary) 9%, var(--color-background));
-    color: var(--color-text);
-    font: inherit;
+  .responsive-panel-toolbar button {
+    min-height: 2.05rem;
+    padding: 0.28rem 0.55rem;
     font-size: 0.6rem;
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  .responsive-panel-toolbar button:hover,
-  .drawer-close-button:hover {
-    border-color: var(--color-accent);
-    background: color-mix(in srgb, var(--color-accent) 12%, var(--color-background));
-  }
-
-  .responsive-panel-toolbar button[aria-expanded="true"] {
-    border-color: var(--color-accent);
-    color: var(--color-accent);
-  }
-
-  .responsive-panel-toolbar__icon {
-    display: grid;
-    width: 1rem;
-    height: 1rem;
-    flex: 0 0 auto;
-    place-items: center;
-  }
-
-  .responsive-panel-toolbar__icon svg {
-    width: 1rem;
-    height: 1rem;
-    fill: none;
-    stroke: currentColor;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 1.8;
   }
 
   .sound-drawer {
@@ -2388,6 +2454,18 @@ svg {
     right: 0;
   }
 
+  .sound-drawer--bottom {
+    top: auto;
+    right: auto;
+    bottom: 0.5rem;
+    left: 50%;
+    width: calc(100% - 1rem);
+    max-width: calc(100% - 1rem);
+    height: auto;
+    max-height: 55vh;
+    transform: translateX(-50%);
+  }
+
   .sound-drawer > .drawer-close-button {
     flex: 0 0 auto;
     align-self: flex-start;
@@ -2400,8 +2478,13 @@ svg {
     overflow-y: auto;
   }
 
+  .sound-drawer--bottom .project-history {
+    position: static;
+    width: 100%;
+  }
+
   .sound-book {
-    min-height: 31rem;
+    min-height: 0;
     padding: var(--space-3);
   }
 
