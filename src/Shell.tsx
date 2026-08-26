@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { FoundationsPage } from './App'
 import { MaterialSymbol, type MaterialSymbolName } from './MaterialSymbol'
+import { ProjectPage } from './ProjectPage'
 
 type Navigate = (path: string) => void
 
@@ -160,29 +161,6 @@ function HomePage({ navigate }: { navigate: Navigate }) {
   )
 }
 
-function ProjectPage() {
-  return (
-    <div className="prototype-page">
-      <PageIntro
-        eyebrow="Projet fictif · Le Jardin de Minuit"
-        title="Le livre attend sa scène."
-        description="Cet écran valide uniquement la place du projet dans le shell principal. Aucun livre ni média n’est importé."
-      />
-      <section className="empty-state" aria-labelledby="empty-state-title">
-        <div className="empty-state__visual" aria-hidden="true">
-          <span>Le texte</span>
-          <i /><i /><i />
-        </div>
-        <div className="empty-state__copy">
-          <span className="prototype-label">Prochaine sous-étape · 1.3</span>
-          <h2 id="empty-state-title">Le workspace Sound Designer sera construit ici.</h2>
-          <p>La bibliothèque, le livre, l’inspecteur et les contrôles de simulation ne font pas partie de cette livraison.</p>
-        </div>
-      </section>
-    </div>
-  )
-}
-
 function SettingsPage() {
   return (
     <div className="prototype-page">
@@ -262,9 +240,13 @@ function InternalBrand({ navigate }: { navigate: Navigate }) {
 
 export function AppShell() {
   const [path, setPath] = useState(initialPath)
+  const [projectMenuOpen, setProjectMenuOpen] = useState(false)
   const mainRef = useRef<HTMLElement>(null)
+  const projectMenuButtonRef = useRef<HTMLButtonElement>(null)
+  const projectMenuRef = useRef<HTMLElement>(null)
 
   const navigate: Navigate = (nextPath) => {
+    setProjectMenuOpen(false)
     if (nextPath === path) return
     window.history.pushState(null, '', nextPath)
     setPath(nextPath)
@@ -285,36 +267,83 @@ export function AppShell() {
     return () => window.cancelAnimationFrame(frame)
   }, [path])
 
+  useEffect(() => {
+    if (!projectMenuOpen) return
+    projectMenuRef.current?.querySelector<HTMLAnchorElement>('a')?.focus()
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      setProjectMenuOpen(false)
+      projectMenuButtonRef.current?.focus()
+    }
+    window.addEventListener('keydown', closeOnEscape)
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [projectMenuOpen])
+
   return (
-    <div className="app-shell">
+    <div className={path === '/projet' ? 'app-shell app-shell--project' : 'app-shell'}>
       <a className="skip-link" href="#main-content">Aller au contenu</a>
       <header className="app-header">
-        <InternalBrand navigate={navigate} />
+        <div className="app-header__start">
+          {path === '/projet' && (
+            <button
+              ref={projectMenuButtonRef}
+              className="project-menu-button"
+              type="button"
+              aria-expanded={projectMenuOpen}
+              aria-controls="project-navigation"
+              aria-label={projectMenuOpen ? 'Fermer la navigation générale' : 'Ouvrir la navigation générale'}
+              onClick={() => setProjectMenuOpen((open) => !open)}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              </svg>
+            </button>
+          )}
+          <InternalBrand navigate={navigate} />
+          {path === '/projet' && <span className="project-header-context">Atelier Sound Designer</span>}
+        </div>
         <span className="prototype-badge"><span aria-hidden="true" />Prototype local</span>
       </header>
-      <aside className="app-sidebar">
-        <nav aria-label="Navigation principale">
-          <span className="nav-heading">Écrans</span>
-          <div className="nav-list">
-            {routes.map((route) => (
-              <RouteLink key={route.path} route={route} currentPath={path} navigate={navigate} />
-            ))}
-          </div>
-        </nav>
-        <nav className="secondary-nav" aria-label="Ressources du prototype">
-          <span className="nav-heading">Ressources</span>
-          <RouteLink
-            route={foundationsRoute}
-            currentPath={path}
-            navigate={navigate}
-            className="nav-link--secondary"
-          />
-        </nav>
-        <p className="shell-version">Jaquette · 0.0.0</p>
-      </aside>
+      {path === '/projet' ? (
+        projectMenuOpen && (
+          <aside id="project-navigation" className="project-navigation-popover" ref={projectMenuRef}>
+            <nav aria-label="Navigation principale">
+              <span className="nav-heading">Écrans</span>
+              <div className="nav-list">
+                {routes.map((route) => <RouteLink key={route.path} route={route} currentPath={path} navigate={navigate} />)}
+              </div>
+            </nav>
+            <nav className="secondary-nav" aria-label="Ressources du prototype">
+              <span className="nav-heading">Ressources</span>
+              <RouteLink route={foundationsRoute} currentPath={path} navigate={navigate} className="nav-link--secondary" />
+            </nav>
+            <p className="shell-version">Jaquette · 0.0.0</p>
+          </aside>
+        )
+      ) : (
+        <aside className="app-sidebar">
+          <nav aria-label="Navigation principale">
+            <span className="nav-heading">Écrans</span>
+            <div className="nav-list">
+              {routes.map((route) => <RouteLink key={route.path} route={route} currentPath={path} navigate={navigate} />)}
+            </div>
+          </nav>
+          <nav className="secondary-nav" aria-label="Ressources du prototype">
+            <span className="nav-heading">Ressources</span>
+            <RouteLink route={foundationsRoute} currentPath={path} navigate={navigate} className="nav-link--secondary" />
+          </nav>
+          <p className="shell-version">Jaquette · 0.0.0</p>
+        </aside>
+      )}
       <main
         id="main-content"
-        className={path === '/fondations' ? 'app-main app-main--foundations' : 'app-main'}
+        className={
+          path === '/fondations'
+            ? 'app-main app-main--foundations'
+            : path === '/projet'
+              ? 'app-main app-main--project'
+              : 'app-main'
+        }
         tabIndex={-1}
         ref={mainRef}
       >
