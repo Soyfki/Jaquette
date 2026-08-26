@@ -2853,3 +2853,335 @@ select:focus-visible,
     justify-self: start;
   }
 }
+
+/* Sous-livraison 1.4.1 — rôle simulé et variante Réviseur */
+.project-workspace-intro {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) auto auto;
+  align-items: center;
+}
+
+.project-workspace-heading {
+  min-width: 0;
+}
+
+.project-role-switcher {
+  display: grid;
+  min-width: 20rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.project-role-switcher__heading {
+  display: grid;
+  gap: 0.05rem;
+  color: var(--color-secondary);
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.project-role-switcher__heading small {
+  color: color-mix(in srgb, var(--color-text) 42%, transparent);
+  font-size: 0.43rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.project-role-switcher__options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem;
+  padding: 0.22rem;
+  border: 1px solid color-mix(in srgb, var(--color-secondary) 28%, transparent);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-secondary) 6%, var(--color-background));
+}
+
+.project-role-switcher__options button {
+  display: inline-flex;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.34rem 0.62rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: color-mix(in srgb, var(--color-text) 66%, transparent);
+  font: inherit;
+  font-size: 0.57rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.project-role-switcher__options button:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 38%, transparent);
+  color: var(--color-text);
+}
+
+.project-role-switcher__options button[aria-pressed='true'] {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-background);
+}
+
+.project-role-switcher__state {
+  padding-left: 0.35rem;
+  border-left: 1px solid currentColor;
+  font-size: 0.43rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.reviewer-workspace {
+  display: grid;
+  min-height: 0;
+  grid-template-areas:
+    'reviewer-book reviewer-sidebar'
+    'reviewer-simulation reviewer-sidebar';
+  grid-template-columns: minmax(36rem, 3.2fr) minmax(17rem, 0.8fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.55rem;
+  overflow: hidden;
+}
+
+.reviewer-workspace > .sound-book {
+  grid-area: reviewer-book;
+}
+
+.reviewer-workspace > .sound-controls {
+  grid-area: reviewer-simulation;
+}
+
+.reviewer-sidebar {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  grid-area: reviewer-sidebar;
+  align-content: start;
+  gap: 0.55rem;
+  overflow-y: auto;
+}
+
+.reviewer-panel {
+  min-width: 0;
+  padding: var(--space-3);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-secondary) 18%, transparent);
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--color-background) 76%, var(--color-text));
+}
+
+.reviewer-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.reviewer-panel h2 {
+  margin: var(--space-1) 0 0;
+  font-size: 0.86rem;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.reviewer-comment-list {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reviewer-comment-list li {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.58rem;
+  border: 1px solid color-mix(in srgb, var(--color-secondary) 16%, transparent);
+  border-radius: 0.65rem;
+  background: color-mix(in srgb, var(--color-text) 3%, transparent);
+}
+
+.reviewer-comment-list li > div,
+.reviewer-candidate > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.reviewer-comment-list strong,
+.reviewer-candidate strong {
+  font-size: 0.58rem;
+}
+
+.reviewer-comment-list p,
+.reviewer-candidate p {
+  margin: 0;
+  color: color-mix(in srgb, var(--color-text) 44%, transparent);
+  font-size: 0.5rem;
+}
+
+.reviewer-comment-list blockquote {
+  margin: 0;
+  color: color-mix(in srgb, var(--color-text) 72%, transparent);
+  font-family: var(--font-book);
+  font-size: 0.58rem;
+  line-height: 1.45;
+}
+
+.review-state {
+  flex: 0 0 auto;
+  color: var(--color-validation);
+  font-size: 0.46rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.review-state--open {
+  color: var(--color-accent);
+}
+
+.reviewer-panel__note,
+.candidate-proposal-note {
+  margin: var(--space-2) 0 0;
+  color: color-mix(in srgb, var(--color-text) 43%, transparent);
+  font-size: 0.49rem;
+  line-height: 1.45;
+}
+
+.reviewer-candidate-list {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.reviewer-candidate {
+  display: grid;
+  gap: 0.22rem;
+  padding: 0.58rem;
+  border: 1px solid color-mix(in srgb, var(--color-secondary) 18%, transparent);
+  border-radius: 0.65rem;
+  background: color-mix(in srgb, var(--color-secondary) 5%, transparent);
+}
+
+.reviewer-candidate > div span {
+  color: var(--color-secondary);
+  font-size: 0.46rem;
+  font-weight: 700;
+}
+
+.reviewer-candidate--proposed {
+  border-color: color-mix(in srgb, var(--color-accent) 42%, transparent);
+  background: color-mix(in srgb, var(--color-accent) 7%, transparent);
+}
+
+.reviewer-candidate--proposed > div span {
+  color: var(--color-accent);
+}
+
+.candidate-proposal-note {
+  padding: 0.55rem;
+  border-left: 0.18rem solid var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+  color: color-mix(in srgb, var(--color-text) 62%, transparent);
+}
+
+.candidate-proposal-note strong {
+  color: var(--color-accent);
+}
+
+.reviewer-validation-summary {
+  display: grid;
+  gap: 0.35rem;
+  margin: var(--space-3) 0 0;
+}
+
+.reviewer-validation-summary div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+
+.reviewer-validation-summary dt {
+  color: color-mix(in srgb, var(--color-text) 48%, transparent);
+  font-size: 0.5rem;
+}
+
+.reviewer-validation-summary dd {
+  margin: 0;
+  color: var(--color-validation);
+  font-size: 0.54rem;
+  font-weight: 700;
+}
+
+@media (max-width: 56rem) {
+  .project-workspace-intro {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .project-workspace-intro > p {
+    display: none;
+  }
+
+  .project-role-switcher {
+    min-width: 19rem;
+  }
+
+  .reviewer-workspace {
+    grid-template-areas:
+      'reviewer-book'
+      'reviewer-simulation'
+      'reviewer-sidebar';
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    align-content: start;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .reviewer-workspace > .sound-book {
+    min-height: 32rem;
+    overflow: visible;
+  }
+
+  .reviewer-workspace > .sound-controls {
+    overflow: visible;
+  }
+
+  .reviewer-workspace .project-history {
+    position: static;
+    width: 100%;
+  }
+
+  .reviewer-workspace .controls-disclaimer {
+    display: block;
+  }
+
+  .reviewer-sidebar {
+    overflow: visible;
+  }
+}
+
+@media (max-width: 42rem) {
+  .project-workspace-intro {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .project-role-switcher {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

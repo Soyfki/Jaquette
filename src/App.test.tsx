@@ -381,16 +381,102 @@ describe('Jaquette application shell', () => {
     expect(history).toHaveFocus()
   })
 
-  it('keeps project content fictive, non-editable and without role switching', () => {
+  it('starts the project with an accessible non-persistent Sound Designer role', () => {
     setPath('/projet')
     render(<AppShell />)
+    const roleControl = screen.getByRole('group', { name: 'Rôle simulé' })
+    const soundDesigner = within(roleControl).getByRole('button', { name: 'Sound Designer' })
+    const reviewer = within(roleControl).getByRole('button', { name: 'Réviseur' })
     const workspace = screen.getByLabelText('Workspace Sound Designer fictif')
+
+    expect(soundDesigner).toHaveAttribute('aria-pressed', 'true')
+    expect(reviewer).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByText('Local · non persistant')).toBeVisible()
+    expect(screen.getByText('Atelier Sound Designer · rôle simulé')).toBeVisible()
     expect(within(workspace).getByText('Aucune occurrence sélectionnée')).toBeVisible()
     expect(within(workspace).getByText('Inactive')).toBeVisible()
     expect(within(workspace).getByLabelText('Page de livre fictive non éditable')).toBeVisible()
     expect(workspace.querySelector('[contenteditable], audio')).toBeNull()
-    expect(screen.queryByRole('combobox', { name: /rôle/i })).not.toBeInTheDocument()
     expect(screen.getByText(/Aucun disque indexé · aucune connexion Drive · aucun média réel/)).toBeVisible()
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+  })
+
+  it('switches repeatedly to a distinct Reviewer tree without URL, history or reload changes', async () => {
+    const user = userEvent.setup()
+    setPath('/projet')
+    ;(window as Window & { __jaquetteRoleMarker?: string }).__jaquetteRoleMarker = 'preserved'
+    render(<AppShell />)
+    const initialHistoryLength = window.history.length
+    const reviewer = screen.getByRole('button', { name: 'Réviseur' })
+
+    await user.click(reviewer)
+    expect(reviewer).toHaveFocus()
+    expect(reviewer).toHaveAttribute('aria-pressed', 'true')
+    expect(window.location.pathname).toBe('/projet')
+    expect(window.history.length).toBe(initialHistoryLength)
+    expect((window as Window & { __jaquetteRoleMarker?: string }).__jaquetteRoleMarker).toBe('preserved')
+    expect(screen.getByText('Atelier Réviseur · rôle simulé')).toBeVisible()
+    expect(screen.getByRole('heading', { level: 1, name: 'Le livre passe en révision.' })).toBeVisible()
+
+    const reviewerWorkspace = screen.getByLabelText('Workspace Réviseur fictif')
+    for (const region of ['Livre', 'Simulation/Navigation', 'Commentaires', 'Candidates de chapitre', 'Validation']) {
+      expect(within(reviewerWorkspace).getByRole('region', { name: region })).toBeVisible()
+    }
+    expect(within(reviewerWorkspace).getByText(/Proposer n’est ni sélectionner définitivement, ni valider/)).toBeVisible()
+    expect(within(reviewerWorkspace).getByText(/approbation unanime des Réviseurs affectés sera requise/)).toBeVisible()
+
+    expect(screen.queryByRole('region', { name: 'Bibliothèque' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Inspecteur audio' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('searchbox', { name: 'Rechercher dans la bibliothèque fictive' })).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Ouvrir un fichier local')).not.toBeInTheDocument()
+    expect(screen.queryByText('Niveau & source')).not.toBeInTheDocument()
+    expect(document.querySelector('[data-project-track], .responsive-panel-toolbar')).toBeNull()
+    expect(reviewerWorkspace.querySelector('[contenteditable], audio')).toBeNull()
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+
+    const soundDesigner = screen.getByRole('button', { name: 'Sound Designer' })
+    for (let transition = 0; transition < 2; transition += 1) {
+      await user.click(soundDesigner)
+      expect(screen.getByLabelText('Workspace Sound Designer fictif')).toBeVisible()
+      expect(soundDesigner).toHaveAttribute('aria-pressed', 'true')
+      await user.click(reviewer)
+      expect(screen.getByLabelText('Workspace Réviseur fictif')).toBeVisible()
+      expect(reviewer).toHaveAttribute('aria-pressed', 'true')
+    }
+    expect(window.location.pathname).toBe('/projet')
+    expect(window.history.length).toBe(initialHistoryLength)
+  })
+
+  it('cleans a running reduced Sound Designer drawer before mounting the Reviewer tree', async () => {
+    const user = userEvent.setup()
+    const clearIntervalSpy = vi.spyOn(window, 'clearInterval')
+    mockReducedWorkspace()
+    setPath('/projet')
+    render(<AppShell />)
+
+    await user.click(screen.getByRole('button', { name: 'Ouvrir Simulation/Navigation' }))
+    await user.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
+    await user.click(screen.getByRole('button', { name: 'Historique' }))
+    expect(document.querySelector('[data-active-word="true"]')).toBeInTheDocument()
+    expect(document.querySelector('.sound-drawer')).toBeInTheDocument()
+    clearIntervalSpy.mockClear()
+
+    const reviewer = screen.getByRole('button', { name: 'Réviseur' })
+    await user.click(reviewer)
+    expect(reviewer).toHaveFocus()
+    expect(clearIntervalSpy).toHaveBeenCalled()
+    expect(document.querySelector('[data-active-word="true"], .sound-drawer')).toBeNull()
+    expect(screen.queryByRole('region', { name: 'Historique fictif du projet' })).not.toBeInTheDocument()
+    expect(screen.getByLabelText('Workspace Réviseur fictif')).toBeVisible()
+
+    await user.click(screen.getByRole('button', { name: 'Sound Designer' }))
+    expect(screen.getByLabelText('Workspace Sound Designer fictif')).toBeVisible()
+    expect(screen.queryByRole('region', { name: 'Bibliothèque' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Inspecteur audio' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Simulation/Navigation' })).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Ouvrir Simulation/Navigation' }))
+    expect(screen.getByRole('status', { name: 'État de la simulation : Inactive' })).toBeVisible()
+    clearIntervalSpy.mockRestore()
   })
 
   it('uses the expected unfilled Material Symbols Rounded instead of initials', () => {

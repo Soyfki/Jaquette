@@ -12,8 +12,10 @@ Le cahier des charges complet reste la source de référence détaillée. `AGENT
 
 ## État actuel du projet
 
-- La phase 0 et la sous-étape 1.1 sont acquises.
-- La sous-étape applicative 1.2 est la prochaine à réaliser et n’a pas commencé.
+- La phase 0 et les sous-étapes applicatives 1.1, 1.2 et 1.3 sont acquises.
+- La sous-étape 1.4 est entamée uniquement par son lot 1.4.1 — socle de rôle simulé et variante Réviseur.
+- Le prototype Web permet de basculer localement entre les rôles simulés Sound Designer et Réviseur ; le rôle Sound Designer reste l’état initial et la simulation n’est pas persistée.
+- Les variantes Chef d’équipe et Admin Maison ne sont pas réalisées. La sous-étape 1.4 et la phase 1 ne sont donc pas acquises, et la sous-étape 2.1 n’est pas la prochaine étape exécutable.
 - Le recadrage produit REC-01 sur la collaboration offline est intégré à la documentation.
 - La version de l’application reste `0.0.0`.
 - Les choix d’implémentation qui ne sont pas explicitement validés restent ouverts.

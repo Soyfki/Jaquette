@@ -277,6 +277,105 @@ test('collapses desktop panels and uses three exclusive reduced drawers', async 
   expect(errors.pageErrors).toEqual([])
 })
 
+test('switches the simulated role locally and mounts a wider Reviewer workspace', async ({ page }, testInfo) => {
+  const errors = collectErrors(page)
+  await page.goto('/projet')
+  const viewport = page.viewportSize()!
+  const roleControl = page.getByRole('group', { name: 'Rôle simulé' })
+  const soundDesigner = roleControl.getByRole('button', { name: 'Sound Designer' })
+  const reviewer = roleControl.getByRole('button', { name: 'Réviseur' })
+  const soundDesignerBook = page.locator('[data-workspace-region="book"]')
+
+  await expect(soundDesigner).toHaveAttribute('aria-pressed', 'true')
+  await expect(reviewer).toHaveAttribute('aria-pressed', 'false')
+  await expect(page.getByText('Atelier Sound Designer · rôle simulé')).toBeVisible()
+  const soundDesignerBookRect = await soundDesignerBook.boundingBox()
+  expect(soundDesignerBookRect).toBeTruthy()
+  const browserState = await page.evaluate(() => {
+    ;(window as Window & { __jaquetteRoleMarker?: string }).__jaquetteRoleMarker = 'preserved'
+    return { historyLength: window.history.length, path: window.location.pathname }
+  })
+  expect(browserState.path).toBe('/projet')
+
+  if (testInfo.project.name === 'chrome-reduced') {
+    await page.getByRole('button', { name: 'Ouvrir Simulation/Navigation' }).click()
+  }
+  await page.getByRole('button', { name: 'Lancer la simulation' }).click()
+  await expect(page.locator('[data-active-word="true"]')).toHaveCount(1)
+
+  await reviewer.focus()
+  await expect(reviewer).toBeFocused()
+  await reviewer.press('Space')
+  await expect(reviewer).toBeFocused()
+  await expect(reviewer).toHaveAttribute('aria-pressed', 'true')
+  const focus = await reviewer.evaluate((element) => {
+    const style = getComputedStyle(element)
+    return { style: style.outlineStyle, width: Number.parseFloat(style.outlineWidth) }
+  })
+  expect(focus.style).not.toBe('none')
+  expect(focus.width).toBeGreaterThan(0)
+
+  await expect(page).toHaveURL('/projet')
+  expect(await page.evaluate(() => window.history.length)).toBe(browserState.historyLength)
+  expect(await page.evaluate(() => (window as Window & { __jaquetteRoleMarker?: string }).__jaquetteRoleMarker)).toBe('preserved')
+  await expect(page.getByText('Atelier Réviseur · rôle simulé')).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'Le livre passe en révision.' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+  await expect(page.getByLabel('Workspace Réviseur fictif')).toBeVisible()
+
+  for (const region of ['Livre', 'Simulation/Navigation', 'Commentaires', 'Candidates de chapitre', 'Validation']) {
+    await expect(page.getByRole('region', { name: region })).toBeVisible()
+  }
+  await expect(page.getByText(/Proposer n’est ni sélectionner définitivement, ni valider/)).toBeVisible()
+  await expect(page.getByText(/approbation unanime des Réviseurs affectés sera requise/)).toBeVisible()
+
+  await expect(page.getByRole('region', { name: 'Bibliothèque' })).toHaveCount(0)
+  await expect(page.getByRole('region', { name: 'Inspecteur audio' })).toHaveCount(0)
+  await expect(page.getByRole('searchbox', { name: 'Rechercher dans la bibliothèque fictive' })).toHaveCount(0)
+  await expect(page.getByLabel('Ouvrir un fichier local')).toHaveCount(0)
+  await expect(page.locator('[data-project-track], .responsive-panel-toolbar, .sound-drawer')).toHaveCount(0)
+  await expect(page.getByText('Niveau & source')).toHaveCount(0)
+  await expect(page.locator('[data-active-word="true"], [contenteditable], audio')).toHaveCount(0)
+
+  const reviewerBookRect = await page.locator('[data-workspace-region="book"]').boundingBox()
+  expect(reviewerBookRect).toBeTruthy()
+  if (testInfo.project.name === 'chrome-desktop') {
+    expect(reviewerBookRect!.width).toBeGreaterThanOrEqual(soundDesignerBookRect!.width * 1.18)
+  } else {
+    expect(reviewerBookRect!.width).toBeGreaterThanOrEqual(viewport.width * 0.95)
+  }
+  await expectNoOverflow(page)
+  await page.screenshot({
+    path: 'test-results/visual/projet-reviewer-' + testInfo.project.name + '-' + viewport.width + 'x' + viewport.height + '.png',
+    fullPage: true,
+  })
+
+  for (let transition = 0; transition < 2; transition += 1) {
+    await soundDesigner.click()
+    await expect(page.getByLabel('Workspace Sound Designer fictif')).toBeVisible()
+    await expect(soundDesigner).toHaveAttribute('aria-pressed', 'true')
+    await expect(page.locator('[data-active-word="true"], .sound-drawer')).toHaveCount(0)
+    if (testInfo.project.name === 'chrome-desktop') {
+      await expect(page.getByRole('status', { name: 'État de la simulation : Inactive' })).toBeVisible()
+    }
+    await reviewer.click()
+    await expect(page.getByLabel('Workspace Réviseur fictif')).toBeVisible()
+    await expect(reviewer).toHaveAttribute('aria-pressed', 'true')
+  }
+
+  await expect(page).toHaveURL('/projet')
+  expect(await page.evaluate(() => window.history.length)).toBe(browserState.historyLength)
+  await expectNoOverflow(page)
+
+  await page.reload()
+  await expect(soundDesigner).toHaveAttribute('aria-pressed', 'true')
+  await expect(reviewer).toHaveAttribute('aria-pressed', 'false')
+  await expect(page.getByLabel('Workspace Sound Designer fictif')).toBeVisible()
+  await expect(page).toHaveURL('/projet')
+  expect(errors.consoleErrors).toEqual([])
+  expect(errors.pageErrors).toEqual([])
+})
+
 test('uses the local picker, synchronized pagination, chapter select, menu and history', async ({ page }, testInfo) => {
   const errors = collectErrors(page)
   await page.goto('/projet')
@@ -404,10 +503,14 @@ test('offers visible keyboard focus on the project and its new controls', async 
   await page.keyboard.press('Tab')
   await expect(page.getByRole('link', { name: 'Jaquette, aller à l’accueil' })).toBeFocused()
   await page.keyboard.press('Tab')
+  await expect(page.getByRole('button', { name: 'Sound Designer' })).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('button', { name: 'Réviseur' })).toBeFocused()
+  await page.keyboard.press('Tab')
+  const libraryToggle = page.getByRole('button', { name: /la bibliothèque/ })
+  await expect(libraryToggle).toBeFocused()
   const search = page.getByRole('searchbox', { name: 'Rechercher dans la bibliothèque fictive' })
   if (testInfo.project.name === 'chrome-reduced') {
-    const libraryToggle = page.getByRole('button', { name: 'Ouvrir la bibliothèque' })
-    await expect(libraryToggle).toBeFocused()
     await libraryToggle.click()
     await expect(page.locator('#sound-library-drawer').getByRole('button', { name: 'Fermer la bibliothèque' })).toBeFocused()
     await search.focus()

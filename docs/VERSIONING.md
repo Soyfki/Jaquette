@@ -9,12 +9,13 @@ Cette convention fournit un repère minimal pour versionner l’application Jaqu
 - Version de l’application : **`0.0.0`**.
 - État : **pré-développement, non publié**.
 - Phase 0 : **acquise**.
-- Sous-étape 1.1 : **acquise**.
-- Prochaine sous-étape applicative : **1.2, non commencée**.
+- Sous-étapes 1.1 à 1.3 : **acquises**.
+- Sous-étape 1.4 : **entamée uniquement par le lot 1.4.1 — socle de rôle simulé et variante Réviseur**.
+- Variantes Chef d’équipe et Admin Maison : **non réalisées** ; la sous-étape 1.4 et la phase 1 ne sont pas acquises, et 2.1 n’est pas encore la prochaine étape exécutable.
 - Recadrage REC-01 : **collaboration offline intégrée à la documentation**.
 - Jalon produit visé par la roadmap : **V0.1 — Preuve du modèle textuel**.
 
-La valeur `0.0.0` reste inchangée malgré l’existence de la démonstration du design system 1.1 : aucun livrable applicatif publié n’a encore reçu de version. Elle ne signifie pas que le jalon produit V0.1 est atteint.
+La valeur `0.0.0` reste inchangée malgré l’existence du prototype Web intermédiaire jusqu’au lot 1.4.1 : aucun livrable applicatif publié n’a encore reçu de version. Elle ne signifie ni que la sous-étape 1.4 ou la phase 1 sont acquises, ni que le jalon produit V0.1 est atteint.
 
 ## Version de l’application
 

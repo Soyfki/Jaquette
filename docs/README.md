@@ -18,14 +18,16 @@ Ce dossier rassemble la documentation complémentaire et les décisions techniqu
 - [Données de référence](../reference-data/README.md) — acquisition reproductible, inventaire validé et scénario de doublage du jalon 0.2.
 - [Protocole de validation](validation/README.md) — méthode commune, checklist et modèles de rapports pour valider chaque livraison.
 - [Validation du design system 1.1](validation/1.1-design-system.md) — contrôles automatisés et revue humaine de la page de démonstration.
+- [Validation du socle de rôle simulé et de la variante Réviseur 1.4.1](validation/1.4-role-variants.md) — bascule locale, séparation des interfaces, responsive et non-régression du workspace Sound Designer.
 
 ## État documentaire
 
 - Phase acquise : **phase 0 — Préparation du projet**.
-- Sous-étape acquise : **1.1 — Construire le design system de base**.
-- Prochaine sous-étape applicative : **1.2 — Créer la structure d’écran principale**, non commencée.
+- Sous-étapes acquises : **1.1 à 1.3**.
+- Sous-étape en cours : **1.4 — Adapter l’interface selon le rôle**, entamée uniquement par le lot **1.4.1 — Socle de rôle simulé et variante Réviseur**.
+- Variantes encore absentes : **Chef d’équipe** et **Admin Maison** ; la sous-étape 1.4 et la phase 1 ne sont pas acquises, et 2.1 n’est pas encore la prochaine étape exécutable.
 - Recadrage produit : **REC-01 — Collaboration offline**, intégré à la documentation.
-- Code applicatif : **démonstration Web du design system uniquement**.
+- Code applicatif : **prototype Web intermédiaire avec shell, workspace Sound Designer et variante Réviseur simulée localement**.
 - Version actuelle de l’application : **`0.0.0` (pré-développement, non publiée)**.
 
 Cet index n’ajoute aucune règle métier et ne remplace pas les documents de référence.
