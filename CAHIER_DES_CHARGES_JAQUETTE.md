@@ -612,6 +612,8 @@ Un Chef d’équipe peut gérer plusieurs équipes et disposer d’un tableau de
 
 ## 22. Accueil façon Figma
 
+L’accueil est un tableau de bord général distinct de l’écran d’un projet. Dans le workspace courant, il affiche simultanément toutes les équipes et tous les projets du jeu de données disponible, sans exiger l’ouverture préalable d’un projet.
+
 Navigation gauche :
 
 - switch de workspace ;
@@ -624,6 +626,8 @@ Navigation gauche :
 
 Zone centrale :
 
+- vue de toutes les équipes avec leur nom, leur nombre de membres et leurs projets associés ou leur nombre ;
+- vue de tous les projets avec leur nom, leur équipe, leur statut et un repère de progression ou d’activité ;
 - projets récents ;
 - cartes de projets avec couverture ;
 - titre ;
@@ -811,6 +815,8 @@ Validation finale et publication sont deux actions distinctes.
 Après validation : `VALIDÉ → PRÊT À PUBLIER`.
 
 Puis l’utilisateur autorisé lance explicitement : `Publier dans Jacques`.
+
+Avant l’état `Validé`, aucune préparation de publication ne doit être présentée. Pour `Non soumis`, `En attente Chef` ou `À corriger`, le panneau, les boutons, les contrôles et les métadonnées de destination sont absents du DOM ; les laisser montés mais désactivés n’est pas conforme.
 
 ## 31. Métadonnées boutique
 

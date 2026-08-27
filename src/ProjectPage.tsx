@@ -8,11 +8,18 @@ type SimulationState = 'inactive' | 'paused' | 'playing'
 type WorkspacePanel = 'library' | 'inspector' | 'simulation'
 type ResponsiveDrawer = WorkspacePanel | null
 type DesktopPanelState = Record<WorkspacePanel, boolean>
+type FinalValidationState = 'Non soumis' | 'En attente Chef' | 'À corriger' | 'Validé' | 'Prêt à publier' | 'Publié'
 
 export type SimulatedProjectRole = 'sound-designer' | 'reviewer' | 'team-lead' | 'publishing-house-admin'
 
 const REDUCED_WORKSPACE_QUERY = '(max-width: 56rem)'
 const BASE_WORDS_PER_MINUTE = 180
+const TEAM_LEAD_DEMO_FINAL_VALIDATION_STATE: FinalValidationState = 'En attente Chef'
+const PUBLICATION_PREPARATION_STATES: readonly FinalValidationState[] = ['Validé', 'Prêt à publier']
+
+function canShowPublicationPreparation(state: FinalValidationState) {
+  return PUBLICATION_PREPARATION_STATES.includes(state)
+}
 
 const simulatedRoleOptions: ReadonlyArray<{ value: SimulatedProjectRole; label: string }> = [
   { value: 'sound-designer', label: 'Sound Designer' },
@@ -856,7 +863,7 @@ function TeamLeadDashboardPanel() {
   )
 }
 
-function TeamLeadProgressPanel() {
+function TeamLeadProgressPanel({ finalValidationState }: { finalValidationState: FinalValidationState }) {
   return (
     <section className="role-panel team-lead-progress" aria-labelledby="team-lead-progress-title" data-workspace-region="progress">
       <header className="role-panel__header">
@@ -875,7 +882,7 @@ function TeamLeadProgressPanel() {
         </article>
         <article className="progress-axis-list__final">
           <span>Validation finale</span>
-          <strong>En attente Chef</strong>
+          <strong>{finalValidationState}</strong>
           <p>État textuel fictif · aucun pourcentage global</p>
         </article>
       </div>
@@ -915,7 +922,7 @@ function TeamLeadCommentsPanel() {
   )
 }
 
-function TeamLeadFinalValidationPanel() {
+function TeamLeadFinalValidationPanel({ finalValidationState }: { finalValidationState: FinalValidationState }) {
   return (
     <section className="role-panel team-lead-validation" aria-labelledby="team-lead-validation-title" data-workspace-region="final-validation">
       <header className="role-panel__header">
@@ -923,7 +930,7 @@ function TeamLeadFinalValidationPanel() {
         <span className="fiction-chip fiction-chip--static">Non exécutoire</span>
       </header>
       <dl className="role-definition-list">
-        <div><dt>État présenté</dt><dd>En attente Chef</dd></div>
+        <div><dt>État présenté</dt><dd>{finalValidationState}</dd></div>
         <div><dt>Révision</dt><dd>21 validations sur 30</dd></div>
       </dl>
       <div className="non-executive-actions" aria-label="Aperçu fictif des décisions finales">
@@ -931,6 +938,7 @@ function TeamLeadFinalValidationPanel() {
         <button type="button" disabled>Retour fictif vers Réviseur</button>
         <button type="button" disabled>Retour fictif vers Sound Designer</button>
       </div>
+      <p className="role-panel__note">La préparation de la publication deviendra disponible après la validation finale du livre. Dans l’état présenté, elle reste entièrement absente.</p>
       <p className="role-panel__note">Ces formulations illustrent la hiérarchie future ; aucune validation ni aucun rejet n’est enregistré.</p>
     </section>
   )
@@ -959,6 +967,7 @@ function TeamLeadWorkspace() {
   const [page, setPage] = useState(1)
   const [historyOpen, setHistoryOpen] = useState(false)
   const historyButtonRef = useRef<HTMLButtonElement>(null)
+  const publicationPreparationAvailable = canShowPublicationPreparation(TEAM_LEAD_DEMO_FINAL_VALIDATION_STATE)
 
   useEffect(() => {
     if (!historyOpen) return
@@ -974,7 +983,7 @@ function TeamLeadWorkspace() {
   return (
     <div className="team-lead-workspace" aria-label="Workspace Chef d’équipe fictif">
       <TeamLeadDashboardPanel />
-      <TeamLeadProgressPanel />
+      <TeamLeadProgressPanel finalValidationState={TEAM_LEAD_DEMO_FINAL_VALIDATION_STATE} />
       <BookPanel activeWordIndex={activeWordIndex} chapterIndex={chapterIndex} page={page} />
       <SimulationControls
         id="team-lead-simulation-panel"
@@ -991,8 +1000,8 @@ function TeamLeadWorkspace() {
       <aside className="team-lead-sidebar" aria-label="Pilotage Chef d’équipe fictif">
         <TeamLeadHistoryPanel />
         <TeamLeadCommentsPanel />
-        <TeamLeadFinalValidationPanel />
-        <TeamLeadPublicationPanel />
+        <TeamLeadFinalValidationPanel finalValidationState={TEAM_LEAD_DEMO_FINAL_VALIDATION_STATE} />
+        {publicationPreparationAvailable && <TeamLeadPublicationPanel />}
       </aside>
     </div>
   )

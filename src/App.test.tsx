@@ -50,6 +50,47 @@ describe('Jaquette application shell', () => {
     expect(screen.getByRole('heading', { level: 1, name: heading })).toBeVisible()
   })
 
+  it('shows every local demo team and project on the general dashboard before opening a project', async () => {
+    const user = userEvent.setup()
+    setPath('/accueil')
+    ;(window as Window & { __jaquetteHomeMarker?: string }).__jaquetteHomeMarker = 'preserved'
+    render(<AppShell />)
+
+    const teamsRegion = screen.getByRole('region', { name: 'Toutes les équipes' })
+    const projectsRegion = screen.getByRole('region', { name: 'Tous les projets' })
+    expect(within(teamsRegion).getAllByRole('article')).toHaveLength(2)
+    expect(within(projectsRegion).getAllByRole('article')).toHaveLength(5)
+
+    for (const [name, members, projectCount] of [
+      ['Studio narratif', '7 membres fictifs', '3 projets'],
+      ['Révision Minuit', '5 membres fictifs', '2 projets'],
+    ] as const) {
+      const team = within(teamsRegion).getByRole('article', { name })
+      expect(within(team).getByText(members)).toBeVisible()
+      expect(within(team).getByText(projectCount)).toBeVisible()
+    }
+
+    for (const [name, team, status] of [
+      ['Le Jardin de Minuit', 'Studio narratif', 'En attente Chef'],
+      ['L’Atlas des brumes', 'Studio narratif', 'Révision'],
+      ['Les Voix du large', 'Studio narratif', 'Doublage'],
+      ['La Ville Haute', 'Révision Minuit', 'Doublage'],
+      ['Les Heures claires', 'Révision Minuit', 'Prêt à réviser'],
+    ] as const) {
+      const project = within(projectsRegion).getByRole('article', { name })
+      expect(within(project).getByText(team)).toBeVisible()
+      expect(within(project).getByText(status)).toBeVisible()
+      expect(within(project).getByRole('progressbar')).toBeVisible()
+    }
+
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+    await user.click(screen.getByRole('button', { name: 'Ouvrir l’état du projet' }))
+    expect(window.location.pathname).toBe('/projet')
+    expect((window as Window & { __jaquetteHomeMarker?: string }).__jaquetteHomeMarker).toBe('preserved')
+    expect(screen.getByRole('button', { name: 'Sound Designer' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByLabelText('Workspace Sound Designer fictif')).toBeVisible()
+  })
+
   it('opens the three desktop panels with synchronized compact controls', () => {
     setPath('/projet')
     render(<AppShell />)
@@ -308,8 +349,8 @@ describe('Jaquette application shell', () => {
     expect(screen.getByText('Page 1 sur 9')).toBeVisible()
   })
 
-  it('launches, pauses, resumes and manually advances the text simulation', async () => {
-    const user = userEvent.setup()
+  it('launches, pauses, resumes and manually advances the text simulation', () => {
+    vi.useFakeTimers()
     setPath('/projet')
     render(<AppShell />)
     const x1 = screen.getByRole('button', { name: 'x1' })
@@ -318,27 +359,27 @@ describe('Jaquette application shell', () => {
 
     expect(x1).toHaveAttribute('aria-pressed', 'true')
     expect(x2).toHaveAttribute('aria-pressed', 'false')
-    await user.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
     expect(screen.getByRole('button', { name: 'Mettre en pause' })).toBeVisible()
     expect(screen.getByRole('status', { name: 'État de la simulation : En cours' })).toBeVisible()
     expect(document.querySelector('[data-active-word="true"]')).toHaveTextContent('À')
-    await user.click(screen.getByRole('button', { name: 'Mettre en pause' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Mettre en pause' }))
     expect(screen.getByRole('status', { name: 'État de la simulation : En pause' })).toBeVisible()
 
-    await user.click(screen.getByRole('button', { name: 'Mot suivant' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Mot suivant' }))
     expect(document.querySelector('[data-active-word="true"]')).toHaveTextContent('l’instant')
-    await user.click(screen.getByRole('button', { name: 'Mot précédent' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Mot précédent' }))
     expect(document.querySelector('[data-active-word="true"]')).toHaveTextContent('À')
 
-    await user.click(x2)
+    fireEvent.click(x2)
     expect(x2).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByText('Multiplicateur actif : x2')).toBeVisible()
-    await user.click(x4)
+    fireEvent.click(x4)
     expect(x4).toHaveAttribute('aria-pressed', 'true')
-    await user.click(x1)
+    fireEvent.click(x1)
     expect(x1).toHaveAttribute('aria-pressed', 'true')
 
-    await user.click(screen.getByRole('button', { name: 'Reprendre la simulation' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Reprendre la simulation' }))
     expect(screen.getByRole('button', { name: 'Mettre en pause' })).toBeVisible()
   })
 
@@ -422,15 +463,17 @@ describe('Jaquette application shell', () => {
       'Historique',
       'Commentaires',
       'Validation finale',
-      'Préparation de la publication',
     ]) {
       expect(within(workspace).getByRole('region', { name: region })).toBeVisible()
     }
     expect(within(workspace).getByRole('progressbar', { name: 'Doublage fictif : 7 chapitres terminés sur 10' })).toHaveValue(7)
     expect(within(workspace).getByRole('progressbar', { name: 'Révision fictive : 21 validations obtenues sur 30 attendues' })).toHaveValue(21)
     expect(within(workspace).getByText('En attente Chef', { selector: 'strong' })).toBeVisible()
-    expect(within(workspace).getByText('Boutique Jacques')).toBeVisible()
+    expect(within(workspace).getByText(/La préparation de la publication deviendra disponible après la validation finale/)).toBeVisible()
     expect(within(workspace).getByText(/aucun pourcentage global/)).toBeVisible()
+    expect(within(workspace).queryByRole('region', { name: 'Préparation de la publication' })).not.toBeInTheDocument()
+    expect(within(workspace).queryByRole('button', { name: /publication/i })).not.toBeInTheDocument()
+    expect(workspace.querySelector('[data-workspace-region="publication-preparation"]')).toBeNull()
 
     expect(screen.queryByRole('region', { name: 'Bibliothèque' })).not.toBeInTheDocument()
     expect(screen.queryByRole('region', { name: 'Inspecteur audio' })).not.toBeInTheDocument()

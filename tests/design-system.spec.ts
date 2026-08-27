@@ -53,6 +53,84 @@ test('opens every primary URL directly with its accessible shell', async ({ page
   expect(errors.pageErrors).toEqual([])
 })
 
+test('shows the complete local dashboard and enters the project through SPA navigation', async ({ page }, testInfo) => {
+  const errors = collectErrors(page)
+  await page.goto('/accueil')
+  const viewport = page.viewportSize()!
+  const teamsRegion = page.getByRole('region', { name: 'Toutes les équipes' })
+  const projectsRegion = page.getByRole('region', { name: 'Tous les projets' })
+
+  await expect(teamsRegion).toBeVisible()
+  await expect(projectsRegion).toBeVisible()
+  await expect(teamsRegion.getByRole('article')).toHaveCount(2)
+  await expect(projectsRegion.getByRole('article')).toHaveCount(5)
+
+  for (const [name, members, projectCount] of [
+    ['Studio narratif', '7 membres fictifs', '3 projets'],
+    ['Révision Minuit', '5 membres fictifs', '2 projets'],
+  ] as const) {
+    const team = teamsRegion.getByRole('article', { name })
+    await expect(team).toBeVisible()
+    await expect(team.getByText(members, { exact: true })).toBeVisible()
+    await expect(team.getByText(projectCount, { exact: true })).toBeVisible()
+  }
+
+  for (const [id, name, team, status] of [
+    ['jardin-minuit', 'Le Jardin de Minuit', 'Studio narratif', 'En attente Chef'],
+    ['atlas-brumes', 'L’Atlas des brumes', 'Studio narratif', 'Révision'],
+    ['voix-large', 'Les Voix du large', 'Studio narratif', 'Doublage'],
+    ['ville-haute', 'La Ville Haute', 'Révision Minuit', 'Doublage'],
+    ['heures-claires', 'Les Heures claires', 'Révision Minuit', 'Prêt à réviser'],
+  ] as const) {
+    const project = projectsRegion.locator(`[data-demo-project="${id}"]`)
+    await expect(project.getByRole('heading', { level: 3, name })).toBeVisible()
+    await expect(project.getByText(team, { exact: true })).toBeVisible()
+    await expect(project.getByText(status, { exact: true })).toBeVisible()
+    await expect(project.getByRole('progressbar')).toBeVisible()
+  }
+
+  await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+  await expectNoOverflow(page)
+  const clippedCards = await page.locator('[data-demo-team], [data-demo-project]').evaluateAll((cards) => cards.some((card) => (
+    card.scrollWidth > card.clientWidth || card.scrollHeight > card.clientHeight
+  )))
+  expect(clippedCards).toBe(false)
+
+  if (testInfo.project.name === 'chrome-reduced') {
+    const [teamsBox, projectsBox] = await Promise.all([teamsRegion.boundingBox(), projectsRegion.boundingBox()])
+    expect(teamsBox && projectsBox).toBeTruthy()
+    expect(projectsBox!.y).toBeGreaterThanOrEqual(teamsBox!.y + teamsBox!.height)
+  }
+
+  const openProject = page.getByRole('button', { name: 'Ouvrir l’état du projet' })
+  await openProject.focus()
+  await expect(openProject).toBeFocused()
+  const focus = await openProject.evaluate((element) => {
+    const style = getComputedStyle(element)
+    return { style: style.outlineStyle, width: Number.parseFloat(style.outlineWidth) }
+  })
+  expect(focus.style).not.toBe('none')
+  expect(focus.width).toBeGreaterThan(0)
+
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await page.screenshot({
+    path: `test-results/visual/accueil-dashboard-${viewport.width}x${viewport.height}.png`,
+    fullPage: true,
+  })
+
+  await page.evaluate(() => {
+    ;(window as Window & { __jaquetteHomeMarker?: string }).__jaquetteHomeMarker = 'preserved'
+  })
+  await openProject.press('Enter')
+  await expect(page).toHaveURL('/projet')
+  expect(await page.evaluate(() => (window as Window & { __jaquetteHomeMarker?: string }).__jaquetteHomeMarker)).toBe('preserved')
+  await expect(page.getByRole('button', { name: 'Sound Designer' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByLabel('Workspace Sound Designer fictif')).toBeVisible()
+  await expectNoOverflow(page)
+  expect(errors.consoleErrors).toEqual([])
+  expect(errors.pageErrors).toEqual([])
+})
+
 test('collapses desktop panels and uses three exclusive reduced drawers', async ({ page }, testInfo) => {
   const errors = collectErrors(page)
   await page.goto('/projet')
@@ -377,6 +455,7 @@ test('switches the simulated role locally and mounts a wider Reviewer workspace'
 })
 
 test('mounts the Team Lead and Admin Maison hierarchies as isolated responsive trees', async ({ page }, testInfo) => {
+  test.setTimeout(120_000)
   const errors = collectErrors(page)
   await page.goto('/projet')
   const viewport = page.viewportSize()!
@@ -421,7 +500,6 @@ test('mounts the Team Lead and Admin Maison hierarchies as isolated responsive t
     'Historique',
     'Commentaires',
     'Validation finale',
-    'Préparation de la publication',
   ]
   for (const region of teamLeadRegions) {
     await expect(page.getByRole('region', { name: region, exact: true })).toBeVisible()
@@ -429,8 +507,11 @@ test('mounts the Team Lead and Admin Maison hierarchies as isolated responsive t
   await expect(page.getByRole('progressbar', { name: 'Doublage fictif : 7 chapitres terminés sur 10' })).toHaveAttribute('value', '7')
   await expect(page.getByRole('progressbar', { name: 'Révision fictive : 21 validations obtenues sur 30 attendues' })).toHaveAttribute('value', '21')
   await expect(page.getByText('En attente Chef', { exact: true }).first()).toBeVisible()
-  await expect(page.getByText('Boutique Jacques')).toBeVisible()
+  await expect(page.getByText(/La préparation de la publication deviendra disponible après la validation finale/)).toBeVisible()
   await expect(page.getByText(/aucun pourcentage global/)).toBeVisible()
+  await expect(page.getByRole('region', { name: 'Préparation de la publication', exact: true })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: /publication/i })).toHaveCount(0)
+  await expect(page.locator('[data-workspace-region="publication-preparation"]')).toHaveCount(0)
   await expect(page.getByRole('region', { name: 'Bibliothèque', exact: true })).toHaveCount(0)
   await expect(page.getByRole('region', { name: 'Inspecteur audio', exact: true })).toHaveCount(0)
   await expect(page.getByRole('searchbox', { name: 'Rechercher dans la bibliothèque fictive' })).toHaveCount(0)

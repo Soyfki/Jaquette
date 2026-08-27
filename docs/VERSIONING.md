@@ -10,8 +10,8 @@ Cette convention fournit un repère minimal pour versionner l’application Jaqu
 - État : **pré-développement, non publié**.
 - Phase 0 : **acquise**.
 - Sous-étapes 1.1 à 1.3 : **acquises**.
-- Sous-étape 1.4 : **lot 1.4.1 acquis ; lot 1.4.2 — variantes simulées Chef d’équipe et Admin Maison — livré techniquement mais en attente de validation humaine**.
-- Lot 1.4.3 et clôture de la phase 1 : **non commencés** ; la sous-étape 1.4 et la phase 1 ne sont pas acquises, et 2.1 n’est pas encore la prochaine étape exécutable.
+- Sous-étape 1.4 : **lot 1.4.1 acquis ; lot 1.4.2 — variantes simulées Chef d’équipe et Admin Maison — en correction après retour humain et non acquis jusqu’à sa revalidation**.
+- Lot 1.4.3 et clôture de la phase 1 : **non commencés** ; la sous-étape 1.4 et la phase 1 ne sont pas acquises, la phase 2 n’a pas commencé et 2.1 n’est pas encore la prochaine étape exécutable.
 - Recadrage REC-01 : **collaboration offline intégrée à la documentation**.
 - Jalon produit visé par la roadmap : **V0.1 — Preuve du modèle textuel**.
 

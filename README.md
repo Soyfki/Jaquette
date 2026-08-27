@@ -10,7 +10,7 @@ Jaquette ne doit pas être confondu avec **Jacques** : Jaquette est l’outil de
 
 ## État du projet
 
-La **phase 0 — Préparation du projet** et les sous-étapes applicatives **1.1 à 1.3** sont acquises. La sous-étape **1.4 — Adapter l’interface selon le rôle** est entamée : le lot **1.4.1 — Socle de rôle simulé et variante Réviseur** est acquis, tandis que le lot **1.4.2 — Variantes simulées Chef d’équipe et Admin Maison** est livré techniquement mais reste en attente de validation humaine. Le lot 1.4.3 et la clôture de la phase 1 n’ont pas commencé ; la sous-étape 1.4 et la phase 1 ne sont donc pas acquises, et la sous-étape 2.1 n’est pas encore la prochaine étape exécutable.
+La **phase 0 — Préparation du projet** et les sous-étapes applicatives **1.1 à 1.3** sont acquises. La sous-étape **1.4 — Adapter l’interface selon le rôle** est entamée : le lot **1.4.1 — Socle de rôle simulé et variante Réviseur** est acquis, tandis que le lot **1.4.2 — Variantes simulées Chef d’équipe et Admin Maison** est en correction après retour humain et reste non acquis jusqu’à sa revalidation. Le lot 1.4.3 et la clôture de la phase 1 n’ont pas commencé ; la sous-étape 1.4 et la phase 1 ne sont donc pas acquises, la phase 2 n’a pas commencé et la sous-étape 2.1 n’est pas encore la prochaine étape exécutable.
 
 Le recadrage produit **REC-01 — Collaboration offline** reste intégré à la documentation : la collaboration repose sur des chapitres `.chpt` échangés et révisés comme candidates, sans fonctions live.
 
@@ -28,7 +28,7 @@ corepack pnpm dev
 
 Ouvrir ensuite <http://127.0.0.1:5173> dans Chrome.
 
-La route `/projet` démarre dans la vue Sound Designer héritée de la sous-étape 1.3. Un sélecteur permet de basculer localement entre Sound Designer, Réviseur, Chef d’équipe et Admin Maison. Les variantes 1.4.2 présentent un pilotage projet fictif pour le Chef d’équipe et une administration fictive de maison pour l’Admin Maison. Les rôles simulés ne modifient ni l’URL ni l’historique du navigateur, ne sont pas conservés après rechargement et n’implémentent aucune authentification, permission, persistance ou action métier réelle.
+La route `/accueil` présente le tableau général fictif du workspace courant, avec les deux équipes et les cinq projets du jeu local visibles avant l’ouverture d’un projet. La route `/projet` démarre dans la vue Sound Designer héritée de la sous-étape 1.3. Un sélecteur permet de basculer localement entre Sound Designer, Réviseur, Chef d’équipe et Admin Maison. Dans l’état fictif `En attente Chef`, la préparation de publication reste absente jusqu’à la validation finale. Les rôles simulés ne modifient ni l’URL ni l’historique du navigateur, ne sont pas conservés après rechargement et n’implémentent aucune authentification, permission, persistance ou action métier réelle.
 
 Vérifications techniques :
 
