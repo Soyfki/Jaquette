@@ -10,12 +10,14 @@ Jaquette ne doit pas être confondu avec **Jacques** : Jaquette est l’outil de
 
 ## État du projet
 
-La **phase 0 — Préparation du projet** et la sous-étape **1.1 — Construire le design system de base** sont acquises. La prochaine sous-étape applicative est **1.2 — Créer la structure d’écran principale** ; elle n’a pas commencé. Le recadrage produit **REC-01 — Collaboration offline** est intégré à la documentation : la collaboration repose sur des chapitres `.chpt` échangés et révisés comme candidates, sans fonctions live.
+La **phase 0 — Préparation du projet** et les sous-étapes applicatives **1.1 à 1.3** sont acquises. La sous-étape **1.4 — Adapter l’interface selon le rôle** est entamée uniquement par son lot **1.4.1 — Socle de rôle simulé et variante Réviseur**. Les variantes Chef d’équipe et Admin Maison restent à réaliser : la sous-étape 1.4 et la phase 1 ne sont donc pas acquises, et la sous-étape 2.1 n’est pas encore la prochaine étape exécutable.
+
+Le recadrage produit **REC-01 — Collaboration offline** reste intégré à la documentation : la collaboration repose sur des chapitres `.chpt` échangés et révisés comme candidates, sans fonctions live.
 
 La version actuelle de l’application est **`0.0.0` (pré-développement, non publiée)**. La [convention de version](docs/VERSIONING.md) explique la différence entre cette version, les jalons produit tels que V0.1 et les futures versions des formats `.jacq`, `.chpt` et `.jacko`.
 
 
-## Lancer la démonstration 1.1
+## Lancer le prototype Web intermédiaire 1.4.1
 
 Pré-requis : Node.js 24 ou plus récent et Chrome. Le projet fixe pnpm 11.19.0 dans `package.json` et embarque les polices via des dépendances locales ; aucun service de polices distant n’est requis à l’exécution.
 
@@ -26,6 +28,8 @@ corepack pnpm dev
 
 Ouvrir ensuite <http://127.0.0.1:5173> dans Chrome.
 
+La route `/projet` démarre dans la vue Sound Designer héritée de la sous-étape 1.3. Un sélecteur permet de basculer localement vers la vue Réviseur, centrée sur le livre, la simulation, les commentaires, les candidates de chapitre et l’état de validation. Ce rôle simulé ne modifie ni l’URL ni l’historique du navigateur, n’est pas conservé après rechargement et n’implémente aucune authentification, permission, persistance ou action métier réelle.
+
 Vérifications techniques :
 
 ```powershell
@@ -34,7 +38,7 @@ corepack pnpm test:e2e
 git diff --check
 ```
 
-`test:e2e` lance la page dans Google Chrome aux largeurs définies dans la configuration Playwright. Les instructions complètes se trouvent dans la [validation de la sous-étape 1.1](docs/validation/1.1-design-system.md).
+`test:e2e` lance le prototype dans Google Chrome aux largeurs définies dans la configuration Playwright. Les contrôles du lot courant sont décrits dans la [validation 1.4.1 des variantes de rôle](docs/validation/1.4-role-variants.md). La campagne historique du socle visuel reste disponible dans la [validation de la sous-étape 1.1](docs/validation/1.1-design-system.md).
 
 ## Sources de vérité
 
@@ -66,5 +70,6 @@ Ne versionnez jamais de secret, mot de passe, clé, jeton ou identifiant de conn
 - [Données de référence](reference-data/README.md)
 - [Protocole et modèles de validation](docs/validation/README.md)
 - [Validation du design system 1.1](docs/validation/1.1-design-system.md)
+- [Validation du socle de rôle simulé et de la variante Réviseur 1.4.1](docs/validation/1.4-role-variants.md)
 - [Décision de socle Web](docs/decisions/0001-web-foundation.md)
 - [Plan détaillé de développement](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md)

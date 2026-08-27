@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { FoundationsPage } from './App'
 import { MaterialSymbol, type MaterialSymbolName } from './MaterialSymbol'
-import { ProjectPage } from './ProjectPage'
+import { ProjectPage, type SimulatedProjectRole } from './ProjectPage'
 
 type Navigate = (path: string) => void
 
@@ -205,11 +205,21 @@ function NotFoundPage({ navigate }: { navigate: Navigate }) {
   )
 }
 
-function CurrentPage({ path, navigate }: { path: string; navigate: Navigate }) {
+function CurrentPage({
+  path,
+  navigate,
+  projectRole,
+  setProjectRole,
+}: {
+  path: string
+  navigate: Navigate
+  projectRole: SimulatedProjectRole
+  setProjectRole: (role: SimulatedProjectRole) => void
+}) {
   switch (path) {
     case '/connexion': return <ConnectionPage navigate={navigate} />
     case '/accueil': return <HomePage navigate={navigate} />
-    case '/projet': return <ProjectPage />
+    case '/projet': return <ProjectPage role={projectRole} onRoleChange={setProjectRole} />
     case '/parametres': return <SettingsPage />
     case '/fondations': return <FoundationsPage />
     default: return <NotFoundPage navigate={navigate} />
@@ -240,6 +250,7 @@ function InternalBrand({ navigate }: { navigate: Navigate }) {
 
 export function AppShell() {
   const [path, setPath] = useState(initialPath)
+  const [projectRole, setProjectRole] = useState<SimulatedProjectRole>('sound-designer')
   const [projectMenuOpen, setProjectMenuOpen] = useState(false)
   const mainRef = useRef<HTMLElement>(null)
   const projectMenuButtonRef = useRef<HTMLButtonElement>(null)
@@ -248,12 +259,17 @@ export function AppShell() {
   const navigate: Navigate = (nextPath) => {
     setProjectMenuOpen(false)
     if (nextPath === path) return
+    if (nextPath === '/projet') setProjectRole('sound-designer')
     window.history.pushState(null, '', nextPath)
     setPath(nextPath)
   }
 
   useEffect(() => {
-    const handlePopState = () => setPath(normalizePath(window.location.pathname))
+    const handlePopState = () => {
+      const nextPath = normalizePath(window.location.pathname)
+      if (nextPath === '/projet') setProjectRole('sound-designer')
+      setPath(nextPath)
+    }
     window.addEventListener('popstate', handlePopState)
     return () => window.removeEventListener('popstate', handlePopState)
   }, [])
@@ -300,7 +316,11 @@ export function AppShell() {
             </button>
           )}
           <InternalBrand navigate={navigate} />
-          {path === '/projet' && <span className="project-header-context">Atelier Sound Designer</span>}
+          {path === '/projet' && (
+            <span className="project-header-context">
+              Atelier {projectRole === 'reviewer' ? 'Réviseur' : 'Sound Designer'} · rôle simulé
+            </span>
+          )}
         </div>
         <span className="prototype-badge"><span aria-hidden="true" />Prototype local</span>
       </header>
@@ -347,7 +367,12 @@ export function AppShell() {
         tabIndex={-1}
         ref={mainRef}
       >
-        <CurrentPage path={path} navigate={navigate} />
+        <CurrentPage
+          path={path}
+          navigate={navigate}
+          projectRole={projectRole}
+          setProjectRole={setProjectRole}
+        />
       </main>
     </div>
   )

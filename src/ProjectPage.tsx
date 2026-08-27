@@ -9,8 +9,15 @@ type WorkspacePanel = 'library' | 'inspector' | 'simulation'
 type ResponsiveDrawer = WorkspacePanel | null
 type DesktopPanelState = Record<WorkspacePanel, boolean>
 
+export type SimulatedProjectRole = 'sound-designer' | 'reviewer'
+
 const REDUCED_WORKSPACE_QUERY = '(max-width: 56rem)'
 const BASE_WORDS_PER_MINUTE = 180
+
+const simulatedRoleOptions: ReadonlyArray<{ value: SimulatedProjectRole; label: string }> = [
+  { value: 'sound-designer', label: 'Sound Designer' },
+  { value: 'reviewer', label: 'Réviseur' },
+]
 
 const libraryFamilies: LibraryFamily[] = [
   {
@@ -485,7 +492,7 @@ function SimulationControls({
   )
 }
 
-export function ProjectPage() {
+function SoundDesignerWorkspace() {
   const [chapterIndex, setChapterIndex] = useState(0)
   const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null)
   const [page, setPage] = useState(1)
@@ -634,31 +641,41 @@ export function ProjectPage() {
   )
 
   return (
-    <div className="prototype-page project-workspace-page">
-      <header className="project-workspace-intro">
-        <div><span className="page-intro__eyebrow">Projet fictif · Sound Designer</span><h1 tabIndex={-1}>Le livre attend sa scène.</h1></div>
-        <p><strong>Le Jardin de Minuit</strong><span>Aucun EPUB ni média réel</span></p>
-      </header>
-      <div className={workspaceClasses} aria-label="Workspace Sound Designer fictif">
-        {toolbar}
-        {!isReducedWorkspace && desktopPanels.library && <LibraryPanel id="sound-library-panel" />}
-        {isReducedWorkspace && responsiveDrawer === 'library' && (
-          <div id="sound-library-drawer" className="sound-drawer sound-drawer--left">
-            <button ref={libraryCloseButtonRef} className="drawer-close-button" type="button" onClick={() => closeResponsiveDrawer()}>Fermer la bibliothèque</button>
-            <LibraryPanel />
-          </div>
-        )}
-        <BookPanel activeWordIndex={activeWordIndex} chapterIndex={chapterIndex} page={page} />
-        {!isReducedWorkspace && desktopPanels.inspector && <InspectorPanel id="sound-inspector-panel" />}
-        {isReducedWorkspace && responsiveDrawer === 'inspector' && (
-          <div id="sound-inspector-drawer" className="sound-drawer sound-drawer--right">
-            <button ref={inspectorCloseButtonRef} className="drawer-close-button" type="button" onClick={() => closeResponsiveDrawer()}>Fermer l’inspecteur audio</button>
-            <InspectorPanel />
-          </div>
-        )}
-        {!isReducedWorkspace && desktopPanels.simulation && (
+    <div className={workspaceClasses} aria-label="Workspace Sound Designer fictif">
+      {toolbar}
+      {!isReducedWorkspace && desktopPanels.library && <LibraryPanel id="sound-library-panel" />}
+      {isReducedWorkspace && responsiveDrawer === 'library' && (
+        <div id="sound-library-drawer" className="sound-drawer sound-drawer--left">
+          <button ref={libraryCloseButtonRef} className="drawer-close-button" type="button" onClick={() => closeResponsiveDrawer()}>Fermer la bibliothèque</button>
+          <LibraryPanel />
+        </div>
+      )}
+      <BookPanel activeWordIndex={activeWordIndex} chapterIndex={chapterIndex} page={page} />
+      {!isReducedWorkspace && desktopPanels.inspector && <InspectorPanel id="sound-inspector-panel" />}
+      {isReducedWorkspace && responsiveDrawer === 'inspector' && (
+        <div id="sound-inspector-drawer" className="sound-drawer sound-drawer--right">
+          <button ref={inspectorCloseButtonRef} className="drawer-close-button" type="button" onClick={() => closeResponsiveDrawer()}>Fermer l’inspecteur audio</button>
+          <InspectorPanel />
+        </div>
+      )}
+      {!isReducedWorkspace && desktopPanels.simulation && (
+        <SimulationControls
+          id="sound-simulation-panel"
+          activeWordIndex={activeWordIndex}
+          chapterIndex={chapterIndex}
+          historyOpen={historyOpen}
+          page={page}
+          setActiveWordIndex={setActiveWordIndex}
+          setChapterIndex={setChapterIndex}
+          setHistoryOpen={setHistoryOpen}
+          setPage={setPage}
+          historyButtonRef={historyButtonRef}
+        />
+      )}
+      {isReducedWorkspace && responsiveDrawer === 'simulation' && (
+        <div id="sound-simulation-drawer" className="sound-drawer sound-drawer--bottom">
+          <button ref={simulationCloseButtonRef} className="drawer-close-button" type="button" onClick={() => closeResponsiveDrawer()}>Fermer Simulation/Navigation</button>
           <SimulationControls
-            id="sound-simulation-panel"
             activeWordIndex={activeWordIndex}
             chapterIndex={chapterIndex}
             historyOpen={historyOpen}
@@ -669,24 +686,170 @@ export function ProjectPage() {
             setPage={setPage}
             historyButtonRef={historyButtonRef}
           />
-        )}
-        {isReducedWorkspace && responsiveDrawer === 'simulation' && (
-          <div id="sound-simulation-drawer" className="sound-drawer sound-drawer--bottom">
-            <button ref={simulationCloseButtonRef} className="drawer-close-button" type="button" onClick={() => closeResponsiveDrawer()}>Fermer Simulation/Navigation</button>
-            <SimulationControls
-              activeWordIndex={activeWordIndex}
-              chapterIndex={chapterIndex}
-              historyOpen={historyOpen}
-              page={page}
-              setActiveWordIndex={setActiveWordIndex}
-              setChapterIndex={setChapterIndex}
-              setHistoryOpen={setHistoryOpen}
-              setPage={setPage}
-              historyButtonRef={historyButtonRef}
-            />
-          </div>
-        )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ProjectRoleSwitcher({
+  role,
+  onRoleChange,
+}: {
+  role: SimulatedProjectRole
+  onRoleChange: (role: SimulatedProjectRole) => void
+}) {
+  return (
+    <div className="project-role-switcher">
+      <div className="project-role-switcher__heading">
+        <span>Rôle simulé</span>
+        <small>Local · non persistant</small>
       </div>
+      <div className="project-role-switcher__options" role="group" aria-label="Rôle simulé">
+        {simulatedRoleOptions.map((option) => {
+          const isActive = option.value === role
+          return (
+            <button
+              type="button"
+              key={option.value}
+              aria-pressed={isActive}
+              onClick={() => onRoleChange(option.value)}
+            >
+              <span>{option.label}</span>
+              {isActive && <span className="project-role-switcher__state" aria-hidden="true">Actif</span>}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function ReviewerCommentsPanel() {
+  return (
+    <section className="reviewer-panel reviewer-comments" aria-labelledby="reviewer-comments-title" data-workspace-region="comments">
+      <header className="reviewer-panel__header">
+        <div><span className="sound-panel__index">03 · Échanges fictifs</span><h2 id="reviewer-comments-title">Commentaires</h2></div>
+        <span className="fiction-chip fiction-chip--static">Démo</span>
+      </header>
+      <ul className="reviewer-comment-list">
+        <li>
+          <div><strong>Réviseuse A · personne fictive</strong><span className="review-state review-state--open">Ouvert</span></div>
+          <p>« La cloche très douce » · plage de mots fictive</p>
+          <blockquote>Vérifier la continuité de l’ambiance à cet endroit.</blockquote>
+        </li>
+        <li>
+          <div><strong>Réviseur B · personne fictive</strong><span className="review-state">Résolu</span></div>
+          <p>Chapitre entier · cible fictive</p>
+          <blockquote>Le niveau général reste lisible dans cette simulation.</blockquote>
+        </li>
+      </ul>
+      <p className="reviewer-panel__note">Aucune saisie n’est enregistrée dans cette sous-livraison.</p>
+    </section>
+  )
+}
+
+function ReviewerCandidatesPanel() {
+  return (
+    <section className="reviewer-panel reviewer-candidates" aria-labelledby="reviewer-candidates-title" data-workspace-region="candidates">
+      <header className="reviewer-panel__header">
+        <div><span className="sound-panel__index">04 · Versions fictives</span><h2 id="reviewer-candidates-title">Candidates de chapitre</h2></div>
+        <span className="fiction-chip fiction-chip--static">2 démos</span>
+      </header>
+      <div className="reviewer-candidate-list">
+        <article className="reviewer-candidate reviewer-candidate--proposed">
+          <div><strong>Candidate A</strong><span>Proposée à l’examen · fictif</span></div>
+          <p>Base simulée 04 · Sound Designer A fictif</p>
+        </article>
+        <article className="reviewer-candidate">
+          <div><strong>Candidate B</strong><span>Alternative conservée · fictif</span></div>
+          <p>Base simulée 04 · Sound Designer B fictif</p>
+        </article>
+      </div>
+      <p className="candidate-proposal-note"><strong>Proposer n’est ni sélectionner définitivement, ni valider.</strong> Dans le futur workflow, l’approbation unanime des Réviseurs affectés sera requise.</p>
+    </section>
+  )
+}
+
+function ReviewerValidationPanel() {
+  return (
+    <section className="reviewer-panel reviewer-validation" aria-labelledby="reviewer-validation-title" data-workspace-region="validation">
+      <header className="reviewer-panel__header">
+        <div><span className="sound-panel__index">05 · État fictif</span><h2 id="reviewer-validation-title">Validation</h2></div>
+        <span className="fiction-chip fiction-chip--static">Non exécutoire</span>
+      </header>
+      <dl className="reviewer-validation-summary">
+        <div><dt>État de démonstration</dt><dd>Non révisé</dd></div>
+        <div><dt>Approbations fictives</dt><dd>2 sur 3</dd></div>
+        <div><dt>Intégration</dt><dd>Bloquée</dd></div>
+      </dl>
+      <p className="reviewer-panel__note">Aucune validation, invalidation ou tâche réelle n’est créée ici.</p>
+    </section>
+  )
+}
+
+function ReviewerWorkspace() {
+  const [chapterIndex, setChapterIndex] = useState(0)
+  const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null)
+  const [page, setPage] = useState(1)
+  const [historyOpen, setHistoryOpen] = useState(false)
+  const historyButtonRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (!historyOpen) return
+    const closeHistory = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      setHistoryOpen(false)
+      historyButtonRef.current?.focus()
+    }
+    window.addEventListener('keydown', closeHistory)
+    return () => window.removeEventListener('keydown', closeHistory)
+  }, [historyOpen])
+
+  return (
+    <div className="reviewer-workspace" aria-label="Workspace Réviseur fictif">
+      <BookPanel activeWordIndex={activeWordIndex} chapterIndex={chapterIndex} page={page} />
+      <SimulationControls
+        id="reviewer-simulation-panel"
+        activeWordIndex={activeWordIndex}
+        chapterIndex={chapterIndex}
+        historyOpen={historyOpen}
+        page={page}
+        setActiveWordIndex={setActiveWordIndex}
+        setChapterIndex={setChapterIndex}
+        setHistoryOpen={setHistoryOpen}
+        setPage={setPage}
+        historyButtonRef={historyButtonRef}
+      />
+      <aside className="reviewer-sidebar" aria-label="Outils de révision fictifs">
+        <ReviewerCommentsPanel />
+        <ReviewerCandidatesPanel />
+        <ReviewerValidationPanel />
+      </aside>
+    </div>
+  )
+}
+
+export function ProjectPage({
+  role,
+  onRoleChange,
+}: {
+  role: SimulatedProjectRole
+  onRoleChange: (role: SimulatedProjectRole) => void
+}) {
+  const isReviewer = role === 'reviewer'
+
+  return (
+    <div className="prototype-page project-workspace-page" data-simulated-role={role}>
+      <header className="project-workspace-intro">
+        <div className="project-workspace-heading">
+          <span className="page-intro__eyebrow">Projet fictif · {isReviewer ? 'Réviseur' : 'Sound Designer'}</span>
+          <h1 tabIndex={-1}>{isReviewer ? 'Le livre passe en révision.' : 'Le livre attend sa scène.'}</h1>
+        </div>
+        <p><strong>Le Jardin de Minuit</strong><span>Aucun EPUB ni média réel</span></p>
+        <ProjectRoleSwitcher role={role} onRoleChange={onRoleChange} />
+      </header>
+      {isReviewer ? <ReviewerWorkspace /> : <SoundDesignerWorkspace />}
     </div>
   )
 }
