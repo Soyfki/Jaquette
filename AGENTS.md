@@ -13,9 +13,9 @@ Le cahier des charges complet reste la source de référence détaillée. `AGENT
 ## État actuel du projet
 
 - La phase 0 et les sous-étapes applicatives 1.1, 1.2 et 1.3 sont acquises.
-- La sous-étape 1.4 est entamée uniquement par son lot 1.4.1 — socle de rôle simulé et variante Réviseur.
-- Le prototype Web permet de basculer localement entre les rôles simulés Sound Designer et Réviseur ; le rôle Sound Designer reste l’état initial et la simulation n’est pas persistée.
-- Les variantes Chef d’équipe et Admin Maison ne sont pas réalisées. La sous-étape 1.4 et la phase 1 ne sont donc pas acquises, et la sous-étape 2.1 n’est pas la prochaine étape exécutable.
+- La sous-étape 1.4 est entamée par le lot 1.4.1 acquis — socle de rôle simulé et variante Réviseur — et par le lot 1.4.2 en correction après retour de validation humaine — variantes Chef d’équipe et Admin Maison.
+- Le prototype Web permet de basculer localement entre les quatre rôles simulés Sound Designer, Réviseur, Chef d’équipe et Admin Maison ; le rôle Sound Designer reste l’état initial et la simulation n’est pas persistée.
+- Le lot 1.4.2 reste non acquis jusqu’à sa revalidation humaine. Le lot 1.4.3 et la clôture de la phase 1 n’ont pas commencé ; la sous-étape 1.4 et la phase 1 ne sont donc pas acquises, la phase 2 n’a pas commencé et la sous-étape 2.1 n’est pas la prochaine étape exécutable.
 - Le recadrage produit REC-01 sur la collaboration offline est intégré à la documentation.
 - La version de l’application reste `0.0.0`.
 - Les choix d’implémentation qui ne sont pas explicitement validés restent ouverts.
@@ -494,6 +494,8 @@ Le Chef d’équipe **ne modifie jamais directement le montage audio**.
 
 L’accueil doit être conçu comme un espace de gestion de travail comparable dans son principe à Figma.
 
+L’accueil est un tableau de bord général distinct de l’écran d’un projet. Pour le workspace courant, il doit permettre de consulter simultanément toutes les équipes et tous les projets du jeu de données disponible, sans devoir ouvrir un projet. Chaque projet y expose au minimum son nom, son équipe, son statut et un repère de progression ou d’activité ; chaque équipe expose au minimum son nom, son nombre de membres et ses projets associés ou leur nombre.
+
 Il doit mettre en évidence :
 
 - workspace courant ;
@@ -705,6 +707,8 @@ Validé
 → Prêt à publier
 → Publier dans Jacques
 ```
+
+La préparation de la publication n’est présentée qu’après la validation finale. Dans les états antérieurs à `Validé` — notamment `Non soumis`, `En attente Chef` et `À corriger` — aucun panneau, bouton, contrôle ni métadonnée de préparation de publication ne doit être monté ; un contrôle seulement désactivé ne suffit pas.
 
 ## Métadonnées de publication
 

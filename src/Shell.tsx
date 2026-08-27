@@ -26,6 +26,90 @@ const foundationsRoute: RouteDefinition = {
   icon: 'palette',
 }
 
+const projectRoleLabels: Record<SimulatedProjectRole, string> = {
+  'sound-designer': 'Sound Designer',
+  reviewer: 'Réviseur',
+  'team-lead': 'Chef d’équipe',
+  'publishing-house-admin': 'Admin Maison',
+}
+
+type DemoTeam = {
+  id: string
+  name: string
+  memberCount: number
+}
+
+type DemoProject = {
+  id: string
+  name: string
+  teamId: DemoTeam['id']
+  status: string
+  activity: string
+  progressLabel: string
+  progressValue: number
+  progressMax: number
+  opensProjectDemo?: boolean
+}
+
+const demoTeams: DemoTeam[] = [
+  { id: 'studio-narratif', name: 'Studio narratif', memberCount: 7 },
+  { id: 'revision-minuit', name: 'Révision Minuit', memberCount: 5 },
+]
+
+const demoProjects: DemoProject[] = [
+  {
+    id: 'jardin-minuit',
+    name: 'Le Jardin de Minuit',
+    teamId: 'studio-narratif',
+    status: 'En attente Chef',
+    activity: 'Soumis aujourd’hui à 09:42',
+    progressLabel: '7 chapitres doublés sur 10',
+    progressValue: 7,
+    progressMax: 10,
+    opensProjectDemo: true,
+  },
+  {
+    id: 'atlas-brumes',
+    name: 'L’Atlas des brumes',
+    teamId: 'studio-narratif',
+    status: 'Révision',
+    activity: '18e validation fictive hier',
+    progressLabel: '18 validations obtenues sur 24',
+    progressValue: 18,
+    progressMax: 24,
+  },
+  {
+    id: 'voix-large',
+    name: 'Les Voix du large',
+    teamId: 'studio-narratif',
+    status: 'Doublage',
+    activity: 'Chapitre 6 terminé lundi',
+    progressLabel: '6 chapitres doublés sur 11',
+    progressValue: 6,
+    progressMax: 11,
+  },
+  {
+    id: 'ville-haute',
+    name: 'La Ville Haute',
+    teamId: 'revision-minuit',
+    status: 'Doublage',
+    activity: 'Nouvelle candidate reçue hier',
+    progressLabel: '4 chapitres doublés sur 9',
+    progressValue: 4,
+    progressMax: 9,
+  },
+  {
+    id: 'heures-claires',
+    name: 'Les Heures claires',
+    teamId: 'revision-minuit',
+    status: 'Prêt à réviser',
+    activity: 'Doublage déclaré terminé vendredi',
+    progressLabel: '8 chapitres doublés sur 8',
+    progressValue: 8,
+    progressMax: 8,
+  },
+]
+
 function normalizePath(pathname: string) {
   if (pathname === '/') return pathname
   return pathname.replace(/\/+$/, '') || '/'
@@ -128,35 +212,89 @@ function ConnectionPage({ navigate }: { navigate: Navigate }) {
 
 function HomePage({ navigate }: { navigate: Navigate }) {
   return (
-    <div className="prototype-page">
+    <div className="prototype-page home-dashboard">
       <PageIntro
         eyebrow="Atelier Minuit · workspace fictif"
         title="Bonjour, Noémie."
-        description="Un aperçu volontairement léger du futur espace de travail. Les informations ci-dessous sont démonstratives et ne sont pas enregistrées."
+        description="Le tableau général réunit toutes les équipes et tous les projets du jeu de démonstration local, avant l’ouverture d’un projet. Aucune information n’est enregistrée."
       />
       <section className="workspace-strip" aria-label="Résumé du workspace fictif">
-        <div><span>Équipe</span><strong>Studio narratif</strong></div>
-        <div><span>Projet actif</span><strong>1 prototype</strong></div>
-        <div><span>Dernière activité</span><strong>Aujourd’hui</strong></div>
+        <div><span>Workspace courant</span><strong>Atelier Minuit</strong></div>
+        <div><span>Portefeuille local</span><strong>2 équipes · 5 projets</strong></div>
+        <div><span>Dernière activité</span><strong>Aujourd’hui · 09:42</strong></div>
       </section>
-      <section className="home-grid" aria-labelledby="recent-title">
-        <article className="project-preview">
-          <div className="project-preview__cover" aria-hidden="true"><span>JM</span></div>
-          <div className="project-preview__content">
-            <span className="prototype-label">Projet fictif · exploration</span>
-            <h2 id="recent-title">Le Jardin de Minuit</h2>
-            <p>Une carte de repérage pour valider la hiérarchie du shell avant la construction du workspace métier.</p>
-            <button className="text-action" type="button" onClick={() => navigate('/projet')}>
-              Ouvrir l’état du projet <span aria-hidden="true">→</span>
-            </button>
+
+      <section className="dashboard-section" aria-labelledby="all-teams-title" data-dashboard-region="all-teams">
+        <div className="dashboard-section__heading">
+          <div>
+            <span className="prototype-label">Vue d’ensemble locale</span>
+            <h2 id="all-teams-title">Toutes les équipes</h2>
           </div>
-        </article>
-        <aside className="principle-card" aria-label="Principe central de Jaquette">
-          <span className="principle-card__index">01</span>
-          <p>Le texte est la timeline de Jaquette.</p>
-          <span>Les outils audio arriveront dans les prochaines sous-étapes.</span>
-        </aside>
+          <p>Chaque équipe et son portefeuille fictif sont visibles sans ouvrir de projet.</p>
+        </div>
+        <div className="team-overview-grid">
+          {demoTeams.map((team) => {
+            const projects = demoProjects.filter((project) => project.teamId === team.id)
+            return (
+              <article className="team-overview-card" aria-labelledby={`team-${team.id}-title`} data-demo-team={team.id} key={team.id}>
+                <div className="dashboard-card__header">
+                  <div>
+                    <h3 id={`team-${team.id}-title`}>{team.name}</h3>
+                    <span>{team.memberCount} membres fictifs</span>
+                  </div>
+                  <strong>{projects.length} projets</strong>
+                </div>
+                <ul aria-label={`Projets associés à ${team.name}`}>
+                  {projects.map((project) => <li key={project.id}>{project.name}</li>)}
+                </ul>
+              </article>
+            )
+          })}
+        </div>
       </section>
+
+      <section className="dashboard-section" aria-labelledby="all-projects-title" data-dashboard-region="all-projects">
+        <div className="dashboard-section__heading">
+          <div>
+            <span className="prototype-label">Portefeuille de démonstration</span>
+            <h2 id="all-projects-title">Tous les projets</h2>
+          </div>
+          <p>Statut, équipe et repère d’avancement restent explicitement fictifs et locaux.</p>
+        </div>
+        <div className="project-overview-grid">
+          {demoProjects.map((project) => {
+            const team = demoTeams.find((candidate) => candidate.id === project.teamId)
+            return (
+              <article className="project-overview-card" aria-labelledby={`project-${project.id}-title`} data-demo-project={project.id} key={project.id}>
+                <div className="dashboard-card__header">
+                  <div>
+                    <span className="project-overview-card__team">{team?.name}</span>
+                    <h3 id={`project-${project.id}-title`}>{project.name}</h3>
+                  </div>
+                  <span className="status-chip">{project.status}</span>
+                </div>
+                <div className="project-overview-card__progress">
+                  <div><span>Repère d’avancement</span><strong>{project.progressLabel}</strong></div>
+                  <progress aria-label={`${project.name} · ${project.progressLabel}`} value={project.progressValue} max={project.progressMax}>
+                    {project.progressValue} sur {project.progressMax}
+                  </progress>
+                </div>
+                <p>{project.activity} · donnée locale fictive</p>
+                {project.opensProjectDemo && (
+                  <button className="text-action" type="button" onClick={() => navigate('/projet')}>
+                    Ouvrir l’état du projet <span aria-hidden="true">→</span>
+                  </button>
+                )}
+              </article>
+            )
+          })}
+        </div>
+      </section>
+
+      <aside className="dashboard-alert" aria-label="Dernière alerte fictive">
+        <span className="dashboard-alert__marker" aria-hidden="true">!</span>
+        <div><strong>1 projet attend une décision simulée</strong><p>Le Jardin de Minuit est présenté dans l’état « En attente Chef ». Aucune action n’est disponible depuis cet accueil général.</p></div>
+      </aside>
     </div>
   )
 }
@@ -318,7 +456,7 @@ export function AppShell() {
           <InternalBrand navigate={navigate} />
           {path === '/projet' && (
             <span className="project-header-context">
-              Atelier {projectRole === 'reviewer' ? 'Réviseur' : 'Sound Designer'} · rôle simulé
+              Atelier {projectRoleLabels[projectRole]} · rôle simulé
             </span>
           )}
         </div>

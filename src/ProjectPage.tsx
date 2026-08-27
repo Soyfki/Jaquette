@@ -8,16 +8,32 @@ type SimulationState = 'inactive' | 'paused' | 'playing'
 type WorkspacePanel = 'library' | 'inspector' | 'simulation'
 type ResponsiveDrawer = WorkspacePanel | null
 type DesktopPanelState = Record<WorkspacePanel, boolean>
+type FinalValidationState = 'Non soumis' | 'En attente Chef' | 'À corriger' | 'Validé' | 'Prêt à publier' | 'Publié'
 
-export type SimulatedProjectRole = 'sound-designer' | 'reviewer'
+export type SimulatedProjectRole = 'sound-designer' | 'reviewer' | 'team-lead' | 'publishing-house-admin'
 
 const REDUCED_WORKSPACE_QUERY = '(max-width: 56rem)'
 const BASE_WORDS_PER_MINUTE = 180
+const TEAM_LEAD_DEMO_FINAL_VALIDATION_STATE: FinalValidationState = 'En attente Chef'
+const PUBLICATION_PREPARATION_STATES: readonly FinalValidationState[] = ['Validé', 'Prêt à publier']
+
+function canShowPublicationPreparation(state: FinalValidationState) {
+  return PUBLICATION_PREPARATION_STATES.includes(state)
+}
 
 const simulatedRoleOptions: ReadonlyArray<{ value: SimulatedProjectRole; label: string }> = [
   { value: 'sound-designer', label: 'Sound Designer' },
   { value: 'reviewer', label: 'Réviseur' },
+  { value: 'team-lead', label: 'Chef d’équipe' },
+  { value: 'publishing-house-admin', label: 'Admin Maison' },
 ]
+
+const simulatedRolePresentation: Record<SimulatedProjectRole, { label: string; title: string }> = {
+  'sound-designer': { label: 'Sound Designer', title: 'Le livre attend sa scène.' },
+  reviewer: { label: 'Réviseur', title: 'Le livre passe en révision.' },
+  'team-lead': { label: 'Chef d’équipe', title: 'Le projet garde son cap.' },
+  'publishing-house-admin': { label: 'Admin Maison', title: 'La maison organise ses équipes.' },
+}
 
 const libraryFamilies: LibraryFamily[] = [
   {
@@ -830,6 +846,263 @@ function ReviewerWorkspace() {
   )
 }
 
+function TeamLeadDashboardPanel() {
+  return (
+    <section className="role-panel team-lead-dashboard" aria-labelledby="team-lead-dashboard-title" data-workspace-region="dashboard">
+      <header className="role-panel__header">
+        <div><span className="sound-panel__index">01 · Pilotage fictif</span><h2 id="team-lead-dashboard-title">Tableau de bord</h2></div>
+        <span className="fiction-chip fiction-chip--static">Local · démo</span>
+      </header>
+      <div className="team-lead-dashboard__summary">
+        <div><span>Projet</span><strong>Le Jardin de Minuit</strong></div>
+        <div><span>Équipe fictive</span><strong>Studio narratif</strong></div>
+        <div><span>Étape simulée</span><strong>Soumis au Chef d’équipe</strong></div>
+      </div>
+      <p className="role-panel__note">Aucune affectation, décision ou transition de workflow n’est exécutée depuis cet aperçu.</p>
+    </section>
+  )
+}
+
+function TeamLeadProgressPanel({ finalValidationState }: { finalValidationState: FinalValidationState }) {
+  return (
+    <section className="role-panel team-lead-progress" aria-labelledby="team-lead-progress-title" data-workspace-region="progress">
+      <header className="role-panel__header">
+        <div><span className="sound-panel__index">02 · Trois axes distincts</span><h2 id="team-lead-progress-title">Progression</h2></div>
+      </header>
+      <div className="progress-axis-list">
+        <article>
+          <div><span>Doublage</span><strong>70 %</strong></div>
+          <progress aria-label="Doublage fictif : 7 chapitres terminés sur 10" value="7" max="10">7 sur 10</progress>
+          <p>7 chapitres déclarés terminés sur 10 · données fictives</p>
+        </article>
+        <article>
+          <div><span>Révision</span><strong>21 / 30</strong></div>
+          <progress aria-label="Révision fictive : 21 validations obtenues sur 30 attendues" value="21" max="30">21 sur 30</progress>
+          <p>21 validations obtenues sur 30 attendues · données fictives</p>
+        </article>
+        <article className="progress-axis-list__final">
+          <span>Validation finale</span>
+          <strong>{finalValidationState}</strong>
+          <p>État textuel fictif · aucun pourcentage global</p>
+        </article>
+      </div>
+    </section>
+  )
+}
+
+function TeamLeadHistoryPanel() {
+  return (
+    <section className="role-panel team-lead-history" aria-labelledby="team-lead-history-title" data-workspace-region="history">
+      <header className="role-panel__header">
+        <div><span className="sound-panel__index">05 · Journal fictif</span><h2 id="team-lead-history-title">Historique</h2></div>
+      </header>
+      <ol className="role-event-list">
+        <li><span>Aujourd’hui · 09:42</span><strong>Projet soumis au Chef d’équipe</strong></li>
+        <li><span>Hier · 17:18</span><strong>21e validation fictive obtenue</strong></li>
+        <li><span>12 août · 11:03</span><strong>Version de repérage conservée</strong></li>
+      </ol>
+      <p className="role-panel__note">Cet historique est une composition locale de démonstration.</p>
+    </section>
+  )
+}
+
+function TeamLeadCommentsPanel() {
+  return (
+    <section className="role-panel team-lead-comments" aria-labelledby="team-lead-comments-title" data-workspace-region="comments">
+      <header className="role-panel__header">
+        <div><span className="sound-panel__index">06 · Suivi fictif</span><h2 id="team-lead-comments-title">Commentaires</h2></div>
+        <span className="fiction-chip fiction-chip--static">2 ouverts</span>
+      </header>
+      <ul className="role-comment-list">
+        <li><strong>Chapitre 2 · Révision</strong><p>Clarifier le retour attendu avant un éventuel renvoi fictif.</p></li>
+        <li><strong>Livre entier · Production</strong><p>Vérifier la cohérence du niveau général pendant la simulation.</p></li>
+      </ul>
+      <p className="role-panel__note">Aucun commentaire n’est créé, modifié ou résolu dans ce prototype.</p>
+    </section>
+  )
+}
+
+function TeamLeadFinalValidationPanel({ finalValidationState }: { finalValidationState: FinalValidationState }) {
+  return (
+    <section className="role-panel team-lead-validation" aria-labelledby="team-lead-validation-title" data-workspace-region="final-validation">
+      <header className="role-panel__header">
+        <div><span className="sound-panel__index">07 · Décision fictive</span><h2 id="team-lead-validation-title">Validation finale</h2></div>
+        <span className="fiction-chip fiction-chip--static">Non exécutoire</span>
+      </header>
+      <dl className="role-definition-list">
+        <div><dt>État présenté</dt><dd>{finalValidationState}</dd></div>
+        <div><dt>Révision</dt><dd>21 validations sur 30</dd></div>
+      </dl>
+      <div className="non-executive-actions" aria-label="Aperçu fictif des décisions finales">
+        <button type="button" disabled>Valider le livre · simulation</button>
+        <button type="button" disabled>Retour fictif vers Réviseur</button>
+        <button type="button" disabled>Retour fictif vers Sound Designer</button>
+      </div>
+      <p className="role-panel__note">La préparation de la publication deviendra disponible après la validation finale du livre. Dans l’état présenté, elle reste entièrement absente.</p>
+      <p className="role-panel__note">Ces formulations illustrent la hiérarchie future ; aucune validation ni aucun rejet n’est enregistré.</p>
+    </section>
+  )
+}
+
+function TeamLeadPublicationPanel() {
+  return (
+    <section className="role-panel team-lead-publication" aria-labelledby="team-lead-publication-title" data-workspace-region="publication-preparation">
+      <header className="role-panel__header">
+        <div><span className="sound-panel__index">08 · Jacques</span><h2 id="team-lead-publication-title">Préparation de la publication</h2></div>
+        <span className="fiction-chip fiction-chip--static">Aperçu</span>
+      </header>
+      <div className="publication-readiness">
+        <span>Destination fictive</span><strong>Boutique Jacques</strong>
+        <span>État de démonstration</span><strong>Non prêt à publier</strong>
+      </div>
+      <button className="non-executive-primary" type="button" disabled>Préparer la publication dans Jacques · non exécutoire</button>
+      <p className="role-panel__note">La validation finale et la publication restent deux actions distinctes. Le Chef d’équipe n’est pas présenté comme pouvant dépublier un livre.</p>
+    </section>
+  )
+}
+
+function TeamLeadWorkspace() {
+  const [chapterIndex, setChapterIndex] = useState(0)
+  const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null)
+  const [page, setPage] = useState(1)
+  const [historyOpen, setHistoryOpen] = useState(false)
+  const historyButtonRef = useRef<HTMLButtonElement>(null)
+  const publicationPreparationAvailable = canShowPublicationPreparation(TEAM_LEAD_DEMO_FINAL_VALIDATION_STATE)
+
+  useEffect(() => {
+    if (!historyOpen) return
+    const closeHistory = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      setHistoryOpen(false)
+      historyButtonRef.current?.focus()
+    }
+    window.addEventListener('keydown', closeHistory)
+    return () => window.removeEventListener('keydown', closeHistory)
+  }, [historyOpen])
+
+  return (
+    <div className="team-lead-workspace" aria-label="Workspace Chef d’équipe fictif">
+      <TeamLeadDashboardPanel />
+      <TeamLeadProgressPanel finalValidationState={TEAM_LEAD_DEMO_FINAL_VALIDATION_STATE} />
+      <BookPanel activeWordIndex={activeWordIndex} chapterIndex={chapterIndex} page={page} />
+      <SimulationControls
+        id="team-lead-simulation-panel"
+        activeWordIndex={activeWordIndex}
+        chapterIndex={chapterIndex}
+        historyOpen={historyOpen}
+        page={page}
+        setActiveWordIndex={setActiveWordIndex}
+        setChapterIndex={setChapterIndex}
+        setHistoryOpen={setHistoryOpen}
+        setPage={setPage}
+        historyButtonRef={historyButtonRef}
+      />
+      <aside className="team-lead-sidebar" aria-label="Pilotage Chef d’équipe fictif">
+        <TeamLeadHistoryPanel />
+        <TeamLeadCommentsPanel />
+        <TeamLeadFinalValidationPanel finalValidationState={TEAM_LEAD_DEMO_FINAL_VALIDATION_STATE} />
+        {publicationPreparationAvailable && <TeamLeadPublicationPanel />}
+      </aside>
+    </div>
+  )
+}
+
+function AdminMembersPanel() {
+  return (
+    <section className="admin-panel admin-members" aria-labelledby="admin-members-title" data-workspace-region="members">
+      <header className="role-panel__header">
+        <div><span className="sound-panel__index">01 · Maison fictive</span><h2 id="admin-members-title">Membres</h2></div>
+        <span className="fiction-chip fiction-chip--static">12 démos</span>
+      </header>
+      <ul className="admin-entity-list">
+        <li><span className="admin-avatar" aria-hidden="true">AM</span><div><strong>Ana Martin</strong><span>Cheffe d’équipe · identité fictive</span></div><small>Active</small></li>
+        <li><span className="admin-avatar" aria-hidden="true">YK</span><div><strong>Yanis Kader</strong><span>Sound Designer · identité fictive</span></div><small>Actif</small></li>
+        <li><span className="admin-avatar" aria-hidden="true">LN</span><div><strong>Leïla Nassar</strong><span>Réviseuse · identité fictive</span></div><small>Active</small></li>
+      </ul>
+      <p className="role-panel__note">Aucun membre réel n’est invité, suspendu ou modifié.</p>
+    </section>
+  )
+}
+
+function AdminTeamsPanel() {
+  return (
+    <section className="admin-panel admin-teams" aria-labelledby="admin-teams-title" data-workspace-region="teams">
+      <header className="role-panel__header"><div><span className="sound-panel__index">02 · Organisation locale</span><h2 id="admin-teams-title">Équipes</h2></div></header>
+      <div className="admin-stat-grid">
+        <article><strong>Studio narratif</strong><span>7 membres fictifs</span><small>3 projets de démonstration</small></article>
+        <article><strong>Révision Minuit</strong><span>5 membres fictifs</span><small>2 projets de démonstration</small></article>
+      </div>
+      <p className="role-panel__note">Aucune équipe n’est créée, renommée ou affectée.</p>
+    </section>
+  )
+}
+
+function AdminInvitationsPanel() {
+  return (
+    <section className="admin-panel admin-invitations" aria-labelledby="admin-invitations-title" data-workspace-region="invitations">
+      <header className="role-panel__header"><div><span className="sound-panel__index">03 · Accès fictifs</span><h2 id="admin-invitations-title">Invitations</h2></div><span className="fiction-chip fiction-chip--static">Démo locale</span></header>
+      <div className="admin-invitation-preview"><span>2 invitations fictives en attente</span><strong>Aucun e-mail réel</strong></div>
+      <button className="non-executive-primary" type="button" disabled>Aperçu d’invitation · action indisponible</button>
+      <p className="role-panel__note">Aucune invitation n’est envoyée et aucune identité n’est créée.</p>
+    </section>
+  )
+}
+
+function AdminProjectsPanel() {
+  return (
+    <section className="admin-panel admin-projects" aria-labelledby="admin-projects-title" data-workspace-region="projects">
+      <header className="role-panel__header"><div><span className="sound-panel__index">04 · Portefeuille fictif</span><h2 id="admin-projects-title">Projets</h2></div></header>
+      <div className="admin-project-table" role="table" aria-label="Projets fictifs de la maison">
+        <div role="row"><span role="columnheader">Projet</span><span role="columnheader">Équipe</span><span role="columnheader">Statut</span></div>
+        <div role="row"><strong role="cell">Le Jardin de Minuit</strong><span role="cell">Studio narratif</span><small role="cell">Révision</small></div>
+        <div role="row"><strong role="cell">La Ville Haute</strong><span role="cell">Révision Minuit</span><small role="cell">Doublage</small></div>
+      </div>
+      <p className="role-panel__note">Données de management fictives ; aucun projet n’est créé, transféré ou publié.</p>
+    </section>
+  )
+}
+
+function AdminPermissionsPanel() {
+  return (
+    <section className="admin-panel admin-permissions" aria-labelledby="admin-permissions-title" data-workspace-region="permissions">
+      <header className="role-panel__header"><div><span className="sound-panel__index">05 · Cadre simulé</span><h2 id="admin-permissions-title">Permissions</h2></div><span className="fiction-chip fiction-chip--static">Lecture seule</span></header>
+      <dl className="role-definition-list">
+        <div><dt>Administration du workspace</dt><dd>Aperçu autorisé</dd></div>
+        <div><dt>Droits métier éditoriaux</dt><dd>Non accordés automatiquement</dd></div>
+        <div><dt>Montage audio</dt><dd>Absent de cette interface</dd></div>
+      </dl>
+      <p className="role-panel__note">Aucune permission réelle n’est consultée, accordée ou retirée.</p>
+    </section>
+  )
+}
+
+function AdminAuditPanel() {
+  return (
+    <section className="admin-panel admin-audit" aria-labelledby="admin-audit-title" data-workspace-region="audit">
+      <header className="role-panel__header"><div><span className="sound-panel__index">06 · Traces fictives</span><h2 id="admin-audit-title">Audit</h2></div></header>
+      <ol className="role-event-list">
+        <li><span>Aujourd’hui · 10:14</span><strong>Aperçu d’équipe consulté · donnée fictive</strong></li>
+        <li><span>Hier · 16:02</span><strong>Invitation de démonstration préparée · non envoyée</strong></li>
+        <li><span>12 août · 09:20</span><strong>Projet fictif ajouté au tableau de bord</strong></li>
+      </ol>
+      <p className="role-panel__note">Aucun événement réel ni identifiant sensible n’est journalisé.</p>
+    </section>
+  )
+}
+
+function PublishingHouseAdminWorkspace() {
+  return (
+    <div className="admin-workspace" aria-label="Workspace Admin Maison fictif">
+      <AdminMembersPanel />
+      <AdminTeamsPanel />
+      <AdminInvitationsPanel />
+      <AdminProjectsPanel />
+      <AdminPermissionsPanel />
+      <AdminAuditPanel />
+    </div>
+  )
+}
+
 export function ProjectPage({
   role,
   onRoleChange,
@@ -837,19 +1110,26 @@ export function ProjectPage({
   role: SimulatedProjectRole
   onRoleChange: (role: SimulatedProjectRole) => void
 }) {
-  const isReviewer = role === 'reviewer'
+  const presentation = simulatedRolePresentation[role]
+  const workspace = role === 'sound-designer'
+    ? <SoundDesignerWorkspace />
+    : role === 'reviewer'
+      ? <ReviewerWorkspace />
+      : role === 'team-lead'
+        ? <TeamLeadWorkspace />
+        : <PublishingHouseAdminWorkspace />
 
   return (
     <div className="prototype-page project-workspace-page" data-simulated-role={role}>
       <header className="project-workspace-intro">
         <div className="project-workspace-heading">
-          <span className="page-intro__eyebrow">Projet fictif · {isReviewer ? 'Réviseur' : 'Sound Designer'}</span>
-          <h1 tabIndex={-1}>{isReviewer ? 'Le livre passe en révision.' : 'Le livre attend sa scène.'}</h1>
+          <span className="page-intro__eyebrow">Projet fictif · {presentation.label}</span>
+          <h1 tabIndex={-1}>{presentation.title}</h1>
         </div>
         <p><strong>Le Jardin de Minuit</strong><span>Aucun EPUB ni média réel</span></p>
         <ProjectRoleSwitcher role={role} onRoleChange={onRoleChange} />
       </header>
-      {isReviewer ? <ReviewerWorkspace /> : <SoundDesignerWorkspace />}
+      {workspace}
     </div>
   )
 }

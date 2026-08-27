@@ -216,6 +216,10 @@ Objectif :
 Créer l’accueil réel du produit.
 
 Inclure :
+- un tableau de bord général distinct d’un écran de projet ;
+- toutes les équipes et tous les projets du jeu de données du workspace, visibles simultanément sans ouvrir un projet ;
+- pour chaque équipe, son nom, son nombre de membres et ses projets associés ou leur nombre ;
+- pour chaque projet, son nom, son équipe, son statut et un repère de progression ou d’activité ;
 - projets récents ;
 - Drafts ;
 - équipes ;
@@ -224,6 +228,7 @@ Inclure :
 - progression.
 
 Test d’acceptation :
+- l’utilisateur peut consulter toutes les équipes et tous les projets du workspace avant d’ouvrir un projet ;
 - le même utilisateur voit un accueil différent selon son rôle/contexte ;
 - les cartes de projet permettent d’ouvrir le bon projet.
 
@@ -958,6 +963,7 @@ Test :
 ## 13.7 Validation finale
 
 Test :
+- dans les états antérieurs à `Validé`, notamment `En attente Chef`, aucun panneau, bouton, contrôle ni métadonnée de préparation de publication n’est monté ;
 - après validation, état `Validé` puis `Prêt à publier` accessible.
 
 ---

@@ -9,7 +9,7 @@ Ce dossier définit la méthode commune pour valider chaque sous-étape de Jaque
 3. Copier le [`VALIDATION_REPORT.md`](VALIDATION_REPORT.md) pour rendre la décision finale.
 
 
-La campagne propre à la page exécutable du design system est décrite dans [`1.1-design-system.md`](1.1-design-system.md). La campagne du lot 1.4.1 consacré au rôle simulé et à la variante Réviseur est décrite dans [`1.4-role-variants.md`](1.4-role-variants.md).
+La campagne propre à la page exécutable du design system est décrite dans [`1.1-design-system.md`](1.1-design-system.md). La campagne du lot 1.4.1 consacré au rôle simulé et à la variante Réviseur est décrite dans [`1.4-role-variants.md`](1.4-role-variants.md). La campagne corrective du lot 1.4.2 consacré aux variantes Chef d’équipe et Admin Maison, au tableau général fictif et à la publication conditionnelle est décrite dans [`1.4.2-team-lead-admin-variants.md`](1.4.2-team-lead-admin-variants.md).
 
 Les copies remplies peuvent être conservées dans la pull request ou dans l'outil de suivi retenu par l'équipe. Elles ne doivent contenir ni secret, ni donnée privée, ni manuscrit confidentiel.
 
