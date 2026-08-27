@@ -26,6 +26,13 @@ const foundationsRoute: RouteDefinition = {
   icon: 'palette',
 }
 
+const projectRoleLabels: Record<SimulatedProjectRole, string> = {
+  'sound-designer': 'Sound Designer',
+  reviewer: 'Réviseur',
+  'team-lead': 'Chef d’équipe',
+  'publishing-house-admin': 'Admin Maison',
+}
+
 function normalizePath(pathname: string) {
   if (pathname === '/') return pathname
   return pathname.replace(/\/+$/, '') || '/'
@@ -318,7 +325,7 @@ export function AppShell() {
           <InternalBrand navigate={navigate} />
           {path === '/projet' && (
             <span className="project-header-context">
-              Atelier {projectRole === 'reviewer' ? 'Réviseur' : 'Sound Designer'} · rôle simulé
+              Atelier {projectRoleLabels[projectRole]} · rôle simulé
             </span>
           )}
         </div>
