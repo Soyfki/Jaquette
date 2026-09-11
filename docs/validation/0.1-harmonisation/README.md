@@ -1,6 +1,6 @@
 # 0.1 — Harmoniser les sources
 
-Date : 11 septembre 2026. Périmètre exclusivement documentaire selon le mandat reçu. Dossier préparé avant la campagne, à partir des modèles [checklist](../CHECKLIST.md), [bug](../BUG_REPORT.md) et [rapport](../VALIDATION_REPORT.md). Les résultats finaux et le SHA complet testé sont publiés dans la PR du lot pour éviter un commit consacré à son propre SHA.
+Date : 11 septembre 2026. Périmètre exclusivement documentaire selon le mandat reçu. Dossier préparé avant la campagne, à partir des modèles [checklist](../CHECKLIST.md), [bug](../BUG_REPORT.md) et [rapport](../VALIDATION_REPORT.md). Les résultats finaux et le SHA complet testé sont publiés dans la [PR 10](https://github.com/Soyfki/Jaquette/pull/10) pour éviter un commit consacré à son propre SHA.
 
 ## Provenance et périmètre
 

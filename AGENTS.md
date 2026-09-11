@@ -631,6 +631,8 @@ Exemple :
 
 ## Validation finale
 
+Prêt à publier et Publié sont des états de l’extension F1 ; au lancement, la validation finale mène à l’export et au contrôle.
+
 États prévus :
 
 - Non soumis ;

@@ -1,6 +1,6 @@
 # Rapport de validation — 0.1 Harmoniser les sources
 
-Adapté du [modèle de rapport](../VALIDATION_REPORT.md). Le rapport final lié au SHA complet réellement testé est publié dans la PR de la branche codex/etape-0-1-harmonisation. Ce fichier fixe son périmètre et ses références sans provoquer un commit pour inscrire son propre SHA.
+Adapté du [modèle de rapport](../VALIDATION_REPORT.md). Le rapport final lié au SHA complet réellement testé est publié dans la [PR 10](https://github.com/Soyfki/Jaquette/pull/10), branche codex/etape-0-1-harmonisation. Ce fichier fixe son périmètre et ses références sans provoquer un commit pour inscrire son propre SHA.
 
 ## Livraison
 

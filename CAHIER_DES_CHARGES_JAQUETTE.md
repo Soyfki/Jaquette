@@ -167,7 +167,7 @@ Il contient :
 - manifeste de déclenchements ;
 - métadonnées de publication ;
 - checksums ;
-- signature numérique ;
+- extension de signature numérique, obligatoire pour une publication F1 ; un export de contrôle peut rester non signé ;
 - version du format.
 
 Structure conceptuelle :
@@ -195,7 +195,7 @@ Le manifeste contient au minimum :
 
 - `formatVersion` ;
 - `bookId` ;
-- `releaseId` ;
+- `releaseId` pour une publication F1 ;
 - titre ;
 - langues ;
 - chapitres ;
@@ -207,7 +207,7 @@ Le manifeste contient au minimum :
 - règles musicales ;
 - spatialisation ;
 - preset d’export ;
-- signature et informations d’intégrité.
+- informations d’intégrité et extension de signature.
 
 Le format doit être versionné dès la première version. Cette structure est conceptuelle, pas un choix de conteneur. Les données de publication et `releaseId` décrivent l’extension F1 ; un export de contrôle ne fabrique pas une publication réelle.
 
@@ -546,7 +546,7 @@ Le contexte de travail contient :
 - drafts ;
 - permissions ;
 - activité ;
-- publication.
+- publication en extension F1.
 
 L’utilisateur peut changer d’espace rapidement via un switch de contexte façon Slack/Figma.
 
@@ -675,7 +675,7 @@ Livre plus large, bibliothèque et outils de montage masqués, simulation/commen
 
 ### Chef d’équipe
 
-Dashboard, lecture/simulation, commentaires, historique, validation finale, publication.
+Dashboard, lecture/simulation, commentaires, historique, validation finale ; publication en extension F1.
 
 ### Admin Maison
 
@@ -783,6 +783,8 @@ Calcul basé sur toutes les validations attendues.
 Exemple : 10 chapitres × 3 réviseurs = 30 validations nécessaires. Si 21 sont acquises, progression révision = 70 %.
 
 ### Validation finale
+
+Les états Prêt à publier et Publié sont conservés pour F1 ; le lancement qualifie la validation finale puis l’export et le contrôle.
 
 États :
 

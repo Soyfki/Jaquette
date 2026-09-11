@@ -6,7 +6,7 @@ Adaptée du [modèle](../CHECKLIST.md), préparée avant les tests le 11 septemb
 
 - Périmètre : documents Markdown uniquement ; plan complet reçu, cahier, AGENTS, index et protocoles.
 - Branche : codex/etape-0-1-harmonisation ; base : 8a9e9a7ed692f26e3969641a4584669bfa1d93a9.
-- Commit testé et PR : renseignés dans le rapport final publié dans la PR, sur chaque résultat.
+- Commit testé et résultats : rapport final de la [PR 10](https://github.com/Soyfki/Jaquette/pull/10), avec SHA complet sur chaque résultat.
 - Développeur et responsable : agent Codex, cumul explicitement autorisé.
 - Validateur utilisateur : aucun essai humain supplémentaire obligatoire pour 0.1 ; décisions produit déjà données.
 
