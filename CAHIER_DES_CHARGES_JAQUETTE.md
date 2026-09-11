@@ -1210,7 +1210,7 @@ L’ancienne phase 0, les anciennes sous-étapes 1.1 à 1.3 et le lot 1.4.1 sont
 
 L’ancien 1.4.3 n’est plus une prochaine livraison autonome. Aucun périmètre précis n’a été retrouvé dans l’ancien plan : ses reliquats réellement identifiables seront inventoriés en 0.3/0.5, puis rattachés aux futures sous-étapes correspondantes. Aucun besoin ne lui est attribué rétroactivement ; l’ancienne sous-étape 1.4 et la phase 1 ne sont pas clôturées.
 
-La nouvelle étape 0 est distincte de l’ancienne phase 0 acquise. Après Go de 0.1, la prochaine action est **0.2 — Reproduire la base**, sans démarrer l’ancienne 2.1 ni la nouvelle étape 1. La version reste **0.0.0**.
+La nouvelle étape 0 est distincte de l’ancienne phase 0 acquise. Les lots 0.1 et **0.2 — Reproduire la base** sont validés ; la [campagne 0.2](docs/validation/0.2-base-reproductible/README.md) et la [PR 11](https://github.com/Soyfki/Jaquette/pull/11) consignent les preuves et SHA contrôlés. La prochaine action est **0.3 — Corriger les défauts du prototype**, non commencée ici. L’ancienne 2.1 et la nouvelle étape 1 ne démarrent pas. La version reste **0.0.0**.
 
 Les listes d’étapes historiques sont conservées dans le [cahier antérieur](https://github.com/Soyfki/Jaquette/blob/8a9e9a7ed692f26e3969641a4584669bfa1d93a9/CAHIER_DES_CHARGES_JAQUETTE.md) et le [plan antérieur](https://github.com/Soyfki/Jaquette/blob/8a9e9a7ed692f26e3969641a4584669bfa1d93a9/PLAN_DE_DEVELOPPEMENT_JAQUETTE.md). Elles n’imposent plus leur ordre de livraison.
 

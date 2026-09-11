@@ -19,6 +19,10 @@
     "check:links": "node scripts/check-markdown-links.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
     "check:reference": "node scripts/check-reference-integrity.mjs",
+    "prepare:references": "node scripts/prepare-references.mjs",
+    "test:tooling": "node --test scripts/qualification.test.mjs",
+    "validate:diagnostic": "node scripts/validate-diagnostic.mjs",
+    "validate:all": "pnpm validate && pnpm test:tooling && pnpm test:e2e",
     "validate": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm check:links && pnpm check:secrets && pnpm check:reference"
   },
   "dependencies": {

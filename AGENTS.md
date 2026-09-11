@@ -19,7 +19,8 @@ Le cahier des charges complet reste la source de référence détaillée. `AGENT
 - L’ancien lot 1.4.2 reste non acquis avant sa revalidation humaine. Le lot 0.1 documentaire ne modifie ni ne fusionne la PR 9.
 - L’ancien 1.4.3 n’est plus une prochaine livraison autonome. Aucun périmètre précis n’a été retrouvé dans l’ancien plan ; les reliquats réellement identifiables sont à inventorier en 0.3/0.5 puis à rattacher aux futures sous-étapes correspondantes, sans exigences rétroactives.
 - Aucune clôture rétroactive de l’ancienne 1.4 ou de l’ancienne phase 1 ; l’ancienne phase 2 n’est pas commencée.
-- La nouvelle étape 0 est distincte de l’ancienne phase 0 acquise. Après Go de 0.1, prochaine action : **0.2 — Reproduire la base**, pas l’ancienne 2.1 ni la nouvelle étape 1.
+- La nouvelle étape 0 est distincte de l’ancienne phase 0 acquise. Les lots **0.1 — Harmoniser les sources** et **0.2 — Reproduire la base** sont validés ; preuves et SHA qualifiés dans les PR 10 et [PR 11](https://github.com/Soyfki/Jaquette/pull/11). Prochaine action : **0.3 — Corriger les défauts du prototype**, non commencée par 0.2, pas l’ancienne 2.1 ni la nouvelle étape 1.
+- Le socle de qualification 0.2 fixe Node 24.19.0, pnpm 11.19.0, installation frozen-lockfile, six références canoniques vérifiées et CI Chrome sur PR/main. Voir le [guide](docs/REPRODUCIBILITY.md). Ce socle ne qualifie pas les fonctions métier simulées ni toute la matrice produit.
 - Le recadrage REC-01 est conservé et complété par les règles d’échanges connectés de septembre.
 - La version de l’application reste **0.0.0**. Une simulation n’est ni une capacité réelle ni une permission.
 - Les propositions de stockage (section 4 du plan) attendent les preuves et la décision en nouvelle 1.2 ; les performances (section 5) restent des cibles proposées à fixer en 0.4, pas des résultats acquis.

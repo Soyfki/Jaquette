@@ -3,7 +3,10 @@ import { defineConfig, devices } from '@playwright/test'
 export default defineConfig({
   testDir: './tests',
   outputDir: 'test-results/playwright',
-  reporter: [['list'], ['html', { open: 'never' }]],
+  reporter: [['list'], ['html', { open: 'never' }], ['json', { outputFile: 'test-results/e2e.json' }]],
+  forbidOnly: !!process.env.CI,
+  retries: 0,
+  workers: process.env.CI ? 2 : undefined,
   use: {
     baseURL: 'http://127.0.0.1:4173',
     browserName: 'chromium',

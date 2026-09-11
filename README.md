@@ -16,7 +16,7 @@ Les quatre rôles et les correctifs de l’ancien **1.4.2 — Chef d’équipe e
 
 L’ancien 1.4.3 n’est plus une prochaine livraison autonome : aucun périmètre précis retrouvé dans l’ancien plan. Les reliquats réellement identifiables seront inventoriés en 0.3/0.5 et rattachés aux futures sous-étapes correspondantes. L’ancienne 1.4 et l’ancienne phase 1 restent non acquises ; aucune clôture rétroactive.
 
-La nouvelle étape 0 de reprise est distincte de l’ancienne phase 0. Après Go de **0.1 — Harmoniser les sources**, la prochaine action est **0.2 — Reproduire la base**, pas l’ancienne 2.1 ni la nouvelle étape 1.
+La nouvelle étape 0 de reprise est distincte de l’ancienne phase 0. **0.1 — Harmoniser les sources** et **0.2 — Reproduire la base** sont validées ; les [preuves 0.2 et le suivi de fusion](https://github.com/Soyfki/Jaquette/pull/11) précisent les SHA qualifiés. La prochaine action est **0.3 — Corriger les défauts du prototype**, non commencée ici.
 
 Version : **0.0.0**, non publiée. Les [jalons actifs et leur correspondance historique](docs/VERSIONING.md) ne sont pas des versions applicatives ou de formats.
 
@@ -36,12 +36,13 @@ Le [plan complet](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) distingue les décisions pr
 
 ## Lancer le prototype Web intermédiaire 1.4.1
 
-Ce mode d’emploi décrit le prototype historique 1.4.1 sur main, pas la qualification du lancement multi-plateforme. L’installation transférée a été constatée cassée lors de l’audit du 11 septembre ; sa reproduction et sa réparation relèvent de 0.2, pas du lot documentaire 0.1.
+Ce mode d’emploi décrit le prototype historique 1.4.1 sur main. Le [guide de reproductibilité](docs/REPRODUCIBILITY.md) fixe Node 24.19.0 et pnpm 11.19.0 pour la campagne 0.2, avec installation propre, diagnostic et CI Chrome. La référence anglaise utilise une archive explicite des octets canoniques : voir le [dossier 0.2](docs/validation/0.2-base-reproductible/README.md).
 
 Pré-requis du prototype historique : Node.js 24 ou plus récent et Chrome. Le projet fixe pnpm 11.19.0 dans `package.json` et embarque les polices via des dépendances locales ; aucun service de polices distant n’est requis à l’exécution.
 
 ```powershell
 corepack pnpm install --frozen-lockfile
+corepack pnpm prepare:references
 corepack pnpm dev
 ```
 
@@ -52,12 +53,12 @@ La route `/projet` démarre dans la vue Sound Designer héritée de la sous-éta
 Vérifications techniques :
 
 ```powershell
-corepack pnpm validate
-corepack pnpm test:e2e
+corepack pnpm validate:diagnostic
+corepack pnpm validate:all
 git diff --check
 ```
 
-`test:e2e` lance le prototype dans Google Chrome aux largeurs définies dans la configuration Playwright. Les contrôles historiques de ce prototype sont décrits dans la [validation 1.4.1 des variantes de rôle](docs/validation/1.4-role-variants.md). La campagne historique du socle visuel reste disponible dans la [validation de la sous-étape 1.1](docs/validation/1.1-design-system.md).
+Si Corepack est absent, utiliser directement pnpm 11.19.0. Préparer Chrome avec `pnpm exec playwright install chrome` avant les E2E. `validate:all` inclut `validate`, les tests d'outillage et `test:e2e`, avec propagation des échecs. Les E2E utilisent Google Chrome 1440 × 1000 et 768 × 1024, Vite dev et `reuseExistingServer=false` ; cela ne qualifie ni le build distribué ni toute la matrice produit. Les contrôles historiques restent dans la [validation 1.4.1](docs/validation/1.4-role-variants.md) et la [validation 1.1](docs/validation/1.1-design-system.md).
 
 ## Sources de vérité
 
@@ -75,7 +76,7 @@ Avant toute contribution :
 
 1. vérifier la branche par défaut, le dernier commit et les changements déjà présents ;
 2. lire intégralement [`AGENTS.md`](AGENTS.md), puis le [cahier des charges](CAHIER_DES_CHARGES_JAQUETTE.md) et le [plan détaillé](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) ;
-3. reprendre le plan canonique actualisé sur main après chaque lot ; après Go de 0.1, exécuter uniquement 0.2 et respecter ses prérequis ;
+3. reprendre le plan canonique actualisé sur main après chaque lot ; après les Go de 0.1 et 0.2, la prochaine sous-étape est 0.3 ; respecter ses prérequis et le mandat du lot demandé ;
 4. distinguer les règles produit validées des décisions techniques encore ouvertes ;
 5. documenter toute nouvelle décision technique sans en faire une règle métier implicite.
 
