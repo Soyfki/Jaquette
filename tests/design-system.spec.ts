@@ -495,6 +495,7 @@ test('runs and pauses the local text simulation without audio', async ({ page },
 })
 
 test('offers visible keyboard focus on the project and its new controls', async ({ page }, testInfo) => {
+  const errors = collectErrors(page)
   await page.goto('/projet')
   const menu = page.getByRole('button', { name: 'Ouvrir la navigation générale' })
   await menu.focus()
@@ -560,6 +561,8 @@ test('offers visible keyboard focus on the project and its new controls', async 
   })
   expect(fileTriggerFocus.style).not.toBe('none')
   expect(fileTriggerFocus.width).toBeGreaterThan(0)
+  expect(errors.consoleErrors).toEqual([])
+  expect(errors.pageErrors).toEqual([])
 })
 
 test('navigates without reload and restores history, URL, title and focus', async ({ page }) => {

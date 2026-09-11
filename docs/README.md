@@ -11,6 +11,8 @@ Ce dossier rassemble la documentation complémentaire et les décisions techniqu
 
 ## Décisions techniques du dépôt
 
+- [Installation et diagnostic reproductibles](REPRODUCIBILITY.md) — runtime fixé, commande complète et CI minimale Chrome ; [campagne 0.2](validation/0.2-base-reproductible/README.md), bloquée par la récupération canonique anglaise.
+
 - [Convention de version](VERSIONING.md) — convention minimale, état de version actuel et séparation entre application, jalons produit et formats de fichiers.
 - [Collaboration offline et échanges `.chpt`](COLLABORATION_OFFLINE.md) — synthèse secondaire des règles d’échange, de fusion, de conflit et des simulations REC-01.
 - [Socle Web de la démonstration 1.1](decisions/0001-web-foundation.md) — choix révisable de React, TypeScript, Vite et pnpm pour le premier exécutable.

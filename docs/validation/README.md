@@ -35,6 +35,8 @@ L’ancien 1.4.2 reste non acquis avant sa revalidation humaine : [protocole PR 
 
 ## Préparer une validation
 
+Pour **0.2 — Reproduire la base**, utiliser la [campagne technique dédiée](0.2-base-reproductible/README.md) et le [guide d'installation](../REPRODUCIBILITY.md). Aucun essai humain supplémentaire n'est requis pour ce lot. La récupération et la CI obligatoires doivent réussir avant acquisition ; la revalidation humaine de 1.4.2 reste distincte.
+
 Avant les tests :
 
 1. lire le périmètre et les critères d'acceptation de la sous-étape dans le plan de développement ;
