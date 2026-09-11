@@ -2,12 +2,14 @@ import { Buffer } from 'node:buffer'
 import { lstatSync, mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { readAsset, readManifest, rootArgument, verifyBytes } from './reference-manifest.mjs'
+import { referenceDownloadUrl } from './reference-source.mjs'
 
 try {
   const root = rootArgument()
   const manifest = readManifest(root)
   const failures = []
   for (const asset of manifest.assets) {
+    const downloadUrl = referenceDownloadUrl(asset)
     try {
       const destination = join(root, manifest.localDirectory, asset.file)
       const existing = lstatSync(destination, { throwIfNoEntry: false })
@@ -16,8 +18,11 @@ try {
         console.log(`PASS déjà présent et vérifié : ${asset.file}`)
         continue
       }
-      console.log(`GET ${asset.downloadUrl}`)
-      const response = await globalThis.fetch(asset.downloadUrl, {
+      if (downloadUrl !== asset.downloadUrl) {
+        console.log(`Archive canonique explicite pour ${asset.id} ; origine : ${asset.downloadUrl} ; aucune autre source ne sera essayée.`)
+      }
+      console.log(`GET ${downloadUrl}`)
+      const response = await globalThis.fetch(downloadUrl, {
         signal: globalThis.AbortSignal.timeout(30_000),
         headers: { 'User-Agent': 'Jaquette-reference-validation/0.0.0 (https://github.com/Soyfki/Jaquette)' },
       })
@@ -38,7 +43,7 @@ try {
       readAsset(root, asset)
       console.log(`PASS acquis et vérifié : ${asset.file} ; ${asset.sizeBytes} octets ; SHA-256 ${asset.sha256}`)
     } catch (error) {
-      failures.push(`${asset.file} depuis ${asset.downloadUrl} : ${error.message} ; ${error.cause?.code ?? ''}`)
+      failures.push(`${asset.file} depuis ${downloadUrl} : ${error.message} ; ${error.cause?.code ?? ''}`)
     }
   }
   if (failures.length) throw new Error(failures.join('\n'))

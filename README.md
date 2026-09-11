@@ -36,7 +36,7 @@ Le [plan complet](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) distingue les décisions pr
 
 ## Lancer le prototype Web intermédiaire 1.4.1
 
-Ce mode d’emploi décrit le prototype historique 1.4.1 sur main. Le [guide de reproductibilité](docs/REPRODUCIBILITY.md) fixe Node 24.19.0 et pnpm 11.19.0 pour la campagne 0.2, avec installation propre, diagnostic et CI Chrome. La récupération réseau de la référence anglaise reste bloquée : voir le [dossier 0.2](docs/validation/0.2-base-reproductible/README.md).
+Ce mode d’emploi décrit le prototype historique 1.4.1 sur main. Le [guide de reproductibilité](docs/REPRODUCIBILITY.md) fixe Node 24.19.0 et pnpm 11.19.0 pour la campagne 0.2, avec installation propre, diagnostic et CI Chrome. La référence anglaise utilise une archive explicite des octets canoniques : voir le [dossier 0.2](docs/validation/0.2-base-reproductible/README.md).
 
 Pré-requis du prototype historique : Node.js 24 ou plus récent et Chrome. Le projet fixe pnpm 11.19.0 dans `package.json` et embarque les polices via des dépendances locales ; aucun service de polices distant n’est requis à l’exécution.
 

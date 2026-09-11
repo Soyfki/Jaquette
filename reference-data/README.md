@@ -9,7 +9,7 @@ Ce dossier définit le jeu de données de référence de l’ancien jalon histor
 - [`manifest.json`](manifest.json) : inventaire machine-readable des fichiers attendus ;
 - [`.gitignore`](.gitignore) : exclusion explicite des binaires acquis.
 
-Les EPUB et les sons sont placés localement sous `reference-data/files/`. Ce répertoire est ignoré par Git : le dépôt ne redistribue aucun binaire tiers. La commande explicite `pnpm prepare:references` et la CI de qualification téléchargent les six URL du manifeste ; l'application ne les télécharge pas.
+Les EPUB et les sons sont placés localement sous `reference-data/files/`. Ce répertoire est ignoré par Git : aucun binaire tiers n'entre dans l'historique Git. La seule référence anglaise est aussi distribuée gratuitement comme [asset de Release de fixtures](ARCHIVE.md), avec licence et provenance conservées. La commande explicite `pnpm prepare:references` et la CI de qualification utilisent cette archive pour l'anglais et les cinq autres URL du manifeste ; l'application ne les télécharge pas.
 
 ## Arborescence locale attendue
 
@@ -43,7 +43,7 @@ Get-ChildItem reference-data/files -Recurse -File | Get-FileHash -Algorithm SHA2
 
 Une empreinte différente bloque la campagne : source modifiée ou téléchargement incomplet. Ne pas recalculer les empreintes, remplacer la référence ni employer un EPUB personnel pour obtenir un succès. Une évolution intentionnelle du corpus exige une décision distincte et documentée.
 
-**Obstacle constaté le 11 septembre 2026 :** l'EPUB anglais téléchargé diffère du manifeste. La récupération vierge et la CI restent bloquées ; cinq autres références sont conformes. Les valeurs attendues/observées et les conditions de reprise figurent dans le [rapport 0.2](../docs/validation/0.2-base-reproductible/BUG_REPORT.md). Une copie canonique locale vérifiée permet les tests locaux, sans lever ce blocage de récupération.
+**Incident du 11 septembre 2026 :** l'EPUB anglais à l'URL Gutenberg diffère du manifeste et est correctement refusé. Les mêmes octets canoniques ont été archivés, sans recompression, dans la [Release de fixtures](ARCHIVE.md). Cette source est sélectionnée explicitement avant téléchargement et journalisée ; un échec ne déclenche aucun recours silencieux à Gutenberg. Les valeurs et l'historique de qualification figurent dans le [rapport 0.2](../docs/validation/0.2-base-reproductible/BUG_REPORT.md).
 
 La référence française est la variante officielle **EPUB sans images pour anciens lecteurs** de l’eBook Project Gutenberg nº 46541. La [fiche de l’eBook](https://www.gutenberg.org/ebooks/46541), les crédits de production, les conditions Project Gutenberg et la vérification territoriale française sont détaillés dans [`INVENTORY.md`](INVENTORY.md). L’usage professionnel de test ne dispense pas de respecter le droit moral français, les conditions liées à la marque Project Gutenberg ni de refaire l’analyse pour un autre territoire ou une redistribution.
 

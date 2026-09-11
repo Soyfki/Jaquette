@@ -19,6 +19,8 @@ Windows 10 build 19045 x64, Node 24.19.0, pnpm 11.19.0, Corepack absent, Chrome 
 
 ## 3. Contrôles automatiques ou techniques — tous obligatoires
 
+Reprise après incident Gutenberg : REF-01 impose les six acquisitions réelles dans un dossier vide, dont l'anglais depuis la Release explicite. TOOL-01 couvre aussi les sept scénarios d'acquisition d'archive (succès canonique, HTTP 404, altération, troncature, dépassement, réseau empêché, fichier existant invalide), avec code non nul et aucun fallback/écrasement lors des échecs. Ces critères sont fixés avant la nouvelle campagne finale.
+
 | ID | Commande ou procédure | Résultat attendu | Preuve attendue |
 |---|---|---|---|
 | ENV-01 | Installation pnpm 11.19.0 --frozen-lockfile depuis absence de node_modules | Code 0, versions fixées, lockfile inchangé | environnement, installation, empreintes avant/après, SHA |

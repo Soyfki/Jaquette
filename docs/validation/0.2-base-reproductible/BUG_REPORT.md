@@ -14,7 +14,7 @@
 
 Windows 10 build 19045 x64, Node 24.19.0, pnpm 11.19.0. Clone neuf depuis main, corpus décrit par le manifeste canonique inchangé. Aucun fichier de EPUB tests/ utilisé. Le téléchargement est une acquisition de fixture publique, pas un import applicatif.
 
-## Reproduction
+## Reproduction historique, avant correction
 
 1. Dans une copie isolée du checkout, conserver le manifeste et les scripts mais partir sans reference-data/files.
 2. Exécuter pnpm prepare:references, ou node scripts/prepare-references.mjs --root suivi du chemin absolu de cette copie.
@@ -37,7 +37,13 @@ La copie anglaise du **reference-data/files** du checkout initial a la taille et
 
 Reprise nécessaire : rendre les **mêmes octets canoniques** accessibles de façon reproductible à un runner neuf, avec provenance et licences conservées, puis rejouer acquisition vierge et campagne locale/CI au SHA courant. Toute nouvelle source archive ou infrastructure de distribution doit être documentée explicitement ; aucune substitution ni réécriture des empreintes pour passer la gate. Les binaires restent hors Git. Une simple réexécution avec le cache local ne lève pas l'obstacle.
 
-Preuves : prepare-initial.log, canonical-en-recovery.json et reproduction finale dans l'espace evidence adjacent au clone ; journaux et artefacts de la PR. La documentation des [sources et droits](../../../reference-data/INVENTORY.md) reste inchangée.
+Preuves historiques : prepare-initial.log, canonical-en-recovery.json et reproduction au SHA **ae7b9b05b4a9252c598cea2e3e3b1d3a6565cd94** ; [CI initiale en échec](https://github.com/Soyfki/Jaquette/actions/runs/34614174815). Les mêmes 379177 octets divergents y ont été refusés. Cet échec n'est pas requalifié en succès rétroactivement.
+
+## Correction de l'acquisition
+
+Le 11 septembre 2026, à la demande de correction de la CI, la seule copie anglaise canonique a été publiée à l'identique dans une [Release dédiée aux fixtures](../../../reference-data/ARCHIVE.md). Le contrôle préalable porte sur les 379445 octets et SHA e8372766… attendus, les crédits, l'en-tête, la licence complète embarquée et les conditions de redistribution. Les binaires restent hors de l'historique Git ; cette Release n'est pas une version de l'application.
+
+Le mapping d'acquisition choisit explicitement cette archive pour l'anglais et conserve les cinq autres URL. La source d'origine reste dans le manifeste inchangé et dans les logs. Tout échec de l'archive reste non nul, sans fallback à Gutenberg ; aucun fichier local invalide n'est remplacé. Les tests de régression couvrent ces comportements dans des processus isolés. Le téléchargement anonyme réel des six fichiers a réussi pendant le développement ; seul le rapport final de PR au SHA courant atteste la qualification locale/CI et la clôture de l'incident.
 
 ## Incident initial distinct — dépendances transférées
 

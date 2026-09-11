@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import { test } from 'node:test'
 import { readAsset, readManifest, verifyBytes } from './reference-manifest.mjs'
+import { referenceDownloadUrl } from './reference-source.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const manifest = readManifest(root)
@@ -121,6 +122,54 @@ test('size is verified independently even when expected SHA matches', () => {
   const bytes = readAsset(root, asset)
   assert.throws(() => verifyBytes({ ...asset, sizeBytes: asset.sizeBytes + 1 }, bytes), /taille/)
 })
+
+test('explicit English archive changes only acquisition, retaining all six canonical expectations', () => {
+  for (const asset of manifest.assets) {
+    assert.equal(referenceDownloadUrl(asset), asset.id === 'epub-en'
+      ? `https://github.com/Soyfki/Jaquette/releases/download/fixtures-reference-2026-08-21/epub-en-${asset.sha256}.epub`
+      : asset.downloadUrl)
+  }
+})
+
+for (const scenario of ['canonical', 'HTTP 404', 'altered byte', 'truncated', 'oversized', 'network error', 'invalid existing file']) {
+  test(`English archive acquisition: ${scenario}, with no fallback or overwrite`, (t) => {
+    const directory = isolatedCorpus(t)
+    const asset = manifest.assets.find((item) => item.id === 'epub-en')
+    const destination = join(directory, manifest.localDirectory, asset.file)
+    const bytes = readFileSync(destination)
+    rmSync(destination)
+    if (['altered byte', 'invalid existing file'].includes(scenario)) bytes[bytes.length - 1] ^= 1
+    if (scenario === 'invalid existing file') writeFileSync(destination, bytes)
+    const responseFile = join(directory, 'response.epub')
+    writeFileSync(responseFile, scenario === 'truncated' ? bytes.subarray(1) : bytes)
+    if (scenario === 'oversized') writeFileSync(responseFile, new globalThis.Uint8Array(asset.sizeBytes + 1))
+    const requestsFile = join(directory, 'requests.jsonl')
+    const stub = join(directory, 'fetch-stub.mjs')
+    // Override fetch only in the isolated child process. Production still uses
+    // the real network, and the CLI's real exit code and exclusive write are tested.
+    writeFileSync(stub, `
+      import { appendFileSync, readFileSync } from 'node:fs'
+      globalThis.fetch = async (url) => {
+        appendFileSync(${JSON.stringify(requestsFile)}, JSON.stringify(url) + '\\n')
+        if (url !== ${JSON.stringify(referenceDownloadUrl(asset))}) throw new Error('unexpected source')
+        if (${JSON.stringify(scenario)} === 'network error') throw new Error('network unavailable')
+        return new Response(readFileSync(${JSON.stringify(responseFile)}), { status: ${scenario === 'HTTP 404' ? 404 : 200} })
+      }
+    `)
+    const result = spawnSync(process.execPath, ['--import', pathToFileURL(stub).href, prepare, '--root', directory], { encoding: 'utf8' })
+    const requests = existsSync(requestsFile) ? readFileSync(requestsFile, 'utf8').trim().split('\n').map((line) => JSON.parse(line)) : []
+    assert.deepEqual(requests, scenario === 'invalid existing file' ? [] : [referenceDownloadUrl(asset)])
+    if (scenario === 'canonical') {
+      assert.equal(result.status, 0, result.stderr)
+      assert.deepEqual(readAsset(directory, asset), bytes)
+      assert.match(result.stdout, /Archive canonique explicite/)
+    } else {
+      mustFail(result, /BLOCKED préparation/)
+      if (scenario === 'invalid existing file') assert.deepEqual(readFileSync(destination), bytes)
+      else assert.equal(existsSync(destination), false, 'Rejected bytes must never be installed')
+    }
+  })
+}
 
 for (const extension of ['yaml', 'yml']) {
   test(`secret scanning includes .github/workflows/*.${extension}`, (t) => {

@@ -16,7 +16,7 @@ Windows 10 build 19045 x64, Node 24.19.0, pnpm 11.19.0, Chrome 152.0.7977.84. CI
 
 La [checklist](CHECKLIST.md) fixe 14 contrôles obligatoires avant exécution. Chaque résultat final de PR cite le SHA complet, la commande/scénario, le résultat observé, le statut PASS/FAIL/BLOCKED et sa preuve. Le diagnostic conserve chaque contrôle même si un précédent échoue. Aucune assertion supprimée ni test ignoré.
 
-Le [blocage de récupération](BUG_REPORT.md) est avéré : cinq ressources conformes, anglais différent à son URL. Les contrôles locaux peuvent utiliser la copie canonique anglaise déjà archivée et vérifiée ; la reproductibilité sur runner vierge reste à démontrer.
+Le [blocage initial de récupération](BUG_REPORT.md) est conservé : cinq ressources conformes, anglais différent à son URL. La correction utilise une archive explicite des mêmes octets canoniques, hors Git ; sa provenance et ses conditions sont documentées. La nouvelle qualification doit télécharger les six ressources depuis zéro et vérifier la CI au SHA courant.
 
 ### Contrôles manuels
 
@@ -34,10 +34,10 @@ La couverture réellement exécutée de main est comptée dans la PR ; les nombr
 
 ## État restant
 
-Référence anglaise à rendre accessible avec les octets canoniques depuis une machine vierge. CI PR obligatoire à exécuter et relire au SHA courant ; toute gate empêchée reste bloquante. Aucune dette acceptée. Les copies locales conformes ne masquent pas l'échec du téléchargement direct.
+CI PR et campagne locale complètes à exécuter et relire au SHA courant après correction. Toute gate empêchée reste bloquante. Aucune dette acceptée. Le succès d'une ancienne copie locale ne prouve pas la nouvelle acquisition réseau.
 
 ## Conclusion
 
-**BLOQUÉE — NO-GO**, tant que récupération canonique vierge et CI obligatoire ne passent pas. Le refus de la référence divergente est attendu. Le bilan chiffré, le SHA testé et la lecture effective de GitHub sont publiés dans la PR ; ce document ne prétend pas qu'un commit futur a été testé.
+**Correction en qualification — GO non encore rendu.** L'incident initial était BLOQUÉE / NO-GO ; le refus de la référence divergente reste attendu. Le bilan chiffré, le SHA testé et la lecture effective de GitHub sont publiés dans la PR ; ce document ne prétend pas qu'un commit futur a été testé.
 
 La PR reste en brouillon et non fusionnée ; aucune opération de fusion ou CI/main après fusion n'est revendiquée. Signature : **agent Codex, développeur et responsable de validation**, 11 septembre 2026.

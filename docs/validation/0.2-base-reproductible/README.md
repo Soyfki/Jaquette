@@ -2,7 +2,7 @@
 
 Dossier préparé avant tests le 11 septembre 2026 à partir des modèles [checklist](../CHECKLIST.md), [bug](../BUG_REPORT.md) et [rapport](../VALIDATION_REPORT.md). Base main : **d7ddeea09f3fc60146454b935192cb3d1c91ee54**, après fusion vérifiée de [0.1 / PR 10](https://github.com/Soyfki/Jaquette/pull/10). Branche : **codex/etape-0-2-base-reproductible**. La PR du lot contient les résultats finaux avec SHA complet et les liens vers les exécutions CI et artefacts ; aucun commit n'est créé seulement pour inscrire son propre SHA.
 
-**État : BLOQUÉE / NO-GO.** L'URL canonique de l'EPUB anglais retourne un fichier différent. Le script le refuse ; la récupération sur environnement vierge reste empêchée. Voir le [rapport de bug](BUG_REPORT.md). Aucun changement de corpus ni de lockfile n'est admis pour contourner ce blocage.
+**Correction en qualification.** L'incident initial de l'URL anglaise divergente est conservé dans le [rapport de bug](BUG_REPORT.md). Les octets canoniques sont désormais accessibles par une archive explicite hors Git. Le GO exige les 14 contrôles obligatoires locaux et CI au SHA final ; aucun changement de corpus ni de lockfile n'est admis pour contourner un échec.
 
 ## Environnement et périmètre
 
@@ -14,7 +14,7 @@ Le checkout initial reste sur **5cabbb016d3ce5480b165512c1aa7814b8367802**. Son 
 
 Les six fichiers obligatoires sont ceux de [manifest.json](../../../reference-data/manifest.json). Leur contenu, noms, tailles, empreintes, sources et licences sont conservés intégralement. L'empreinte du JSON canonique sérialisé sans espaces est **183af98c06d5478330c2a99396a6cc8a6243589a3d5e6a3743aaf02329224b75**, issue de main à la base exacte ci-dessus. Le garde-fou rejette aussi un manifeste vidé, réduit, dupliqué ou dont les attentes auraient été réécrites. Il n'est pas une signature cryptographique de publication.
 
-Le téléchargement direct donne cinq fichiers conformes ; l'anglais est refusé. Pour poursuivre la qualification locale des scripts et du prototype, la copie anglaise déjà conservée dans **reference-data/files** du checkout initial a été vérifiée (379445 octets, empreinte canonique) puis copiée dans le clone. Elle ne provient pas de EPUB tests/. Ce secours local **ne démontre pas** la reproductibilité réseau ni une CI vierge verte.
+Le téléchargement Gutenberg initial donnait cinq fichiers conformes ; l'anglais était refusé. La copie anglaise conservée dans **reference-data/files** du checkout initial (379445 octets, empreinte canonique, aucun EPUB personnel) a d'abord permis les tests locaux, sans valoir une CI vierge verte. Elle a ensuite été archivée sans modification dans la [Release de fixtures](../../../reference-data/ARCHIVE.md). La nouvelle campagne doit acquérir les six références depuis zéro par le réseau ; l'historique de l'échec initial est conservé.
 
 Tous les contrôles de la [checklist](CHECKLIST.md) sont obligatoires. Un jeu complet valide doit réussir ; une absence, illisibilité, altération ou attente de manifeste incorrecte doit produire un code non nul. Les tests négatifs se déroulent exclusivement dans des dossiers temporaires créés à cet effet ; le corpus canonique n'est pas modifié.
 
