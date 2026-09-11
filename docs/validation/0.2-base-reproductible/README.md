@@ -2,7 +2,7 @@
 
 Dossier préparé avant tests le 11 septembre 2026 à partir des modèles [checklist](../CHECKLIST.md), [bug](../BUG_REPORT.md) et [rapport](../VALIDATION_REPORT.md). Base main : **d7ddeea09f3fc60146454b935192cb3d1c91ee54**, après fusion vérifiée de [0.1 / PR 10](https://github.com/Soyfki/Jaquette/pull/10). Branche : **codex/etape-0-2-base-reproductible**. La PR du lot contient les résultats finaux avec SHA complet et les liens vers les exécutions CI et artefacts ; aucun commit n'est créé seulement pour inscrire son propre SHA.
 
-**Correction en qualification.** L'incident initial de l'URL anglaise divergente est conservé dans le [rapport de bug](BUG_REPORT.md). Les octets canoniques sont désormais accessibles par une archive explicite hors Git. Le GO exige les 14 contrôles obligatoires locaux et CI au SHA final ; aucun changement de corpus ni de lockfile n'est admis pour contourner un échec.
+**État : VALIDÉE / GO**, sans dette ajoutée à 0.2. Les [preuves de PR 11](https://github.com/Soyfki/Jaquette/pull/11) consignent les SHA, 14 contrôles obligatoires, campagnes locales, CI et suivi de fusion. Le manifeste et le lockfile sont inchangés. Les incidents initiaux restent dans le [rapport de bug](BUG_REPORT.md), sans requalification rétroactive. Cette mise à jour documentaire est elle-même contrôlée au dernier SHA avant fusion ; les résultats finaux sont liés dans la PR.
 
 ## Environnement et périmètre
 

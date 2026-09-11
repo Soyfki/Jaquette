@@ -38,6 +38,6 @@ Ce dossier rassemble la documentation complémentaire et les décisions techniqu
 
 ## Reprise du 11 septembre 2026
 
-La nouvelle étape 0 est distincte de l’ancienne phase 0 acquise. Le lot **0.1 — Harmoniser les sources** est documentaire ; son [dossier de preuve](validation/0.1-harmonisation/README.md) fixe les contrôles. Après son Go, prochaine action : **0.2 — Reproduire la base**, sans exécuter l’ancienne 2.1 ni la nouvelle étape 1.
+La nouvelle étape 0 est distincte de l’ancienne phase 0 acquise. **0.1 — Harmoniser les sources** et **0.2 — Reproduire la base** sont validées : [preuves 0.1](validation/0.1-harmonisation/README.md), [preuves 0.2](validation/0.2-base-reproductible/README.md) et [SHA/CI/fusion de PR 11](https://github.com/Soyfki/Jaquette/pull/11). Prochaine action : **0.3 — Corriger les défauts du prototype**, non commencée ici.
 
 Cet index n’ajoute aucune règle métier et ne remplace pas les documents de référence.

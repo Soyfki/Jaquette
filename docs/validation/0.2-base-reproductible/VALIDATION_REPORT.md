@@ -32,12 +32,12 @@ La couverture réellement exécutée de main est comptée dans la PR ; les nombr
 - Au moins un obligatoire FAIL et aucun BLOCKED : À CORRIGER / NO-GO.
 - Au moins un obligatoire BLOCKED : BLOQUÉE / NO-GO, même si les autres contrôles passent.
 
-## État restant
+## Résolution et preuves
 
-CI PR et campagne locale complètes à exécuter et relire au SHA courant après correction. Toute gate empêchée reste bloquante. Aucune dette acceptée. Le succès d'une ancienne copie locale ne prouve pas la nouvelle acquisition réseau.
+La récupération des six octets canoniques est rétablie par l'archive anglaise explicite et vérifiée. Le test de recherche attend la fin du focus initial avant la saisie. La campagne complète comporte 43 unitaires/composants, 28 tests d'outillage et 18 E2E Chrome, sans skip ni retry. Les codes séparés, acquisitions vierges, installations et preuves de CI figurent dans la PR au SHA concerné. Les échecs ae7b9b0 et 0b0cca1 restent historiques ; ils ne sont pas effacés par les nouveaux succès.
 
 ## Conclusion
 
-**Correction en qualification — GO non encore rendu.** L'incident initial était BLOQUÉE / NO-GO ; le refus de la référence divergente reste attendu. Le bilan chiffré, le SHA testé et la lecture effective de GitHub sont publiés dans la PR ; ce document ne prétend pas qu'un commit futur a été testé.
+**VALIDÉE — GO**, sans dette ajoutée à ce lot technique. Les 14 contrôles obligatoires et leurs preuves sont consignés dans la [PR 11](https://github.com/Soyfki/Jaquette/pull/11). Aucun essai humain requis pour 0.2. Les défauts explicitement prévus en 0.3 restent dans ce lot futur ; 1.4.2 demeure non acquis. Après cette mise à jour documentaire, la qualification est vérifiée au dernier SHA avant fusion ; ce document ne remplace pas les preuves de commit.
 
-La PR reste en brouillon et non fusionnée ; aucune opération de fusion ou CI/main après fusion n'est revendiquée. Signature : **agent Codex, développeur et responsable de validation**, 11 septembre 2026.
+Le statut GitHub, le SHA de squash et les vérifications CI/main et smoke après fusion sont consignés dans la PR, après observation effective. La prochaine sous-étape est 0.3, non commencée ici. Signature : **agent Codex, développeur et responsable de validation**, 11 septembre 2026.

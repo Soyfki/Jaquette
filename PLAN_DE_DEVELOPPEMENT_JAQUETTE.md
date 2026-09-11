@@ -47,6 +47,8 @@ La nouvelle numérotation s’applique aux travaux à venir. Elle n’efface pas
 
 La version locale complète de ce plan reçue pour 0.1 le 11 septembre a été copiée depuis le checkout PR 9 avant harmonisation : SHA-256 ECBAAA8B5EA7A3130B4880FAB8D3A01AA022848DF7E5A38CC0D1F99B4AE65C09. La provenance et les modifications documentaires sont tracées dans le [dossier 0.1](docs/validation/0.1-harmonisation/README.md). Dès 0.2, utiliser ce plan canonique actualisé sur main ; ne pas restaurer le snapshot initial par-dessus les harmonisations ou budgets adoptés.
 
+**Suivi de la reprise :** 0.1 validée et intégrée par la PR 10 ; **0.2 — Reproduire la base** validée, avec [preuves et suivi de fusion dans la PR 11](https://github.com/Soyfki/Jaquette/pull/11). Runtime fixé, installation propre depuis le lockfile, six références canoniques, contrôles locaux et CI Chrome sont qualifiés aux SHA consignés. Prochaine action : **0.3**, non commencée par ce lot. Le lot historique 1.4.2 demeure non acquis et la PR 9 indépendante.
+
 ## 3. Règles d’exécution et de validation
 
 Chaque sous-étape ci-dessous constitue un lot démontrable. Son dossier de preuve contient : identifiant, commit exact, environnement, jeux de données, commande ou scénario, résultat observé et preuve adaptée.
