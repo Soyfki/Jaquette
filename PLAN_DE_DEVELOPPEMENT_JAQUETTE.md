@@ -475,4 +475,4 @@ Un membre révoqué ne peut plus soumettre à la reconnexion ; son travail est c
 | Première version distribuée | 14–16 | Installateurs/Web, performances, exploitation et pilotes validés | Stabilisation 25 enrichie, qualification desktop 19 |
 | Extension Jacques | F1 | Publication réelle après création de Jacques | Ancienne phase 24 et signature de publication |
 
-Le lot documentaire de reprise est **0.1 — Harmoniser les sources** ; sa décision et ses preuves sont consignées dans la PR liée au dossier 0.1. **Après Go de 0.1, prochaine action : 0.2 — Reproduire la base**, pas l’ancienne 2.1 ni la nouvelle étape 1. Aucun numéro de cette feuille de route ne vaut validation automatique d’une livraison.
+Les lots de reprise **0.1 — Harmoniser les sources** et **0.2 — Reproduire la base** sont validés ; leurs décisions et preuves sont consignées dans les PR 10 et 11 liées à leurs dossiers. **Prochaine action : 0.3 — Corriger les défauts du prototype**, non commencée par 0.2, pas l’ancienne 2.1 ni la nouvelle étape 1. Aucun numéro de cette feuille de route ne vaut validation automatique d’une livraison.
