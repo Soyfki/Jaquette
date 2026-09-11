@@ -1,6 +1,6 @@
 # Protocole de validation
 
-Ce dossier définit la méthode commune pour valider chaque sous-étape de Jaquette. Il est conçu pour qu'une personne non développeuse puisse retrouver les instructions, exécuter les contrôles manuels, consigner ce qu'elle observe et rendre une décision sans ambiguïté.
+Ce dossier définit la méthode commune pour valider chaque sous-étape de Jaquette. L’humain retrouve les scénarios et fournit ses observations ; l’agent développeur assume aussi la responsabilité de validation, applique la matrice Go/No-Go et signe la décision.
 
 ## Documents à utiliser
 
@@ -9,7 +9,7 @@ Ce dossier définit la méthode commune pour valider chaque sous-étape de Jaque
 3. Copier le [`VALIDATION_REPORT.md`](VALIDATION_REPORT.md) pour rendre la décision finale.
 
 
-La campagne propre à la page exécutable du design system est décrite dans [`1.1-design-system.md`](1.1-design-system.md). La campagne du lot 1.4.1 consacré au rôle simulé et à la variante Réviseur est décrite dans [`1.4-role-variants.md`](1.4-role-variants.md).
+Les campagnes des anciennes sous-étapes conservent leur portée historique Chrome et leurs preuves datées ; elles ne qualifient pas Firefox, Safari ou Electron. La campagne propre à la page exécutable du design system est décrite dans [`1.1-design-system.md`](1.1-design-system.md). La campagne du lot 1.4.1 consacré au rôle simulé et à la variante Réviseur est décrite dans [`1.4-role-variants.md`](1.4-role-variants.md).
 
 Les copies remplies peuvent être conservées dans la pull request ou dans l'outil de suivi retenu par l'équipe. Elles ne doivent contenir ni secret, ni donnée privée, ni manuscrit confidentiel.
 
@@ -17,9 +17,21 @@ Les copies remplies peuvent être conservées dans la pull request ou dans l'out
 
 - **Développeur** : identifie exactement la livraison, exécute les contrôles automatiques ou techniques, fournit leurs résultats et prépare les préconditions nécessaires.
 - **Validateur utilisateur** : exécute les contrôles manuels sans modifier le résultat attendu, décrit ses observations et signale les défauts reproductibles.
-- **Responsable de validation** : vérifie que les preuves correspondent au commit testé, applique les règles de décision et signe la conclusion. Une même personne peut cumuler ces rôles si cela est annoncé dans le rapport.
+- **Responsable de validation** : rôle cumulé par l’agent développeur dans le mandat de septembre. Il interprète les observations humaines, vérifie les preuves du SHA testé, applique la matrice Go/No-Go et signe. L’utilisateur ne choisit pas Go/No-Go.
+
+L’agent crée les commits, pousse, prépare la PR en brouillon, puis après Go la passe prête et fusionne en squash vers main avec contrôle du SHA approuvé, sans contourner les protections GitHub ni inventer une revue indépendante. Il vérifie merged=true, le SHA de squash sur origin/main et les contrôles après fusion. L’ancienne PR 9 reste intacte dans le lot 0.1.
+
+Un retour humain obligatoire absent ou incomplet vaut BLOCKED pour les points non couverts, donc BLOQUÉE et NO-GO. Une observation humaine ne peut pas être remplacée par une analyse automatique de capture. Le cumul de rôles ne dispense d’aucun test humain requis.
 
 Le développeur ne remplace pas un contrôle utilisateur obligatoire par un contrôle technique. Le validateur ne transforme pas un résultat inattendu en résultat attendu après l'exécution.
+
+## Périmètre de reprise du lot 0.1
+
+La [campagne 0.1](0.1-harmonisation/README.md) est exclusivement documentaire et indépendante du Go humain de l’ancien 1.4.2. Aucun essai humain supplémentaire ni contrôle applicatif hors diff n’est obligatoire. Les décisions produit sont déjà fournies. Une contradiction non tranchée doit être isolée avec un texte proposé, sans nouvelle validation générale.
+
+La CI n’est requise pour 0.1 que si une configuration ou protection applicable existe déjà ; sa création et la réparation de l’installation transférée relèvent de 0.2. Dès 0.2, CI minimale et vérification CI/main sont obligatoires. Les tests applicatifs requis par les campagnes historiques gardent leur portée pour ces campagnes.
+
+L’ancien 1.4.2 reste non acquis avant sa revalidation humaine : [protocole PR 9](1.4.2-team-lead-admin-variants.md). L’ancien 1.4.3 n’est plus autonome ; aucun périmètre précis retrouvé, inventaire des reliquats en 0.3/0.5 puis rattachement aux étapes futures correspondantes. Aucune clôture rétroactive de l’ancienne phase 1. Après Go de 0.1, prochaine action 0.2.
 
 ## Préparer une validation
 
@@ -33,7 +45,7 @@ Avant les tests :
 6. marquer chaque contrôle comme obligatoire ou non obligatoire avant son exécution ;
 7. définir pour chaque contrôle des étapes reproductibles, un résultat attendu observable et la preuve à conserver.
 
-Si le SHA complet n'est pas identifiable, la validation ne commence pas. Une nouvelle modification du contenu testé rend les résultats précédents obsolètes pour le nouveau commit : les contrôles concernés doivent être rejoués et le rapport doit citer le nouveau SHA.
+Si le SHA complet n'est pas identifiable, la validation ne commence pas. Une nouvelle modification du contenu testé rend les résultats précédents obsolètes pour le nouveau commit : les contrôles concernés doivent être rejoués et le rapport doit citer le nouveau SHA. Les preuves finales liées au SHA sont publiées dans la PR ou un artefact associé pour éviter un nouveau commit consacré à son propre SHA. Toute réutilisation d’une preuve inchangée est explicitement justifiée.
 
 ## Exécuter et consigner un contrôle
 
@@ -85,6 +97,8 @@ Une anomalie qui ne remplit pas toutes ces conditions conduit à `À CORRIGER` o
 | Tous `PASS` | Oui | Indifférent | `À CORRIGER` |
 | Tous `PASS` | Non | Oui | `VALIDÉE AVEC DETTE` |
 | Tous `PASS` | Non | Non | `VALIDÉE` |
+
+BLOQUÉE et À CORRIGER impliquent NO-GO et aucune fusion. VALIDÉE implique GO ; VALIDÉE AVEC DETTE permet GO seulement pour les dettes strictement admissibles, motivées et signées par le responsable. La revue indépendante éventuellement exigée par GitHub reste une condition distincte.
 
 Dans tous les cas, l'absence du SHA complet réellement testé interdit `VALIDÉE` et `VALIDÉE AVEC DETTE`. La campagne doit être complétée avant décision.
 

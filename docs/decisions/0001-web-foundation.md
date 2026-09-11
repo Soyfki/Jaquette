@@ -1,6 +1,7 @@
 # Décision d’implémentation 0001 — Socle Web de la démonstration 1.1
 
-- Statut : retenue pour la sous-étape 1.1, révisable
+- Statut : retenue pour l’ancienne sous-étape 1.1, révisable
+- Portée historique : les numéros de cette décision visent l’ancien plan. Chrome décrit la campagne du prototype ; Electron hors de ce lot ne signifie pas après lancement. Voir le [plan actif](../../PLAN_DE_DEVELOPPEMENT_JAQUETTE.md).
 - Date : 2026-08-23
 - Version de l’application : `0.0.0`
 
@@ -39,6 +40,6 @@ Le serveur de développement écoute uniquement sur `127.0.0.1`. La cible de tes
 ## Conséquences et décisions ouvertes
 
 - Le choix d’une bibliothèque de composants définitive reste ouvert ; la sous-étape 1.1 utilise des composants locaux simples.
-- La stratégie de structure applicative au-delà de cette page reste ouverte jusqu’à 1.2.
+- La stratégie de structure applicative au-delà de cette page était laissée ouverte jusqu’à l’ancienne 1.2 (navigation, décision 0002), distincte de la nouvelle 1.2 consacrée au stockage.
 - La stratégie Electron reste hors périmètre et ne découle pas automatiquement du présent choix.
 - Les seuils détaillés de contraste et la matrice complète d’accessibilité devront être formalisés au fur et à mesure que les écrans métier apparaîtront.

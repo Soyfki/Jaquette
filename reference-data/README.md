@@ -1,6 +1,6 @@
 # Données de référence
 
-Ce dossier définit le jeu de données de référence du jalon **0.2 — Définir les données de référence**. Il couvre les trois langues minimales, les trois familles audio et un scénario de doublage reproductible, sans ajouter de code applicatif ni de dépendance au projet.
+Ce dossier définit le jeu de données de référence de l’ancien jalon historique **0.2 — Définir les données de référence**, distinct de la nouvelle **0.2 — Reproduire la base**. Il couvre les trois langues minimales, les trois familles audio et un scénario de doublage reproductible, sans ajouter de code applicatif ni de dépendance au projet.
 
 ## Contenu versionné
 

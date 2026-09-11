@@ -4,6 +4,20 @@
 >
 > Cette synthèse facilite la lecture et les tests. Elle ne remplace pas les trois sources de vérité : [`AGENTS.md`](../AGENTS.md), le [cahier des charges](../CAHIER_DES_CHARGES_JAQUETTE.md) et le [plan de développement](../PLAN_DE_DEVELOPPEMENT_JAQUETTE.md).
 
+## Cadrage de lancement — 11 septembre 2026
+
+Jaquette gratuit sur invitation est attendu au lancement en Web complet Chrome/Firefox/Safari sur ordinateur (Safari qualifié sur Mac) et Electron Windows/macOS. Activation initiale en ligne et préparation de l’environnement précèdent cinq jours de travail offline. Après expiration, nouvelles modifications bloquées ; consultation, sauvegarde et archivage conservés.
+
+À reconnexion, droits recontrôlés avant tout envoi, y compris commentaires et décisions en attente. En cas de révocation : aucun envoi, travail conservé, archivage sur disque accompagné jusqu’à vérification. Dans le navigateur, préparer une copie ne prouve pas son enregistrement indépendant ; annulation, refus ou échec ne détruisent pas l’original.
+
+Les contenus, commentaires de contenu et banques restent locaux ou sur l’infrastructure privée choisie par la maison/l’auteur. Les services Jaquette sont limités à l’identité, aux invitations et aux données administratives explicitement autorisées ; aucun manuscrit ni banque audio sur Jaquette Cloud. Les sons des dossiers locaux ou banques privées réellement utilisés sont embarqués dans le projet, indépendamment d’un retrait ultérieur de la banque.
+
+Travail local ; soumissions, transmission des commentaires/décisions et actualisation des tableaux de bord avec connexion. Réviseurs et Chefs peuvent télécharger en ligne puis lire, simuler et préparer leurs décisions hors ligne ; une décision n’est officielle qu’après acceptation par le service autorisé. La date d’actualisation distingue l’état confirmé du travail local non envoyé.
+
+Le MCP est inclus au lancement avec agents externes et bibliothèques autorisées, sans génération sonore ni accès direct au master. Agent et modèle locaux sont nécessaires hors ligne ; tout transfert distant exige consentement et connexion. Desktop peut fournir une liaison MCP locale au navigateur, à qualifier.
+
+Export et contrôle .jacko préparent Jacques ; publication réelle, boutique et dépublication restent en F1. Les clés de test ne sont jamais des clés de publication. Les propositions de parcours de sauvegarde de la section 4 du plan, OPFS, ZIP et distinction espace de travail/copie portable attendent les preuves de nouvelle 1.2 ; les performances de section 5 attendent adoption en 0.4 et mesures. Aucun conteneur ni hébergeur n’est adopté ici.
+
 ## Décision produit
 
 La collaboration sur le contenu est locale et asynchrone. L’ancien modèle de collaboration temps réel est abandonné : aucun utilisateur ne voit la présence, le curseur, la sélection ou les modifications live d’un autre utilisateur.
@@ -107,7 +121,7 @@ Cas obligatoires :
 
 - doubler un chapitre ;
 - réviser un chapitre ;
-- publier un livre dans Jacques ;
+- publier un livre dans Jacques, en extension F1 : tâche créée automatiquement au passage à l’état publiable et terminée après publication confirmée, sans doublon de tâche/release lors d’un réessai ;
 - corriger un chapitre invalidé.
 
 Chaque invalidation génère une nouvelle occurrence de tâche de correction. Les cycles précédents restent intacts. Les tâches d’un chapitre voyagent avec son `.chpt` ; celles du livre restent dans la section commune du `.jacq`.
@@ -140,7 +154,9 @@ Le journal comprend au minimum :
 - arbitrage des informations communes ;
 - création, réponse, résolution et modification d’un commentaire.
 
-## Simulations documentaires REC-01
+## Simulations documentaires REC-01 — historique du 23 août 2026
+
+Les neuf conclusions ci-dessous restent les résultats documentaires historiques de REC-01. Elles ne démontrent aucune implémentation actuelle, aucun échange connecté ni aucun nouveau SHA. Les décisions officielles futures restent soumises aux contrôles de droits et à l’acceptation connectée décrits ci-dessus.
 
 ### 1. Deux chapitres différents
 

@@ -1,1725 +1,476 @@
-# Jaquette — Plan de développement détaillé
+# Jaquette — Plan de développement jusqu’à la mise en production
 
-## 1. Objectif du plan
+Date de cadrage : **11 septembre 2026**.
 
-Ce document transforme le cahier des charges de Jaquette en une séquence de développement incrémentale.
+Destination : **logiciel gratuit sur invitation**, pour maisons d’édition et auteurs indépendants.
 
-Chaque grande étape est découpée en sous-étapes testables.
+Livrable de cet audit : ce plan unique. Les correctifs applicatifs identifiés sont planifiés ; leur présence dans le document ne signifie pas qu’ils sont réalisés.
 
-Règles de conduite :
+## 1. Décisions produit retenues
 
-- Ne jamais commencer une étape dépendante si les critères d’acceptation de l’étape précédente ne sont pas validés.
-- Chaque sous-étape doit produire un résultat démontrable.
-- Les tests doivent utiliser progressivement un véritable EPUB de référence et une véritable bibliothèque audio de test.
-- Les fonctionnalités de collaboration, IA et publication ne doivent pas masquer une faiblesse du socle texte/audio.
-- Les décisions techniques qui ne sont pas encore figées doivent rester des décisions d’implémentation et non devenir des règles métier implicites.
+Les réponses de cadrage de septembre 2026 remplacent l’ancien calendrier « Web, puis Electron, puis IA, puis collaboration ». Les autres invariants du [cahier des charges](CAHIER_DES_CHARGES_JAQUETTE.md) et d’[AGENTS.md](AGENTS.md) sont conservés. Leur harmonisation est la première sous-étape de reprise.
 
----
+| Sujet | Cible à livrer |
+|---|---|
+| Plateformes | Application Electron Windows/macOS et application Web complète sur ordinateur dans Chrome, Firefox et Safari. Safari est qualifié sur macOS. |
+| Matériel | PC Windows 10 de génération 2018, MacBook Intel précédant le M1 et MacBook M1. Les configurations exactes sont fixées en 0.4. |
+| Première utilisation | Invitation, première authentification en ligne, paramétrage de l’espace et récupération de l’environnement nécessaires avant travail hors ligne. |
+| Autonomie | Cinq jours sans reconnexion. À expiration : nouvelles modifications bloquées ; consultation, sauvegarde et archivage du travail existant possibles. Une simple présence de réseau ne renouvelle pas les droits. |
+| Révocation | À la prochaine connexion, droits revérifiés avant tout envoi. Travail du contexte révoqué conservé et préparé pour archivage sur disque, sans possibilité de soumission. Dans le navigateur, l’enregistrement explicite de la copie est accompagné jusqu’à vérification ; aucun original n’est supprimé si l’utilisateur annule. |
+| Contenus | EPUB, manuscrits, projets, chapitres, sons et commentaires de contenu restent localement ou sur l’infrastructure de la maison. L’auteur indépendant choisit son stockage ou son hébergeur. |
+| Services Jaquette | Identité, invitations et données administratives explicitement autorisées. Aucun hébergement des manuscrits ou banques audio sur Jaquette Cloud. |
+| Collaboration | Travail local ; soumissions, transmission des commentaires/décisions et actualisation des tableaux de bord avec connexion. Aucun montage partagé en direct. |
+| Révision | Réviseurs et Chefs peuvent télécharger, lire, simuler et préparer leurs commentaires/décisions hors ligne. Une décision préparée localement devient officielle après acceptation par le service autorisé. |
+| Bibliothèques | Dossiers locaux et banques privées de maison/équipe. Les sons utilisés sont copiés dans le projet et restent disponibles après retrait du son ou perte de l’accès à la banque. |
+| IA au lancement | MCP, selon la dernière précision de cadrage. Agents externes ; propositions utilisant exclusivement les sons des bibliothèques autorisées ; aucune génération sonore. |
+| IA locale et distante | Fonctionnement hors ligne possible avec un agent et un modèle locaux. Tout transfert à un fournisseur distant exige consentement et connexion. Desktop peut fournir la connexion MCP locale au navigateur. |
+| Jacques | Lecteur et boutique inexistants à ce jour. Préparer export et contrat d’interopérabilité ; reporter publication effective, boutique et dépublication à une extension distincte. |
+| Moyens | Développement prévu par GPT.6, budget limité, pas d’échéance imposée. Lots courts, réutilisation du socle existant et décisions techniques fondées sur des preuves. |
 
-# PHASE 0 — Préparation du projet
+La gratuité de Jaquette n’implique pas la gratuité du stockage choisi par l’éditeur, d’un agent tiers ou de ses appels IA. Le plan doit rendre ces dépendances visibles sans créer de paiement ou d’abonnement Jaquette.
 
-## 0.1 Initialiser le dépôt
+## 2. Point de reprise et conservation des acquis
 
-Objectif :
-Créer le socle minimal du repository Jaquette.
+Référence locale auditée : **5cabbb016d3ce5480b165512c1aa7814b8367802**, branche **codex/phase-1-4-2-team-lead-admin-variants**. La [PR 9](https://github.com/Soyfki/Jaquette/pull/9) est ouverte, en brouillon et non fusionnée au moment de l’audit.
 
-Livrables :
-- dépôt initialisé ;
-- README ;
-- cahier des charges ;
-- AGENTS.md ;
-- dossier de documentation ;
-- première convention de version du projet.
+- Acquis historiques : phase 0, sous-étapes 1.1 à 1.3 et lot 1.4.1.
+- Lot 1.4.2 : quatre rôles simulés et correctifs présents dans la branche/PR 9 au SHA indiqué, pas sur main tant qu’ils ne sont pas fusionnés. Revalidation humaine encore attendue ; ne pas le déclarer acquis.
+- Ancien lot 1.4.3 : non commencé et plus de prochaine livraison autonome. Aucun périmètre précis retrouvé dans l’ancien plan ; inventaire en 0.3/0.5 des reliquats réellement identifiables, puis rattachement aux futures sous-étapes correspondantes, sans exigences inventées rétrospectivement. Aucune clôture rétroactive de l’ancienne 1.4 ni de l’ancienne phase 1 ; anciennes phases suivantes non commencées.
+- Version applicative conservée : **0.0.0**. Les numéros des étapes ci-dessous ne sont pas des versions de l’application ou des formats.
+- À réutiliser : React/TypeScript, design system, polices embarquées, navigation, panneaux et variantes Sound Designer/Réviseur sur main à 8a9e9a7ed692f26e3969641a4584669bfa1d93a9. Les variantes Chef/Admin et leurs tests restent sur la PR 9 tant qu’elle n’est pas fusionnée ; 0.1 n’importe aucun de ses changements applicatifs.
+- À construire : import EPUB, ancres persistantes, audio réel, sauvegarde, comptes et permissions, échanges, banques privées, MCP, export et distribution.
+- Les résultats historiques de la PR — 48 tests unitaires/composants et 22 tests navigateur — ne constituent pas une qualification actuelle du produit. Lors de cet audit, la suite applicative n’a pas démarré : résolution de dépendances locale cassée, notamment TypeScript. L’installation hors ligne n’a pas réparé cet état.
+- Contrôles historiques de l’audit préalable, distincts des preuves du lot 0.1 et sans qualification d’un nouveau SHA : 19 documents sans lien relatif manquant, aucun motif courant de secret détecté par le script existant, six ressources de référence conformes, contrôle des espaces du diff réussi. Le script de secrets reste un contrôle limité, pas un audit de sécurité complet.
+- Les fichiers locaux non suivis dans **EPUB tests/** restent hors des modifications et hors des commits.
 
-Test d’acceptation :
-- le dépôt peut être cloné ;
-- les documents de référence sont accessibles ;
-- un nouveau contributeur peut identifier immédiatement le cahier des charges et AGENTS.md.
+La nouvelle numérotation s’applique aux travaux à venir. Elle n’efface pas l’historique et ne demande pas de reconstruire les éléments déjà validés. L’ancienne phase 0 acquise et la nouvelle étape 0 sont distinctes.
 
-## 0.2 Définir le jeu de données de référence
+La version locale complète de ce plan reçue pour 0.1 le 11 septembre a été copiée depuis le checkout PR 9 avant harmonisation : SHA-256 ECBAAA8B5EA7A3130B4880FAB8D3A01AA022848DF7E5A38CC0D1F99B4AE65C09. La provenance et les modifications documentaires sont tracées dans le [dossier 0.1](docs/validation/0.1-harmonisation/README.md). Dès 0.2, utiliser ce plan canonique actualisé sur main ; ne pas restaurer le snapshot initial par-dessus les harmonisations ou budgets adoptés.
 
-Objectif :
-Choisir les éléments réels utilisés pendant tout le développement.
+## 3. Règles d’exécution et de validation
 
-Livrables :
-- un EPUB de référence ;
-- au moins un EPUB anglais ;
-- au moins un EPUB contenant de l’arabe/RTL ;
-- une bibliothèque audio de test ;
-- un scénario de doublage de référence.
+Chaque sous-étape ci-dessous constitue un lot démontrable. Son dossier de preuve contient : identifiant, commit exact, environnement, jeux de données, commande ou scénario, résultat observé et preuve adaptée.
 
-Test d’acceptation :
-- l’équipe peut ouvrir les trois EPUB avec un lecteur existant ;
-- la bibliothèque contient des SFX, ambiances et musiques ;
-- le scénario de référence indique au moins une annotation de chaque type.
+Conserver le [protocole de validation](docs/validation/README.md) : PASS, FAIL ou BLOCKED ; un test empêché n’est jamais réussi. L’humain fournit les observations des essais humains requis ; l’agent développeur assume aussi le rôle de responsable de validation, applique la matrice Go/No-Go et fusionne après Go conforme aux protections GitHub. Ce cumul ne dispense d’aucun essai humain obligatoire. Pour le lot documentaire 0.1, aucun essai humain supplémentaire n’est obligatoire.
 
-## 0.3 Définir le protocole de validation
+Une étape dépendante commence seulement lorsque ses prérequis nommés passent. Les travaux indépendants peuvent avancer en parallèle. Toute extension du modèle ajoute immédiatement son test de sauvegarde/réouverture ; la recette complète n’est pas repoussée à la fin.
 
-Objectif :
-Créer une méthode commune pour valider chaque livraison.
+Pour maîtriser le budget :
 
-Livrables :
-- checklist de validation ;
-- convention de rapport de bug ;
-- règle de validation “pass/fail”.
+1. Une correction ou capacité cohérente par livraison ; éviter les grands remaniements sans bénéfice démontré.
+2. Conserver les dépendances actuelles lorsqu’elles conviennent ; ajouter une dépendance seulement après comparaison, contrôle de licence et justification.
+3. Réutiliser la logique métier entre Web et Electron ; conserver des adaptateurs de plateforme testés séparément.
+4. Ne pas transformer automatiquement le dépôt en monorepo ni multiplier les services.
+5. Choisir un premier raccordement à une infrastructure privée réellement utilisé par les pilotes ; les autres connecteurs deviennent des extensions.
+6. Tester les changements concernés et leurs invariants ; réserver la matrice complète aux jalons et releases.
+7. Faire relire les interfaces et écouter les résultats audio par des utilisateurs métier. Un agent de développement ne remplace pas ces validations.
+8. Ne pas réduire une exigence ou relever un seuil après un échec sans décision explicite et traçable.
 
-Test d’acceptation :
-- un membre non développeur peut exécuter une checklist simple et conclure “validé” ou “non validé”.
+## 4. Parcours de sauvegarde proposé, à prouver avant adoption
 
----
+### Navigateur
 
-# PHASE 1 — Prototype visuel et navigation principale
+Parcours candidat commun aux trois navigateurs :
 
-## 1.1 Construire le design system de base
+1. L’utilisateur crée un projet ou importe une copie .jacq depuis son disque.
+2. Jaquette prépare un espace de travail local au navigateur, avec données communes, chapitres et médias.
+3. Les modifications sont enregistrées automatiquement par chapitre. L’écran distingue **travail enregistré localement** et **dernière copie portable créée**.
+4. Fermer puis rouvrir le même navigateur retrouve le travail dans la limite des droits hors ligne.
+5. Une commande explicite produit une copie .jacq portable cohérente, contenant les sons utilisés. L’utilisateur peut la conserver sur disque et l’ouvrir dans Electron ou un autre navigateur.
+6. L’export .chpt et la soumission utilisent un état figé du chapitre ; continuer le montage ne modifie pas l’envoi déjà préparé.
+7. Une alerte utile rappelle l’absence ou l’ancienneté de copie indépendante. Effacer les données du site ne doit jamais être présenté comme une opération dont Jaquette pourrait récupérer magiquement les modifications non exportées.
 
-Objectif :
-Implémenter les règles visuelles déjà décidées.
+OPFS est une **option à évaluer**, pas une technologie acquise. L’accès direct aux fichiers proposé dans Chrome ne doit pas être une dépendance obligatoire du Web complet : les sélecteurs correspondants ne sont pas uniformément disponibles. Les quotas et l’éviction du stockage navigateur font partie de la qualification. [Mozilla : accès fichier](https://developer.mozilla.org/en-US/docs/Web/API/Window/showOpenFilePicker), [WebKit : stockage](https://webkit.org/blog/14403/updates-to-storage-policy/).
 
-Inclure :
-- fond `#1B1B3A` ;
-- texte `#EFF2FF` ;
-- accent `#FFDFB2` ;
-- secondaire `#74A4BC` ;
-- validation `#CFF2EC` ;
-- SFX `#FFAF87` ;
-- ambiance `#E56399` ;
-- musique `#9358FF` ;
-- succès sombre `#83B692` ;
-- succès clair `#355A40` ;
-- erreur `#A20021` ;
-- Manrope ;
-- Literata ;
-- composants à bords très arrondis.
+### Electron
 
-Test d’acceptation :
-- chaque couleur est visible dans une page de démonstration ;
-- les composants utilisent les bonnes typographies ;
-- aucun ancien code couleur métier n’apparaît.
+Parcours candidat : choisir un emplacement de projet, travailler et autosauvegarder sur disque, créer des copies portables et exporter des chapitres. Les banques locales restent indexées sans duplication de leurs fichiers inutilisés.
 
-## 1.2 Créer la structure d’écran principale
+### Porte de décision impérative
 
-Objectif :
-Mettre en place le shell de Jaquette.
+La distinction entre espace de travail et copie portable doit être **explicitement formalisée et validée en 1.2**, après les essais. Elle ne redéfinit pas silencieusement .jacq.
 
-Écrans minimum :
-- connexion ;
-- accueil ;
-- projet ;
-- paramètres.
+Le projet de travail doit respecter la séparation physique par chapitre. Une archive intégralement régénérée lors d’un export explicite n’est pas une preuve d’autosauvegarde partielle. Des noms .chpt, des empreintes identiques ou un appel seek ne prouvent pas l’absence de réécriture physique.
 
-Test d’acceptation :
-- navigation entre les écrans sans rechargement complet ;
-- état actif clair ;
-- shell stable quelle que soit la page.
+L’API standard d’écriture peut passer par un fichier temporaire ; le stockage OPFS ne garantit pas une correspondance simple entre fichier logique et fichier physique. Mesurer les écritures et la récupération sur chaque plateforme. Si le format proposé ne respecte pas l’invariant, arrêter ce choix et présenter le compromis produit avant de poursuivre ; ne pas supposer un ZIP. [Standard File System](https://fs.spec.whatwg.org/#api-filesystemfilehandle-createwritable), [représentation OPFS WebKit](https://webkit.org/blog/12257/the-file-system-access-api-with-origin-private-file-system/).
 
-## 1.3 Créer l’écran de projet Sound Designer vide
+## 5. Matrice de qualification et objectifs de performance proposés
 
-Objectif :
-Valider le layout principal avant le moteur EPUB.
+Ces valeurs sont des **cibles de travail recommandées**, à figer en 0.4 après description des postes et à éprouver dès les prototypes. Elles ne sont ni des mesures de l’existant ni des performances promises avant qualification. Toute modification ultérieure conserve sa justification et les mesures précédentes.
 
-Disposition :
-- bibliothèque à gauche ;
-- livre au centre ;
-- inspecteur à droite ;
-- zone de contrôle/simulation.
+### Postes et environnements
 
-Test d’acceptation :
-- chaque panneau peut afficher du contenu fictif ;
-- le livre reste la zone dominante ;
-- la page centrale est claire sur interface sombre.
+| Repère | Configuration de référence proposée |
+|---|---|
+| W18 | PC 2018, Windows 10 64 bits, processeur quatre cœurs de génération comparable, 8 Go RAM, SSD, circuit graphique intégré. Relever les références exactes. |
+| MI | MacBook Intel 2019 ou début 2020 compatible avec le macOS retenu, 8 Go RAM, SSD. Relever modèle exact et macOS. |
+| M1 | MacBook M1, 8 Go RAM, SSD, macOS compatible avec les versions retenues. |
+| Web | Chrome et Firefox sur W18, MI, M1 ; Safari sur MI et M1. Qualifier les versions stables retenues et la version précédente supportée, avec numéros inscrits au rapport. |
+| Desktop | Installateurs réels Windows x64, macOS Intel et Apple Silicon ; exécution native, pas uniquement navigateur de développement ou émulation. |
+| Audio | Casque filaire et haut-parleurs pour mesures ; Bluetooth évalué séparément, sa latence matérielle n’étant pas celle du moteur. |
+| Réseau | Hors ligne ; réseau nominal 20 Mbit/s, latence 100 ms ; réseau dégradé 1 Mbit/s, latence 500 ms, pertes/coupures injectées. |
 
-## 1.4 Créer les variantes d’interface par rôle
+Le support technique d’un OS et son cycle de sécurité sont distingués. Electron annonce Windows 10+ et Mac Intel/Apple Silicon, mais la version exacte d’Electron doit rester maintenue et compatible avec le macOS choisi. Windows 10 standard a quitté le support Microsoft le 14 octobre 2025 ; consigner l’édition et sa couverture de maintenance sans supprimer la cible demandée. [Plateformes Electron](https://github.com/electron/electron#platform-support), [maintenance Electron](https://www.electronjs.org/docs/latest/tutorial/electron-timelines), [cycle Windows](https://learn.microsoft.com/en-us/windows/release-health/release-information).
 
-Objectif :
-Valider le principe d’interface adaptative.
+### Jeux de charge
 
-Variantes :
-- Sound Designer ;
-- Réviseur ;
-- Chef d’équipe ;
-- Admin Maison.
+| Jeu | Volume proposé |
+|---|---|
+| Référence | Les EPUB FR, EN et arabe validés, les trois médias de référence et des cas synthétiques dont les résultats sont connus. |
+| Nominal | EPUB jusqu’à 10 Mo, 150 000 mots, 30 chapitres, 3 000 annotations, 1 Go de médias utilisés ; banque de 10 000 fichiers ; workspace de 20 projets et 30 membres. |
+| Charge forte | EPUB jusqu’à 10 Mo, 500 000 mots, 100 chapitres, 20 000 annotations, 5 Go de médias utilisés ; banque de 100 000 fichiers représentant jusqu’à 1 To de sources indexées ; 200 projets et 100 membres par workspace. |
+| Audio dense | Trois SFX, huit ambiances et deux musiques uniquement pendant crossfade ; médias longs et multiples fréquences/canaux. Huit ambiances est une charge d’essai, pas une limite métier. |
+| Endurance | Session de huit heures, changements répétés de chapitre/projet, indexation et export en arrière-plan, au moins 100 cycles ouvrir/fermer et 100 interruptions de sauvegarde réparties sur les points critiques. |
 
-Test d’acceptation :
-- changer le rôle simulé modifie réellement la disposition ;
-- les outils de montage sont absents du mode Réviseur/Chef ;
-- l’Admin voit une interface orientée gestion.
+Le téraoctet de banque n’est pas copié dans le navigateur. Le nombre de références indexées, les fichiers effectivement sélectionnés/copiés et le quota disponible sont mesurés séparément. Un volume supérieur au support qualifié est signalé avant l’import ; il n’autorise jamais corruption ou perte silencieuse.
 
----
+### Budgets à contrôler
 
-# PHASE 2 — Identité locale, workspaces, équipes et projets
+| Mesure | Cible nominale proposée | Charge forte et preuve |
+|---|---|---|
+| Démarrage à froid après activation | Interface utilisable en 5 s maximum | Mesurer avant ouverture du projet, réseau coupé. |
+| Ouverture d’un projet déjà importé | Premier chapitre utilisable en 5 s maximum | 15 s maximum ; ne pas attendre le décodage de tous les médias. |
+| Premier import EPUB | 15 s maximum | 45 s maximum ; progression et annulation disponibles. Mesurer séparément la copie des médias. |
+| Clic/sélection/commande | Réponse visuelle p95 ≤ 100 ms | p95 ≤ 150 ms ; traces de tâches longues. |
+| Défilement du livre | Au moins 55 images/s sur scénario à écran 60 Hz | Au moins 45 images/s ; aucune pause d’interface supérieure à 500 ms. |
+| Recherche locale après indexation | p95 ≤ 200 ms | p95 ≤ 500 ms sur 100 000 entrées. |
+| Audio prêt en cache | Commande → planification p95 ≤ 30 ms ; commande → son filaire p95 ≤ 100 ms | Aucune coupure de tampon observée sur scénario de 30 minutes ; mesurer la sortie réelle en plus des horodatages. |
+| Sauvegarde d’une commande sans nouveau média | Confirmation durable ≤ 2 s | ≤ 5 s pour un chapitre chargé ; durée liée au chapitre modifié, pas à tous les médias du livre. |
+| Protection contre perte | Zéro perte d’un état annoncé enregistré | Après crash, seules les commandes encore signalées en cours peuvent manquer ; précédent état cohérent récupérable. |
+| Mémoire totale attribuable à Jaquette | Pic ≤ 1,5 Go hors agent IA | ≤ 2,5 Go ; plateau stable sur session longue, retour à moins de 15 % au-dessus du niveau initial après 20 cycles. |
+| CPU | Au repos ≤ 2 % de la capacité totale du poste en moyenne sur 60 s ; lecture nominale ≤ 25 % hors agent IA | Mesurer tous les processus concernés et la consommation pendant indexation/export ; réduire leur concurrence si les budgets audio/interface sont dépassés. |
+| Indexation | Métadonnées de 10 000 fichiers en 2 minutes maximum | 100 000 en 15 minutes maximum sur SSD ; hors copie, téléchargement et analyse audio profonde. |
+| Export audio Équilibré | Débit au moins égal au temps réel cumulé des sources uniques à encoder | RAM bornée, annulation en moins de 2 s ; publier aussi durée, taille et qualité, pas seulement le débit. |
+| Tableau de bord | Changement confirmé visible en 10 s maximum sur réseau nominal | Dernière actualisation toujours visible ; reprise complète en 30 s hors temps de transfert du contenu. |
 
-## 2.1 Modéliser l’identité locale
+Pour les durées d’opérations longues : dix exécutions, médiane, p95 et maximum. Pour interactions : au moins 100 événements. Distinguer cache vide/chaud, application distribuée/de développement, copie disque/transcodage et fonctionnement avec/sans agent IA. L’agent local a ses propres prérequis : il n’est pas inclus implicitement dans le budget des 8 Go.
 
-Objectif :
-Créer le concept d’identité Jaquette sans backend collaboratif.
-
-Doit représenter :
-- identité globale ;
-- plusieurs emails ;
-- workspaces ;
-- appartenances ;
-- rôles contextuels.
-
-Test d’acceptation :
-- une identité fictive peut avoir deux emails ;
-- elle peut appartenir à deux workspaces ;
-- son rôle diffère entre les workspaces.
-
-## 2.2 Implémenter l’authentification prototype
-
-Objectif :
-Créer la porte d’entrée V1.
-
-Règles :
-- secrets hors frontend versionné ;
-- deux comptes de prototype configurables.
-
-Test d’acceptation :
-- un compte autorisé se connecte ;
-- un mauvais mot de passe échoue ;
-- aucun secret en clair n’est présent dans les fichiers versionnés ou le bundle livré.
-
-## 2.3 Construire le switch de workspace
-
-Objectif :
-Permettre le changement de contexte.
-
-Test d’acceptation :
-- un utilisateur présent dans plusieurs workspaces peut basculer entre eux ;
-- les projets et équipes affichés changent avec le workspace ;
-- le rôle actif est recalculé selon le contexte.
-
-## 2.4 Construire les équipes
-
-Objectif :
-Créer et afficher les équipes locales.
-
-Test d’acceptation :
-- créer une équipe ;
-- affecter des utilisateurs fictifs ;
-- affecter un rôle différent par équipe ;
-- un Chef peut être associé à plusieurs équipes.
-
-## 2.5 Construire les projets et Drafts
-
-Objectif :
-Créer le pool Drafts et les projets actifs.
-
-Test d’acceptation :
-- créer un Draft ;
-- l’affecter à une équipe ;
-- il disparaît du pool Drafts et apparaît dans les projets de l’équipe.
-
-## 2.6 Construire l’accueil façon Figma
-
-Objectif :
-Créer l’accueil réel du produit.
-
-Inclure :
-- projets récents ;
-- Drafts ;
-- équipes ;
-- tâches de workflow fictives ;
-- statut ;
-- progression.
-
-Test d’acceptation :
-- le même utilisateur voit un accueil différent selon son rôle/contexte ;
-- les cartes de projet permettent d’ouvrir le bon projet.
+En 0.4, choisir une métrique mémoire reproductible par OS et expliciter son périmètre : processus principal, renderer, workers, encodeurs et pont Desktop lorsqu’il participe au parcours. Pour le Web, utiliser un profil dédié et un niveau de référence du navigateur sans projet ; documenter le traitement des processus partagés. Un déplacement du travail dans un sous-processus ne retire pas son coût de la mesure.
 
 ---
 
-# PHASE 3 — Import EPUB et rendu du livre
+# Étape 0 — Reprise propre et contrat de livraison
 
-## 3.1 Importer un EPUB
+**Prérequis :** audit présent et décisions de cadrage reçues.
 
-Objectif :
-Permettre la sélection et l’ouverture du fichier.
+**Sortie :** dépôt reproductible, correctifs de prototype délimités, exigences et mesures rattachées à des tests.
 
-Test d’acceptation :
-- un EPUB valide est accepté ;
-- un fichier non EPUB est refusé proprement.
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 0.1 Harmoniser les sources | Reporter les décisions de ce plan dans le cahier des charges, puis AGENTS.md, README et index. Remplacer les anciens jalons contradictoires, préserver l’historique 1.4.2 et définir le devenir du lot 1.4.3. | Aucun document actif n’exige Chrome seul, une V1 sans IA/collaboration ou la publication Jacques avant lancement. La version reste 0.0.0 et 1.4.2 n’est pas déclaré acquis. |
+| 0.2 Reproduire la base | Réinstaller depuis le lockfile dans un environnement propre ; remplacer les dépendances transférées cassées sans changer arbitrairement leurs versions. Préparer une commande de validation et une CI minimale. | Typecheck, lint, unitaires, build, contrôles documentaires et E2E exécutés sur le SHA consigné ; résultats actuels joints. Une fixture obligatoire absente fait échouer sa campagne au lieu de produire un faux succès. |
+| 0.3 Corriger les défauts du prototype | Rendre cohérents « En attente Chef » et les validations affichées ; corriger le focus de Fondations ; reproduire puis corriger si nécessaire la mise à jour d’état de fin de simulation. Références : ProjectPage.tsx, Shell.tsx, App.tsx. | Un projet soumis affiche toutes les validations attendues ; navigation clavier focalise son titre ; fin de simulation répétée sans avertissement React ni minuterie restante. Les variantes interdites restent absentes du DOM. |
+| 0.4 Fixer corpus et budgets | Relever les trois machines, OS/navigateurs, tailles et données ; adopter ou ajuster avant implémentation les cibles de la section 5. Séparer corpus de référence et fichiers personnels. | Rapport de référence reproductible, chaque budget associé à un script ou protocole ; les données de charge sont générables et ne contiennent aucun manuscrit confidentiel. |
+| 0.5 Organiser les lots de développement | Créer une matrice exigence → sous-étape → test ; conserver la DA ; découper progressivement la grande page projet et ses contrôleurs sans nouvelle bibliothèque imposée. | Un contributeur peut identifier prochaine étape, prérequis et preuve requise ; les acquis de navigation/rôles passent après le découpage. La revalidation humaine de 1.4.2 est consignée séparément des preuves techniques. |
 
-## 3.2 Lire la structure EPUB
+**Porte de sortie :** aucune confusion entre démonstration et fonction métier réelle. Les maquettes restantes ne bloquent pas les expériences techniques indépendantes.
 
-Objectif :
-Identifier :
-- package ;
-- spine ;
-- chapitres ;
-- navigation ;
-- ressources.
+# Étape 1 — Prouver les choix les plus risqués
 
-Test d’acceptation :
-- la liste des chapitres du livre de référence correspond au livre original.
+**Prérequis :** 0.1, 0.2 et 0.4. Les expériences 1.2 à 1.5 peuvent être menées indépendamment avec données synthétiques.
 
-## 3.3 Afficher le contenu d’un chapitre
+**Sortie :** décisions techniques écrites, justifiées par des prototypes jetables ou réutilisables et des mesures.
 
-Objectif :
-Rendre le HTML du livre.
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 1.1 Séparer métier et plateformes | Définir les interfaces minimales de stockage, audio, identité, transport et UI. Réutiliser TypeScript/React ; ne créer des packages que si nécessaires. | Une même commande d’annotation et ses validations s’exécutent sans DOM ; deux adaptateurs de stockage passent le même test de contrat. |
+| 1.2 Choisir le stockage et la représentation .jacq | Comparer les formes compatibles avec la sauvegarde physique par chapitre et le parcours proposé section 4 ; mesurer écritures, croissance, interruption, portabilité et coût. Formaliser la distinction éventuelle espace de travail/copie portable avant adoption. | Modifier le chapitre 2, agrandir ses données et ajouter un média sans réécrire les autres chapitres ; preuve d’E/S, pas seulement hashes. Sur chaque navigateur et Electron, exporter puis réimporter une fixture de 5 Go ; mesurer RAM et espace temporaire, tester annulation/quota insuffisant sans écraser une copie valide. Toute impossibilité est BLOCKED avec décision produit nécessaire, jamais une dérogation implicite. |
+| 1.3 Démarrer Web et Electron hors ligne | Prototype installé Electron et application Web préparée pour offline ; ressources, polices, routes, codecs requis et workers locaux. Définir navigation desktop et repli des routes Web. | Après préparation, fermer l’application/le navigateur, couper le réseau, redémarrer l’OS, ouvrir une route directe et utiliser le prototype sur chaque cible sans serveur de développement. |
+| 1.4 Raccorder une infrastructure privée pilote | Comparer un petit nombre de solutions adaptées au stockage d’un éditeur/auteur : authentification, coûts, exploitation, transferts reprenables et accès navigateur. Choisir un premier connecteur, sans imposer tous les fournisseurs. | Écrire/lire un fichier synthétique depuis Chrome, Safari, Firefox et Electron ; tester CORS, HTTPS, expiration d’accès et coupure ; tracer le chemin réseau et démontrer qu’aucun contenu ne passe par Jaquette Cloud. |
+| 1.5 Prouver le chemin MCP | Démonstration sur données synthétiques : agent local vers Desktop, navigateur appairé à Desktop, agent distant vers endpoint contrôlé par la maison/l’auteur. | Un client découvre les capacités et lit uniquement une ressource autorisée ; autre origine/workspace refusé ; aucun master modifié. Un agent réellement local fonctionne réseau coupé. |
+| 1.6 Mesurer le moteur minimal | Charger un long chapitre et un média long, déclencher quelques sons, sauvegarder pendant lecture. Évaluer décodage, cache, workers et traitements natifs sans choisir sur intuition. | Mesures CPU/RAM/E/S et réactivité sur W18, MI et M1. Les décisions de stockage et d’audio mentionnent alternatives, résultat et seuils, avant extension du produit. |
 
-Test d’acceptation :
-- texte lisible ;
-- paragraphes présents ;
-- images principales visibles ;
-- navigation chapitre précédent/suivant fonctionnelle.
+Electron recommande de profiler, d’éviter les traitements bloquants et de limiter les dépendances réseau au démarrage. Ces principes motivent les mesures, sans imposer un découpage arbitraire en services. [Performance Electron](https://www.electronjs.org/docs/latest/tutorial/performance).
 
-## 3.4 Appliquer le rendu typographique Jaquette
+# Étape 2 — Projets locaux durables et formats de travail
 
-Objectif :
-Appliquer Literata au corps et le fallback adapté.
+**Prérequis :** choix 1.1 et 1.2 validés ; builds 1.3 disponibles.
 
-Test d’acceptation :
-- français et anglais en Literata ;
-- arabe lisible ;
-- direction RTL correcte ;
-- page `#EFF2FF`, texte `#1B1B3A`.
+**Sortie :** stockage de production récupérable, utilisable par les fonctionnalités suivantes.
 
-## 3.5 Refuser les EPUB non supportés
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 2.1 Définir les contrats de données | Identités projet/livre/chapitre, ancres référencées, commun/chapitre, médias, base et filiation. Décider schémas et compatibilité .jacq/.chpt ici, distinctement de la version applicative. | Validation de fichiers minimaux ; références incohérentes refusées ; donnée partagée par deux chapitres stockée au commun, donnée propre à un chapitre dans son .chpt. |
+| 2.2 Implémenter l’autosauvegarde | Transactions récupérables selon 1.2, état enregistré/en cours/échec, sérialisation hors interface et prévention de deux écrivains. | Modifier un chapitre, fermer et retrouver le dernier état confirmé. Deux fenêtres/onglets sur le même projet ne produisent jamais deux écritures concurrentes silencieuses. Budgets de sauvegarde respectés. |
+| 2.3 Récupérer après incident | Gestion de crash, disque plein, retrait de permission, interruption de processus, stockage débranché ; copies de récupération et contrôle d’intégrité. | Injections avant/pendant/après confirmation : ancien ou nouvel état cohérent disponible, aucun état partiel validé. Une récupération conserve les fichiers originaux et explique l’action nécessaire. |
+| 2.4 Gérer les médias utilisés | Copie vérifiée à la première utilisation, empreinte, références par occurrence et déduplication ; aucune modification destructive des sources. | Deux occurrences du même son partagent la ressource ; retirer les bibliothèques n’affecte pas la lecture du projet. Un média incomplet n’est pas marqué intégré. |
+| 2.5 Produire des copies autonomes | Import/export .jacq et export de .chpt candidat ; état figé pendant export, progression/annulation. Utiliser ici des fixtures synthétiques minimales d’ancres, annotations et états de chapitre ; enrichir le round-trip à chaque étape future. | Ouvrir la copie synthétique sur autre OS/navigateur sans sources ; données et ressources identiques. Export annulé sans écrasement d’une copie valide ; candidate stockée séparément de la fixture validée. La preuve EPUB/son réels est exigée en 3.5, la preuve du workflow en 8–10. |
+| 2.6 Historique local | Undo/redo 50 commandes, groupement cohérent des opérations et versions nommées durables. Le format conserve les relations nécessaires aux snapshots. | 51 commandes : seules 50 annulables ; une nouvelle commande après undo coupe correctement redo ; deux versions nommées restent consultables après dépassement et réouverture. Les événements audités ne sont pas effacés. |
+| 2.7 Protéger les évolutions | Migration testée, sauvegarde avant conversion, refus d’un format trop récent et traitement des chemins Unicode/longs/casse différente. | Migration d’un ancien fichier sans perdre liens et médias ; échec de migration restaure la copie précédente ; version inconnue laissée intacte. Parcours Windows → Mac → navigateur réussi. |
 
-Objectif :
-Créer des erreurs explicites.
+# Étape 3 — EPUB, ancres stables et premier doublage réel
 
-Cas minimum :
-- DRM détectable ;
-- fichier corrompu ;
-- structure EPUB illisible.
+**Prérequis :** 2.1 à 2.5.
 
-Test d’acceptation :
-- chaque cas produit un message compréhensible et ne casse pas la session.
+**Sortie :** première preuve complète du principe « le texte est la timeline », sur toutes les plateformes.
+
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 3.1 Importer et contrôler l’EPUB | Lire package, spine, navigation, chapitres et ressources ; accepter reflowable sans DRM ; limites de décompression et diagnostics. | Les trois EPUB de référence s’ouvrent dans le bon ordre. Non-EPUB, DRM détectable, fixed-layout, structure corrompue et archive excessive sont refusés proprement. Ne pas confondre obfuscation de police et DRM du livre. |
+| 3.2 Isoler le contenu éditorial | Rendu sans confiance dans HTML/CSS/scripts ; préserver images, tableaux, notes, liens internes, styles et polices pertinents. | Corpus hostile incapable d’exécuter du code applicatif, d’appeler IPC ou de lire le disque ; aucune ressource distante chargée implicitement. Notes, tableaux et destinations internes testés, éléments non supportés signalés. |
+| 3.3 Créer les ancres | Segmentation chapitres/paragraphes/phrases/tokens ; IDs logiques persistants, indépendants des coordonnées et de la taille de page. Définir la compatibilité du segmentateur et conserver les ancres sans retokenisation implicite à la réouverture. | Deux imports identiques sur moteurs différents et un cycle sauvegarde/réouverture conservent 100 % des IDs attendus. Zoom, police, mise à jour du navigateur et redimensionnement ne changent aucune ancre existante. |
+| 3.4 Couvrir FR/EN/arabe | Accents, apostrophes, tirets, nombres, ponctuation, ligatures, diacritiques et texte bidirectionnel ; Literata et fallback arabe. | Résultats attendus sur corpus annoté ; sélection logique correcte dans un paragraphe multilingue ; aucune inversion d’ancre due au RTL ; texte source non éditable. |
+| 3.5 Faire le parcours vertical | Sélectionner un mot, associer un vrai son local, écouter, autosauvegarder, fermer, relancer hors ligne et retrouver exactement l’association. | Même scénario sur Chrome, Safari, Firefox, Electron Windows, Intel et M1 ; média source rendu indisponible ; ancre et lecture intactes. Ce test est bloquant. |
+| 3.6 Compléter la sélection | Clic, glisser, Shift+clic, double clic phrase, triple clic paragraphe ; commandes paragraphe/chapitre et équivalents clavier. | Chaque interaction produit les bornes attendues en FR/EN/arabe, y compris glisser inverse ; aucune plage inter-chapitres. Plusieurs types d’annotations peuvent partager une plage. |
+| 3.7 Qualifier le rendu volumineux | Préparer les tokens une fois, borner le rendu et dissocier mot actif/rendu général. Définir le traitement d’une nouvelle édition EPUB sans réécriture du texte dans Jaquette. | Budgets sélection/défilement tenus sur 500 000 mots ; aucun recalcul complet à chaque mot actif ; remplacer la source par un EPUB différent ne réancre rien silencieusement. |
+
+**Jalon J1 :** projet autonome démontré ; aucune fonctionnalité collaborative ou IA ne compense un échec de sauvegarde ou d’ancrage.
+
+# Étape 4 — Invitations, contextes et cinq jours hors ligne
+
+**Prérequis :** 1.4, 2 et J1.
+
+**Sortie :** droits réels, explicables et appliqués aux opérations, y compris après reconnexion.
+
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 4.1 Accès sur invitation | Service d’identité minimal, invitations expirables à usage contrôlé, adresses vérifiées et récupération de compte. Définir qui émet les invitations initiales et les invitations de workspace. | Aucun accès public auto-inscrit ; invitation valide ouvre le bon contexte ; invitation expirée, réutilisée ou attribuée à un autre destinataire refusée. Aucun secret dans bundle ou dépôt. |
+| 4.2 Identité globale | Plusieurs emails vérifiés ; liaison/fusion après preuve de contrôle ; conservation des auteurs historiques et appartenances. | Deux adresses accèdent à la même identité ; fusion conserve projets, tâches, commentaires et historique. Nom/IP/email non vérifié ne fusionnent jamais automatiquement. |
+| 4.3 Contextes et rôles | Workspaces Maison/Auteur, équipes, projets, affectations par chapitre ; contrôle partagé UI/commandes/services. | Même identité avec rôles distincts dans deux maisons ; Admin sans droit éditorial implicite ; Réviseur/Chef incapables de modifier audio par UI, commande directe ou service. Cette matrice sera rejouée par MCP en 12.8. |
+| 4.4 Première préparation offline | Authentification, récupération des droits, environnement et ressources requises ; liste des projets réellement disponibles sur le poste. | Première ouverture sans réseau explique la connexion requise. Préparation interrompue n’annonce pas « prêt hors ligne ». Après succès, démarrage à froid et projet disponible fonctionnent sans connexion. |
+| 4.5 Fenêtre de cinq jours | Proposition technique : autorisation bornée à 120 heures après le dernier contrôle serveur réussi, échéance persistée et vérifiée dans les opérations. Protéger contre redémarrage et recul simple de l’horloge. | Tester juste avant/à/après échéance, redémarrage et horloge modifiée. À expiration : aucune édition ni application de proposition ; lecture, sauvegarde et archivage restent possibles. Réseau disponible mais authentification échouée ne prolonge pas l’échéance. |
+| 4.6 Révocation et archive | Revérifier avant envoi ; bloquer le contexte révoqué ; préserver et figer le travail avec ses médias. Sur Desktop, enregistrer l’archive ; sur Web, préparer la copie puis demander l’enregistrement/téléchargement explicite. Interrompre les envois préparés sans destruction. | À reconnexion, zéro soumission acceptée, y compris file ancienne. Copie indépendante vérifiée par réouverture avant de déclarer l’archivage terminé ; autres workspaces autorisés préservés. Tester refus, annulation, fermeture du navigateur et disque plein : original conservé, état « copie indépendante à terminer », envoi toujours bloqué. |
+| 4.7 Gestion de maison/auteur | Invitations/suspensions, équipes, Chefs, affectations et projets ; partage et transfert Auteur → Maison distincts avec acceptation. | Actions réservées au rôle autorisé ; partage conserve propriétaire ; transfert accepté le change en conservant historique ; refus d’acceptation ne transfère rien. Retrait d’affectation pendant workflow traité explicitement. |
+
+La protection locale n’est pas une révocation distante instantanée. La garantie partagée est le refus des opérations non autorisées par les services à chaque réception et finalisation.
+
+# Étape 5 — Bibliothèque locale et atelier Sound Designer
+
+**Prérequis :** 2, 3 et 4.3.
+
+**Sortie :** recherche et placement de médias réels avec autonomie du projet.
+
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 5.1 Dossiers et accès navigateur | Indexer plusieurs dossiers/sous-dossiers ; définir sélection/import explicite et nouvelle autorisation sur les navigateurs sans accès persistant. | Hiérarchie fidèle ; un fichier indexé n’est pas copié par défaut. Sur chaque navigateur, retrouver un son disponible et expliquer clairement une source à resélectionner. |
+| 5.2 Métadonnées et formats | Matrice d’import à qualifier : WAV PCM, MP3, FLAC, Ogg/Vorbis, Opus, AAC/M4A et AIFF selon décodeurs réellement distribués. Afficher durée, format, taille, fréquence et canaux. | Chaque format annoncé possède fichiers valides/corrompus et résultats mesurés sur chaque plateforme. Format non pris en charge refusé avec raison, jamais silencieusement ignoré. |
+| 5.3 Recherche et classement | Nom, filtres, taxonomie, tags libres, favoris et collections ; multi-appartenance d’un son ; index construit progressivement. | Recherche combinée retourne le jeu attendu ; un son reste dans son dossier après ajout à deux collections ; retrait d’un favori ne supprime aucun média. Budgets sur 10 000/100 000 références. |
+| 5.4 Préécoute et placement | Lecture/pause/stop indépendants du projet ; glisser-déposer sur sélection ; choix SFX/Ambiance/Musique et compteur d’utilisations. | Préécouter ne crée aucune annotation ; placement copie le média et crée une occurrence sur bonnes ancres ; trois occurrences donnent trois utilisations ; undo rétablit le compteur. |
+| 5.5 Vie des sources | Détecter déplacement, déconnexion de disque et nouvelle empreinte de source ; mise à jour explicite des occurrences choisies. | Source remplacée : copie embarquée inchangée jusqu’à action explicite. Relier un dossier déplacé restaure son index ; aucune source nouvelle ne remplace silencieusement le son utilisé. |
+| 5.6 Interface de production | Bibliothèque/livre/inspecteur, panneaux rétractables, raccourcis et accès aux annotations superposées ; pas de waveform imposée. | Créer, sélectionner, dupliquer, copier/coller sur une autre plage, modifier et supprimer une occurrence ; réglages conservés et nouvelles bornes correctes après collage ; texte toujours non éditable. |
+
+# Étape 6 — Moteur audio et simulation fiables
+
+**Prérequis :** J1, 5.2 et 5.4.
+
+**Sortie :** comportement texte/audio déterminé et reproductible, indépendant du rafraîchissement visuel.
+
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 6.1 Horloge et positions de lecture | Séparer horloge audio, progression textuelle et rendu. Définir réentrée dans une plage, saut avant/arrière, pause, arrêt et changement de chapitre. | Une trace de positions connue produit la même suite d’événements sur toutes les plateformes ; aucun double déclenchement dû à un re-render. Les comportements artistiques sont validés avant implémentation avancée. |
+| 6.2 SFX | Déclenchement mot/plage, lecture jusqu’au terme après lancement, trois simultanés maximum. | Quatre déclenchements successifs : le plus ancien actif est interrompu ; les trois autres restent conformes. SFX sur même mot distingués, ordre d’égalité déterministe et documenté. |
+| 6.3 Ambiances | Superposition, boucle activée/désactivée, entrée/sortie de plage et fin de média. | Boucle ON répète jusqu’à borne textuelle ; OFF lit une fois ; média trop long s’arrête ou applique sa sortie à la fin de plage ; deux ambiances restent audibles. |
+| 6.4 Musique et transitions | Une musique principale ; coexistence uniquement pendant crossfade ; politique explicite pour arrivée d’une troisième musique pendant transition. | Hors crossfade une seule musique ; courbes de gain attendues pendant A → B ; enchaînement rapide ne laisse aucune musique orpheline ni coexistence durable. |
+| 6.5 Simulations et navigation | Pointeur comme regard ; vitesse en mots/minute ; x1/x2/x4 ; sélection, depuis ici et chapitre ; mot actif visible. | À 200 mots/minute, ordre et durée attendus ; saut reconstruit les ambiances/musique actives ; pause/reprise et fin de sélection suivent le contrat 6.1, sans modifier les annotations. |
+| 6.6 Sorties et ressources | Cache borné, décodage/lecture de médias longs, suspension/reprise OS, périphérique débranché, autoplay navigateur. | Lecture sous indexation et sauvegarde sans coupures de tampon sur scénario de charge ; erreur périphérique compréhensible ; fermeture projet libère sources et timers. Un clic utilisateur débloque proprement l’audio si le navigateur l’exige. |
+
+# Étape 7 — Réglages audio non destructifs et qualité d’écoute
+
+**Prérequis :** moteur 6 et historique 2.6.
+
+**Sortie :** chaque réglage est écoutable, mesurable, réversible et persisté.
+
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 7.1 Volume, entrée et trim | Paramètres propres à chaque occurrence, unités et bornes explicites. | Deux occurrences de la même source ont volumes/trims différents ; signal synthétique démarre aux échantillons attendus selon tolérance définie ; empreinte source inchangée après sauvegarde. |
+| 7.2 Boucles | Boucle entière ou zone, bornes validées, choix du raccord et préécoute. | Cent répétitions sans trou ou clic au-delà du seuil défini sur fixture raccordable ; zone invalide refusée ; boucle désactivée ne rejoue pas. |
+| 7.3 Fades textuels | Plages de mots et courbes de progression ; affichage des bornes et transitions. | Même plage à x1/x4 respecte la progression textuelle ; départ au milieu reconstruit le bon gain ; passage arrière suit 6.1 ; pas de conversion implicite en durée fixe seule. |
+| 7.4 Normalisation | Choisir cible, mesure et protection des crêtes ; activable/désactivable par occurrence, traitement hors interface. | Fixtures de niveau connu atteignent cible et tolérance choisies ; désactivation retrouve le gain attendu ; aucune source réécrite. Documenter la différence entre mesure de fichier et résultat de mixage. |
+| 7.5 Ducking | Définir sources déclenchantes, familles/occurrences affectées, atténuation et temps de retour ; cumul déterministe. | Deux occurrences avec atténuations différentes donnent les gains attendus ; fin de déclenchement restitue le niveau ; déclenchements superposés ne cumulent pas accidentellement une atténuation sans borne. |
+| 7.6 Spatialisation | Position 3D autour du lecteur, distance/azimut/élévation ; stratégie casque et haut-parleurs. | Positions gauche/droite/centre conformes aux mesures ; écoute humaine des transitions ; downmix compatible ; paramètres identiques après réouverture et contrôle d’export. |
+| 7.7 Mute, solo et ergonomie | Commandes par occurrence et famille, priorité des solos et préécoute distincte ; annulation cohérente. | Matrice de combinaisons prévue ; aucune occurrence muette audible ; solo de famille/occurrence fonctionne sans altérer ses réglages de production. Raccourcis utilisables sans souris. |
+
+Les tolérances audio sont fixées sur fixtures avant validation ; « on entend une différence » ne suffit pas. L’écoute métier juge aussi l’utilité et la cohérence artistique.
+
+# Étape 8 — Tâches, commentaires et workflow local
+
+**Prérequis :** 4, 6 et 7 pour révision audible.
+
+**Sortie :** règles métier exécutables et testables sans dépendre du réseau ; les décisions officielles seront raccordées en 9–10.
+
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 8.1 États et commandes métier | Automate de production et permissions pour Draft, affectation, doublage, révision, soumission Chef et validation finale. Différencier état préparé et état partagé. | Chaque transition autorisée/interdite a son test ; aucun bouton ou appel direct ne saute les conditions de validation. |
+| 8.2 Tâches automatiques | Affectations et workflow génèrent doublage, révision et correction ; cible livre/chapitre, assigné, échéance facultative, aucune priorité. | Création Pas commencé ; passage manuel En cours ; Terminée après action métier ; aucune tâche libre ni objet ticket. Deux invalidations créent deux corrections distinctes avec historique conservé. |
+| 8.3 Commentaires contextualisés | Livre, chapitre, mot/plage, occurrence ; fils, modification historisée, Ouvert/Résolu. | Accès au passage/occurrence exact ; aucun commentaire d’occurrence ne vise la bibliothèque ; pas de suppression définitive ; auteur et dates restent accessibles. |
+| 8.4 Transport des objets métier | Enrichir .jacq/.chpt avec tâches, commentaires, validations et audit ; conserver les identifiants. | Livre au commun ; chapitre/texte/occurrence dans .chpt ; réimport répété sans duplications ; données d’origine et filiations intactes. |
+| 8.5 Progression et accueil | Accueil général distinct, équipes, projets, Drafts, tâches, activité, alertes ; trois axes de progression. | Chaque équipe expose membres et projets ; chaque projet nom/équipe/statut/activité ; 21 validations sur 30 donnent 70 % de révision sans pourcentage global trompeur. Tous les projets restent consultables depuis l’accueil, rendu virtualisé si nécessaire. |
+| 8.6 Vues par rôle | Sound Designer, Réviseur, Chef, Admin et contexte Auteur à partir des droits réels. | Montage absent pour Réviseur/Chef ; Admin centré gestion ; publication non montée avant validation et non proposée comme opération réelle avant extension Jacques. Simulation autorisée indépendante du droit de montage. |
+
+# Étape 9 — Échanges connectés sur stockage privé
+
+**Prérequis :** 1.4, 2.5, 4 et 8.
+
+**Sortie :** envoi/réception fiable sans hébergement du contenu chez Jaquette et sans synchronisation du montage en direct.
+
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 9.1 Définir les frontières et autorités | Liste explicite des données administratives autorisées dans les services Jaquette ; contenu, commentaires, audit sensible et états détaillés sur infrastructure privée. Définir l’autorité de chaque état et les règles d’exposition des dashboards. | Requêtes, journaux, erreurs et notifications inspectés : aucun manuscrit, prompt, son, .chpt/.jacq ou extrait de commentaire envoyé à Jaquette Cloud. Une seule autorité désignée par décision partagée ; aucune divergence silencieuse entre services. |
+| 9.2 Distribuer la base du livre | Acquisition initiale de la bonne base .jacq/EPUB et ressources autorisées depuis stockage privé, avant ouverture de candidate. | Nouveau Réviseur sans copie locale télécharge le contexte, retrouve les bonnes ancres et simule ; base absente/incompatible bloque la consultation ou intégration avec message utile. Ne pas supposer que .chpt contient le livre entier. |
+| 9.3 Préparer et envoyer | Snapshot immuable du chapitre, hash, taille, filiation et auteur ; contrôle de droits à l’envoi ; reprise et annulation. | Continuer le montage pendant envoi n’altère pas le snapshot. Couper à 10 %, 50 % et après réception avant réponse : reprise correcte, aucun fichier tronqué reconnu et une seule soumission logique. |
+| 9.4 Accuser réception | Confirmation durable et idempotence ; états préparé/envoi/échec/reçu, sans confondre fin du transfert et acceptation métier. | Double clic, réessai et redémarrage ne dupliquent ni candidate ni tâche. La réponse perdue est réconciliée. « Reçu » n’apparaît qu’après vérification de l’intégrité et confirmation du service. |
+| 9.5 Reconnecter et contrôler les droits | Vérifier identité/affectation avant transmission de toute action préparée offline ; finalisation également protégée. | Révocation avant ou pendant transfert : aucune soumission finalisée après retrait des droits ; archive locale préservée ; fichiers partiels nettoyés selon procédure sans toucher aux contributions validées. |
+| 9.6 Actualiser les tableaux de bord | Rafraîchissement connecté, dernière actualisation, état périmé et reprise progressive. Notifications minimales sans contenu sensible. | Deux postes observent le même état confirmé dans le budget prévu ; hors ligne l’écran indique sa date ; travail local non envoyé n’apparaît pas comme reçu par l’équipe. Une panne d’infrastructure privée ne corrompt pas le cache. |
+| 9.7 Exploiter le connecteur pilote | Configuration guidée, droits limités, secrets hors frontend, diagnostic, sauvegarde/restauration côté éditeur et test Auteur. | Un administrateur pilote raccorde son stockage avec la documentation ; mauvaise configuration produit un diagnostic exploitable ; restauration testée sur une autre instance sans mélanger les workspaces. |
+
+# Étape 10 — Révision partagée, candidates et validation finale
+
+**Prérequis :** 8 et 9.
+
+**Sortie :** cycle Sound Designer → Réviseurs → Chef utilisable avec phases hors ligne.
+
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 10.1 Réviser hors ligne | Télécharger la candidate, simuler/commenter, préparer validation ou invalidation ciblant son identité et son contenu exacts. | Fermer/rouvrir offline conserve brouillon de décision ; aucune décision officielle affichée avant réception ; invalider sans commentaire explicatif refusé. |
+| 10.2 Obtenir l’unanimité | État par chapitre et Réviseur, calcul des validations attendues et intégration du même snapshot approuvé. | Avec trois Réviseurs, 1/3 et 2/3 n’intègrent rien ; 3/3 intègrent la même candidate ; un refus bloque. Aucun vote majoritaire ni arbitrage éditorial du Chef. |
+| 10.3 Gérer les candidates concurrentes | Conserver contributions complètes, proposition explicite d’une candidate active et décisions ; aucun merge détaillé du montage. | Deux propositions concurrentes restent visibles sans remplacement silencieux ; proposer n’est pas valider ; changement de candidate rend nécessaire l’examen de celle-ci et ne récupère pas indûment les votes d’une autre. |
+| 10.4 Corriger et invalider | Nouvel audio après validation annule validations actives et replace le chapitre À réviser ; audit des versions précédentes. | Modifier, soumettre, invalider et corriger deux cycles : mêmes anciennes décisions consultables, nouvelles tâches distinctes. Une décision offline devenue obsolète est refusée ou soumise à réexamen explicite. |
+| 10.5 Intégrer les chapitres compatibles | Vérifier projet/livre/base/filiation, dédupliquer médias et préserver les autres sections. Réaffectation d’identité importée si nécessaire. | Chapitres 1 et 2 compatibles intégrés sans réécriture mutuelle ; origine inconnue bloque ; correspondance assigné uniquement par ID global identique et droits valides, sinon choix Chef/Auteur sans réécrire l’auteur historique. |
+| 10.6 Arbitrer le commun | Détecter paramètres/métadonnées communs modifiés dans deux copies ; décision Chef ou Auteur journalisée. | Aucune valeur ne gagne selon l’heure ou le dernier import ; arbitrage visible et ancien état conservé ; données communes jamais glissées dans un .chpt pour contourner le conflit. |
+| 10.7 Décision du Chef | Soumission seulement après validations requises ; simulation, retour vers Réviseur ou Sound Designer, validation finale distincte de publication. | Projet incomplet non soumettable ; retours créent les tâches appropriées ; Chef ne monte jamais l’audio ; validation finale ne publie rien. |
+| 10.8 Changement d’affectation | Définir remplacement/ajout/retrait de Réviseur pendant cycle et mise à jour des validations attendues. | Aucun retrait ne fabrique implicitement une unanimité ; changement audité et conditions recalculées selon règle validée ; approbations conservées dans l’historique sans droits hérités automatiquement. |
+
+**Jalon J2 :** deux contributeurs et trois Réviseurs sur postes distincts accomplissent deux cycles complets avec coupures réseau et une révocation, sans perte ni duplication.
+
+# Étape 11 — Banques Cloud privées
+
+**Prérequis :** 5, 9 et droits 4.
+
+**Sortie :** banques maison/équipe accessibles avec réseau, projets autonomes sans réseau.
+
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 11.1 Administrer la banque | Rôles autorisés pour déposer, classifier, retirer et versionner des sons sur infrastructure privée ; provenance et droits d’usage documentés. | Membre hors banque refusé ; isolation entre deux maisons ; retrait d’un son ne détruit aucun média utilisé dans un projet. |
+| 11.2 Rechercher et préécouter | Catalogue privé, filtres et recherche cohérents avec local ; distinguer disponible localement et nécessite téléchargement. | Résultats autorisés uniquement ; hors ligne catalogue mis en cache daté, préécoute possible uniquement pour médias disponibles ; aucune attente réseau ne bloque le montage local. |
+| 11.3 Télécharger et intégrer | Cache contrôlé, téléchargement reprenable, vérification d’empreinte, copie dans projet à l’utilisation. | Coupure puis reprise ; fichier incomplet jamais utilisable ; son placé, banque coupée et projet rouvert sur autre poste : lecture intacte. |
+| 11.4 Mettre à jour et nettoyer | Nouvelle version signalée, adoption explicite ; nettoyage du cache distinct des médias du projet. | Nettoyer cache et retirer accès banque ne changent ni les sons déjà intégrés ni les anciens snapshots ; remplacement explicite met à jour seulement les occurrences choisies et invalide les validations si audio modifié. |
+| 11.5 Qualifier coûts et charge | Pagination/recherche côté infrastructure privée, limites de concurrence et diagnostic ; inventaire des coûts réels du pilote. | Banques de charge consultables sans charger tous les médias ; pas d’accès croisé ; panne serveur n’empêche pas production locale. Coûts stockage/transfert documentés avant ouverture aux pilotes. |
+
+# Étape 12 — IA via MCP, intégrée au cycle de production
+
+**Prérequis :** J1, 4, 7, 8 et 1.5 ; 11 pour banques distantes.
+
+**Sortie :** agent connecté capable de proposer un doublage utile sans toucher directement au master.
+
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 12.1 Contrat MCP | Ressources explicitement exposées : projet, chapitre/sélection, bibliothèques autorisées, taxonomie, annotations. Outils limités à lecture/recherche et propositions d’ajout/modification/suppression. | Client de conformité découvre outils et schémas ; accès fichier arbitraire et génération sonore impossibles ; nom métier SFX utilisé ; aucun outil n’écrit directement le master. |
+| 12.2 Serveur local Desktop | Démarrage local contrôlé, dépendances embarquées, transports réellement nécessaires, limites de ressources et journal sans contenu sensible par défaut. | Démarrer hors ligne sans téléchargement ; agent et modèle locaux recherchent un son et proposent une occurrence ; arrêt libère port/processus ; session non autorisée refusée. |
+| 12.3 Connexion du navigateur | Appairage explicite à Desktop, origine et workspace limités ; exposition des seules ressources autorisées de la session Web. Gérer fermeture/gel de l’onglet. | Chrome, Safari et Firefox échangent une proposition ; autre site, autre workspace, appairage expiré et onglet indisponible refusés ; Desktop ne lit pas arbitrairement le stockage d’un navigateur. |
+| 12.4 Agents distants | Endpoint MCP sur infrastructure contrôlée Maison/Auteur, accès aux seuls snapshots choisis ; compatibilité qualifiée par client/version/transport et conditions de compte. | Connexion réellement testée pour chaque client annoncé ; interruption, droits retirés, timeout et réessai gérés ; aucun tunnel public ni transfert de contenu activé implicitement. |
+| 12.5 Consentement | IA interdite/autorisée, fournisseur et périmètre affichés ; certification de l’autorisation de l’auteur/éditeur ; interdictions maison, révocation et audit. | IA interdite bloque exposition ; fournisseur distant sans consentement reçoit zéro contenu ; révocation bloque nouveaux appels et résultats tardifs ; date, compte, fournisseur et version journalisés. |
+| 12.6 Brouillon et acceptation | Diff lisible, acceptation unitaire/chapitre/globale et rejet ; vérification de base, droits, média et bornes avant application. | Acceptation applique uniquement les propositions choisies ; rejet laisse master identique ; modification humaine concurrente provoque conflit explicite ; retries sans doublons ; undo et invalidation de révision fonctionnent. |
+| 12.7 Évaluer l’utilité et les coûts | Scénario FR/EN/arabe sur banques existantes ; qualité des ancrages, pertinence des sons, opérations correctes et coût/latence de l’agent. | Au moins un SFX, une Ambiance et une Musique proposés correctement ; zéro son inventé/hors droits, zéro modification du master sans acceptation ; écoute et correction humaine consignées. Aucun abonnement IA supposé inclus. |
+| 12.8 Tester les accès après expiration | Relier MCP aux droits, délai offline et révocation du contexte ; rejouer la matrice de rôles de 4.3. | Réviseur/Chef ne modifient jamais le montage par MCP. À expiration, aucune proposition appliquée ; après révocation, aucune ressource du contexte exposée à l’agent et travail local conservé. Un message du modèle ne peut pas élargir les capacités autorisées. |
+
+**Compatibilité à qualifier, pas promesse fondée sur une marque :**
+
+- Les agents locaux tels que Codex, Gemini CLI et Claude Code peuvent servir de clients de test selon les transports documentés. Leur connexion locale ne rend pas automatiquement leur modèle local. [OpenAI MCP](https://learn.chatgpt.com/fr-FR/docs/extend/mcp), [Gemini CLI](https://geminicli.com/docs/tools/mcp-server/), [Claude Code](https://code.claude.com/docs/en/mcp).
+- Un chat hébergé demande une liaison réseau et un endpoint qu’il peut atteindre ; il n’a pas automatiquement accès au localhost de l’utilisateur. La compatibilité ChatGPT se teste avec le compte et le mécanisme d’accès disponibles. [Connexion ChatGPT](https://developers.openai.com/plugins/deploy/connect-chatgpt).
+- La sécurité des transports inclut notamment origine, authentification et écoute locale limitée. La version du protocole est choisie au moment de l’implémentation, pas déduite d’un exemple de documentation. [Transports MCP](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports).
+
+# Étape 13 — Contrôle qualité, export et préparation de Jacques
+
+**Prérequis :** 2, 7 et 10 pour développer l’export ; étape 12 obligatoire pour valider le jalon J3 avec les propositions acceptées dans les recettes.
+**Sortie :** fichier de contrôle fiable et contrat préparé pour le futur lecteur. La boutique n’est pas requise.
+
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 13.1 Matrice de diagnostics | Couvrir média absent/corrompu, annotation sans média, plage invalide, conflit musical, boucle invalide, clipping/niveau, source cassée, EPUB non supporté, erreur d’export et métadonnée requise. Fixer gravité et justification. | Une fixture par famille ; erreurs bloquantes empêchent export ; avertissements peuvent être ignorés explicitement. Source externe absente avec copie projet intacte ne devient pas arbitrairement une erreur fatale. |
+| 13.2 Pré-export | Résumé, navigation vers défauts et estimation audio/images/polices/autres ; choix Ultra léger, Équilibré, Haute qualité et Personnalisé. | Chaque diagnostic pointe sa cible ; projet invalide bloqué ; valeurs de preset réellement utilisées et réglages personnalisés contrôlés. |
+| 13.3 Encoder et dédupliquer | Sources de production intactes, médias utilisés uniquement, encodage Opus privilégié et comparaison qualité/taille/coût ; traitements en arrière-plan. | Deux occurrences partagent le même média exporté sans perdre réglages ; fichier inutilisé absent ; annulation ne laisse aucun export présenté valide ; tests d’écoute sur tous les presets. |
+| 13.4 Contrat .jacko | Définir version, contenu, ressources, déclenchements, identité livre, intégrité et extension de signature ; documenter contrat pour Jacques sans inventer son API. | Fichier exporté réimportable dans lecteur de contrôle ; version inconnue refusée sans altération ; données nécessaires au texte, médias et réglages présentes ; formats de travail et distribution distincts. |
+| 13.5 Intégrité et signature | Checksums pour détection de corruption ; preuve distincte d’authenticité avec clés de signature de test. Définir les décisions restantes de confiance et garde des clés de publication pour l’extension Jacques. | Contenu modifié sans mise à jour des checksums détecté ; fixture signée altérée rejetée même avec checksums recalculés. Export de contrôle non signé jamais présenté comme authentifié ; clé de test jamais présentée comme signature de publication ; aucun secret global de signature dans le navigateur. |
+| 13.6 Contrôle lecture seule | Rouvrir .jacko, reconstituer le livre et simuler ; aucune conversion implicite en projet de montage. | Parité des événements et paramètres avec .jacq sur corpus ; rendu FR/EN/arabe, notes/images et audio vérifiés ; outils d’édition absents ; comparaison d’écoute à tolérance définie. |
+| 13.7 Mesurer l’export | Temps, mémoire, taille, estimation, qualité et parité de lecture ; limites explicites selon plateforme. | Écart estimation/taille ≤ 15 % après définition de la méthode ; débit cible section 5 ; compression apporte réduction mesurée sans seuil arbitraire de 10 Mo pour .jacko. Un moteur futur Jacques n’est pas déclaré compatible tant qu’il n’a pas été testé. |
+
+**Jalon J3 :** logiciel de production complet avec collaboration et MCP ; export de contrôle disponible, publication Jacques différée.
+
+# Étape 14 — Installation, sécurité et exploitation
+
+**Prérequis :** socles 1 et 4 ; finalisation après J3.
+
+**Sortie :** produit distribuable, maintenable et récupérable sur les machines cibles.
+
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 14.1 Durcir Electron | Renderer isolé, sandbox, preload limité, validation IPC/origines, chemins et navigation ; traitement EPUB non fiable. | EPUB hostile ne lit aucun fichier arbitraire ; messages IPC forgés et chemins sortant du périmètre refusés ; aucune clé ou capacité système générale exposée à React. |
+| 14.2 Distribuer Desktop | Builds Windows x64 et Mac Intel/Apple Silicon, installateurs signés, notarisation et ticket attaché macOS ; associations de fichiers. | Installation sur machines propres ; signature vérifiée ; ouverture .jacq ; premier lancement sur un autre Mac hors ligne ouvre l’application et explique l’activation requise ; après activation, parcours local complet. |
+| 14.3 Distribuer le Web | HTTPS, cache versionné, mise à jour du service worker, migration coordonnée application/données ; disponibilité par navigateur. | Mise à jour interrompue laisse ancienne version cohérente ou nouvelle complète ; jamais mélange d’assets incompatibles ; démarrage offline sur route directe après préparation. |
+| 14.4 Mettre à jour sans perte | Mises à jour vérifiées, notes de version, installation manuelle possible, sauvegarde avant migration ; stratégie de retour documentée. | Paquet modifié refusé ; panne pendant mise à jour n’endommage aucun projet ; retour vers version compatible ou restauration explicite ; désinstallation ne supprime pas les projets sans action distincte. |
+| 14.5 Exploiter les services nécessaires | Services d’identité/invitations et composant privé ; journalisation minimale, supervision, sauvegardes et restauration. Proposer perte maximale de sauvegarde 24 h et remise en service en 4 h pour métadonnées ordinaires, à valider avant pilotes. Définir une protection plus stricte des révocations et accusés de réception. | Restaurer sur environnement neuf avec opérations partagées bloquées ; revalider les droits auprès de leur autorité et réconcilier identifiants, accusés et candidates selon 9.4–9.5 avant reprise. Aucun droit retiré ressuscité ni soumission dupliquée ; si la preuve manque, maintenir le blocage et conserver le travail local. Mesurer perte/durée réellement obtenues. |
+| 14.6 Confidentialité et licences | Inventaire des dépendances, binaires, polices, sons et droits d’utilisation ; politique de conservation et diagnostics expurgés ; procédure de vulnérabilité. | Paquet livré associé à son inventaire et ses mentions ; aucun manuscrit dans télémétrie/logs/support sans action explicite ; distribution audio et FFmpeg vérifiée selon assemblage réellement livré. |
+| 14.7 Aide et administration | Guide de démarrage, formation de production/révision, banques privées, récupération, cinq jours offline, archives et MCP ; diagnostic exportable par choix utilisateur. | Un utilisateur invité installe, importe, sonorise et soumet avec le guide ; un responsable restaure une copie et révoque un accès sans intervention sur fichiers internes. |
+
+La signature d’application est distincte de la signature .jacko. Apple documente l’intérêt du ticket de notarisation attaché pour la distribution hors ligne. [Signature Electron](https://www.electronjs.org/docs/latest/tutorial/code-signing), [distribution Apple](https://developer.apple.com/documentation/xcode/packaging-mac-software-for-distribution). Pour FFmpeg, vérifier licences et options compilées du binaire effectivement distribué. [Conditions FFmpeg](https://ffmpeg.org/legal.html).
+
+# Étape 15 — Performance, endurance et récupération à l’échelle réelle
+
+**Prérequis :** mesures commencées dès 1.6 ; campagne complète sur J3 et builds 14.
+
+**Sortie :** budgets démontrés et limites publiées avant ouverture générale.
+
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 15.1 Mesurer toute la matrice | Rejouer la section 5 sur builds distribués et moteurs réels. Playwright Chromium/Firefox/WebKit complète mais ne remplace pas Safari réel. | Résultats par poste/navigateur et cache ; aucune cellule obligatoire omise ; les cibles adoptées en 0.4 sont tenues ou la release reste non qualifiée. |
+| 15.2 Éprouver la charge combinée | Lecture, navigation, indexation, sauvegarde et export ; priorités et concurrence bornées. | Interface/audio restent dans budgets ; une opération longue est annulable ; aucun décodage de toute la banque ou de tout le projet en RAM. |
+| 15.3 Démontrer la durabilité | Cent interruptions, disque plein, quota navigateur, permissions retirées, plusieurs onglets, projets sur stockage externe qualifié. | Zéro corruption silencieuse ; zéro perte d’état annoncé sauvegardé ; restauration éprouvée ; manipulations du cache ou des sources ne suppriment pas une copie indépendante. |
+| 15.4 Tester les cinq jours | Horloges contrôlées pour limites, complétées par un essai réel de cinq jours sur les cibles ; reconnexion autorisée puis révoquée. | Fermetures/redémarrages ne prolongent pas le délai ; expiration conserve lecture/sauvegarde ; reconnexion révoquée archive et empêche tous les envois en attente. |
+| 15.5 Vérifier endurance et accessibilité | Huit heures, 100 changements de projet ; clavier, zoom 200 %, lecteurs d’écran, RTL, petits écrans d’ordinateur et contraste. | Pas de croissance mémoire continue, erreur console, contrôle inaccessible ou texte masqué ; les types audio restent reconnaissables sans couleur ; simulation et sauvegarde stables. |
+| 15.6 Optimiser sur mesures | Corriger les causes dominantes, indexer/cacher seulement si bénéfice prouvé ; fixer tailles supportées et messages hors limites. | Comparaison avant/après sur même corpus ; aucune optimisation ne modifie les ancres, la qualité audio ou la cohérence d’écriture ; hors budget déclaré explicitement, jamais dissimulé par un test réduit. |
+
+# Étape 16 — Pilotes métier et première version de production
+
+**Prérequis :** J3, 14 et 15 validés ; coûts d’exploitation connus.
+
+**Sortie :** Jaquette prêt à être distribué gratuitement sur invitation dans son périmètre initial.
+
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| 16.1 Pilote Maison | Une maison, deux Sound Designers, trois Réviseurs, un Chef et un Admin ; livre et banques dont l’usage est autorisé. | Production de chapitres distincts, conflit sur un même chapitre, deux cycles de correction, validation finale et export ; aucune manipulation technique des fichiers internes nécessaire. |
+| 16.2 Pilote Auteur | Auteur indépendant, freelance invité, stockage choisi, multi-workspace et changement d’ordinateur. | Projet autonome, workflow adapté aux rôles attribués, partage/transfert testés ; aucun backend de contenu Jaquette nécessaire ; travail récupéré depuis une copie portable. |
+| 16.3 Pilote MCP | Agent local et connexion distante autorisée ; navigateur appairé à Desktop ; rejet et acceptation de propositions. | Utilité confirmée par les utilisateurs ; aucune génération sonore, aucune modification directe du master, coût externe visible et fonctionnement local offline démontré. |
+| 16.4 Fermer les anomalies | Corriger défauts, rejouer contrôles touchés, faire approuver les dettes admissibles. | Zéro défaut bloquant connu ; aucune dette sur sécurité, perte de données, ancres, permissions ou sauvegarde partielle ; contrôles obligatoires PASS. |
+| 16.5 Qualifier la release candidate | Identifier commit, versions de formats, builds, matrice de compatibilité, preuves et procédure de retour ; vérifier capacité de support. | Installation et scénario complet depuis une machine propre, puis mise à jour depuis version pilote ; mêmes données retrouvées ; décisions humaines d’ergonomie/écoute consignées. |
+| 16.6 Ouvrir la production sur invitation | Publier Web et installateurs selon canal retenu, activer invitations et supervision ; documentation de reprise à jour. | Un nouvel invité accomplit le parcours complet ; services restaurables et support joignable ; aucune UI ne prétend publier dans Jacques. Version applicative attribuée selon la convention du dépôt. |
+
+## Critère final de la première livraison
+
+Sur les cibles qualifiées, un utilisateur invité peut importer un EPUB FR/EN/arabe, placer et régler les trois types de sons, simuler, enregistrer, fermer et retrouver son travail, travailler cinq jours hors ligne, utiliser les médias embarqués sans banque accessible, obtenir un brouillon MCP, échanger des candidates sur son infrastructure, réviser et faire valider le livre, puis exporter et contrôler son résultat.
+
+Un membre révoqué ne peut plus soumettre à la reconnexion ; son travail est conservé et son archivage sur disque accompagné jusqu’à vérification. Un refus d’enregistrement dans le navigateur laisse explicitement la copie indépendante à terminer, sans supprimer l’original. Les utilisateurs disposent de copies restaurables et les services nécessaires disposent d’une restauration éprouvée.
+
+**La publication dans Jacques, les paiements et la génération sonore ne conditionnent pas cette livraison.**
 
 ---
 
-# PHASE 4 — Tokenisation et ancrage stable
+# Extension F1 — Publication dans Jacques, après disponibilité du lecteur et de la boutique
 
-## 4.1 Segmenter le texte en chapitres / paragraphes / phrases / tokens
+**Prérequis :** première livraison stabilisée et projet Jacques disposant d’un contrat testable. Cette extension est planifiée mais ne bloque pas Jaquette.
 
-Objectif :
-Créer la structure logique.
-
-Test d’acceptation :
-- afficher le nombre de tokens d’un chapitre ;
-- le nombre reste identique entre deux imports identiques.
-
-## 4.2 Créer des identifiants stables
-
-Objectif :
-Attribuer une ancre logique à chaque token.
-
-Test d’acceptation critique :
-- importer deux fois le même EPUB ;
-- comparer automatiquement les IDs ;
-- 100 % des tokens inchangés doivent conserver le même ID.
-
-## 4.3 Gérer ponctuation et caractères spéciaux
-
-Objectif :
-Éviter des sélections incohérentes.
-
-Test d’acceptation :
-- apostrophes ;
-- tirets ;
-- guillemets ;
-- ponctuation française ;
-- caractères arabes ;
-- nombres.
-
-Les tokens doivent correspondre à une expérience de sélection cohérente.
-
-## 4.4 Gérer le contenu multilingue et RTL
-
-Test d’acceptation :
-- un même chapitre peut contenir français et arabe ;
-- les IDs restent stables ;
-- le sens visuel ne modifie pas la logique de sélection.
-
-## 4.5 Conserver les ancres après sauvegarde/réouverture
-
-Test d’acceptation critique :
-- créer un projet ;
-- importer l’EPUB ;
-- sauvegarder ;
-- fermer ;
-- rouvrir ;
-- vérifier les mêmes IDs.
-
-Cette sous-étape est un jalon bloquant.
+| Sous-étape | Travail et livrable | Test d’acceptation |
+|---|---|---|
+| F1.1 Valider le contrat commun | Aligner texte, tokens, audio, spatialisation, limites, formats et versions avec le lecteur réel. | Le même fichier de référence est lu par Jacques et le contrôle Jaquette avec comportements conformes ; refus explicite des fonctions non supportées. |
+| F1.2 Préparer les métadonnées | Titre commercial, sous-titre, auteurs, éditeur, couverture, résumé, langue, catégories, tags, ISBN éventuel, prix/devise, territoires, date, visibilité, public cible et numéro de version. | Champs requis validés ; avant validation finale, aucune préparation de publication montée ; après validation, préparation possible selon droits. |
+| F1.3 Signer pour publication | Définir autorité de confiance, garde/rotation/révocation des clés et signature du contenu publié. | .jacko valide vérifié par Jacques ; altération et mauvaise clé rejetées ; aucune clé de production exposée dans le frontend ; rotation et restauration de clés éprouvées. |
+| F1.4 Publier explicitement | Connexion API, envoi reprenable, validation distante, suivi ; bookId stable et releaseId propre à chaque publication. Passage à l’état publiable : génération automatique d’une tâche de publication, sans priorité. | Valider ne publie pas ; tâche créée Pas commencé, passage manuel En cours et achèvement automatique Terminée après publication confirmée ; double clic/retry ne crée ni deux tâches ni deux releases ; nouvelle publication produit nouveau releaseId sur même bookId. |
+| F1.5 Mettre à jour un livre | Modification → annulation des validations concernées → nouveau cycle → nouvelle release. | Aucun nouveau doublage publié sans révision et validation requises ; précédente release et historique conservés. |
+| F1.6 Dépublier | Actions Admin Maison et Super Admin, confirmation explicite et audit ; Chef sans ce droit direct. | Refus pour Chef ; confirmation obligatoire pour rôle autorisé ; état boutique et journal concordent après échec/retry. |
+| F1.7 Qualifier l’intégration complète | Pilote réel Jaquette → Jacques, installation lecteur, lecture et cycle de retrait ; documentation utilisateurs. | Publication, achat/accès lecteur selon le produit Jacques, lecture, mise à jour et dépublication testés sur environnement intégré ; aucun succès simulé présenté comme preuve réelle. |
 
 ---
 
-# PHASE 5 — Sélection textuelle
-
-## 5.1 Sélection par clic
-
-Test :
-- cliquer sur un mot ;
-- seul ce mot est sélectionné.
-
-## 5.2 Sélection par glisser
-
-Test :
-- glisser sur plusieurs mots ;
-- la plage logique correspond exactement au texte visuel.
-
-## 5.3 Sélection Shift + clic
-
-Test :
-- sélectionner le premier mot ;
-- Shift + clic sur le dernier ;
-- toute la plage est sélectionnée.
-
-## 5.4 Double clic phrase
-
-Test :
-- double cliquer au milieu d’une phrase ;
-- la phrase complète est sélectionnée.
-
-## 5.5 Triple clic paragraphe
-
-Test :
-- triple cliquer ;
-- le paragraphe complet est sélectionné.
-
-## 5.6 Sélection de chapitre/paragraphe via commande
-
-Test :
-- sélectionner tout un paragraphe ;
-- sélectionner tout un chapitre.
-
-## 5.7 Bloquer la traversée inter-chapitres
-
-Test :
-- tenter de prolonger une sélection dans le chapitre suivant ;
-- l’opération doit être refusée ou limitée au chapitre courant.
-
----
-
-# PHASE 6 — Premier moteur d’annotations
-
-## 6.1 Créer un SFX
-
-Objectif :
-Associer une ressource fictive à un mot/plage.
-
-Test :
-- sélectionner un mot ;
-- créer un SFX ;
-- le rail `#FFAF87` apparaît sous la sélection.
-
-## 6.2 Créer une Ambiance
-
-Test :
-- sélectionner une plage ;
-- créer une Ambiance ;
-- rail `#E56399`.
-
-## 6.3 Créer une Musique
-
-Test :
-- créer une Musique ;
-- rail `#9358FF`.
-
-## 6.4 Superposer les trois types
-
-Test :
-- même phrase avec SFX + Ambiance + Musique ;
-- les trois annotations restent distinguables.
-
-## 6.5 Plusieurs SFX sur une même plage
-
-Test :
-- deux SFX sur le même token ;
-- les deux existent indépendamment.
-
-## 6.6 Copier/coller une annotation
-
-Test :
-- copier une annotation ;
-- sélectionner une autre plage ;
-- coller ;
-- l’annotation copiée garde ses réglages mais pointe vers la nouvelle plage.
-
-## 6.7 Supprimer/modifier une annotation
-
-Test :
-- modifier la plage ou le type autorisé ;
-- supprimer ;
-- l’état visuel et le modèle restent cohérents.
-
----
-
-# PHASE 7 — Bibliothèque audio locale
-
-## 7.1 Ajouter un dossier de bibliothèque
-
-Test :
-- choisir un dossier ;
-- afficher les fichiers audio trouvés.
-
-## 7.2 Afficher dossiers et sous-dossiers
-
-Test :
-- structure imbriquée fidèle au disque.
-
-## 7.3 Lire les métadonnées
-
-Test :
-- afficher au minimum nom, durée, format, taille, fréquence, canaux pour plusieurs fichiers.
-
-## 7.4 Préécouter un son
-
-Test :
-- clic Play ;
-- lecture ;
-- Stop/Pause cohérents ;
-- la préécoute ne modifie pas le projet.
-
-## 7.5 Recherche instantanée
-
-Test :
-- taper un fragment de nom ;
-- seuls les résultats correspondants restent affichés.
-
-## 7.6 Tags et catégories
-
-Test :
-- ajouter catégories structurées et tags libres ;
-- rechercher/filtrer avec ces informations.
-
-## 7.7 Favoris
-
-Test :
-- marquer ;
-- afficher une vue Favoris ;
-- retirer.
-
-## 7.8 Collections
-
-Test :
-- créer une collection ;
-- ajouter un son déjà présent dans un dossier ;
-- le son reste dans son dossier et apparaît dans la collection.
-
-## 7.9 Nombre d’utilisations
-
-Test :
-- utiliser un son dans trois annotations ;
-- bibliothèque affiche `3`.
-
-## 7.10 Drag-and-drop vers le texte
-
-Test :
-- sélectionner une plage ;
-- glisser un son ;
-- créer l’annotation correspondante.
-
-## 7.11 Copie du média utilisé dans le projet
-
-Test critique :
-- utiliser un son ;
-- sauvegarder le `.jacq` ;
-- retirer/déplacer le dossier source ;
-- le projet conserve le média.
-
-## 7.12 Mise à jour depuis la bibliothèque
-
-Test :
-- modifier/remplacer la source de bibliothèque ;
-- Jaquette signale une différence ;
-- aucune mise à jour automatique ;
-- bouton explicite effectue la mise à jour.
-
----
-
-# PHASE 8 — Édition audio non destructive
-
-## 8.1 Volume par occurrence
-
-Test :
-- deux occurrences du même fichier avec volumes différents ;
-- aucune modification du média source.
-
-## 8.2 Point d’entrée / trim
-
-Test :
-- définir un début différent ;
-- prévisualisation démarre au bon point.
-
-## 8.3 Boucle
-
-Test :
-- activer/désactiver ;
-- comportement conforme selon la plage.
-
-## 8.4 Zone de boucle
-
-Test :
-- définir une sous-zone ;
-- seule cette zone est répétée.
-
-## 8.5 Fade-in / fade-out
-
-Test :
-- définir des plages textuelles ;
-- visualiser les bornes ;
-- simulation applique une évolution progressive.
-
-## 8.6 Normalisation
-
-Test :
-- activer/désactiver par occurrence ;
-- résultat différent ;
-- source intacte.
-
-## 8.7 Ducking
-
-Test :
-- SFX déclenche une baisse de musique/ambiance ;
-- valeur d’atténuation différente sur deux occurrences.
-
-## 8.8 Spatialisation 3D
-
-Test :
-- modifier position autour du lecteur ;
-- la préécoute reproduit une différence perceptible.
-
-## 8.9 Mute / Solo
-
-Test :
-- mute d’une famille ;
-- solo d’une famille ;
-- résultats conformes sans modifier les annotations.
-
----
-
-# PHASE 9 — Moteur de simulation
-
-## 9.1 Déclenchement SFX
-
-Test :
-- entrer dans la plage ;
-- SFX joué une fois selon la simulation.
-
-## 9.2 Limite des 3 SFX
-
-Test :
-- déclencher 4 SFX rapidement ;
-- le plus ancien des trois en cours est coupé.
-
-## 9.3 Ambiances superposables
-
-Test :
-- deux ambiances actives simultanément ;
-- les deux sont audibles.
-
-## 9.4 Règle boucle Ambiance
-
-Test :
-- boucle ON : répétition jusqu’à fin de plage ;
-- boucle OFF : une lecture puis silence.
-
-## 9.5 Musique exclusive
-
-Test :
-- musique A active ;
-- démarrage de B ;
-- pas de coexistence durable hors crossfade.
-
-## 9.6 Crossfade musique
-
-Test :
-- A baisse pendant que B monte ;
-- transition sans coupure sèche.
-
-## 9.7 Fades textuels
-
-Test :
-- progression simulée dans la plage ;
-- volume suit l’avancement.
-
-## 9.8 Souris comme eye-tracker simulé
-
-Test :
-- déplacer la souris sur les tokens ;
-- événements correspondant au token actif se déclenchent.
-
-## 9.9 Lecture automatique en mots/minute
-
-Test :
-- 200 mots/minute ;
-- progression visuelle et logique reproductible.
-
-## 9.10 Vitesses x1 / x2 / x4
-
-Test :
-- la vitesse change sans modifier le projet.
-
-## 9.11 Lire la sélection
-
-Test :
-- lecture commence au premier token sélectionné et s’arrête selon le périmètre prévu.
-
-## 9.12 Lire depuis ici
-
-Test :
-- démarrage à une ancre choisie ;
-- l’état audio est correctement reconstruit pour la position.
-
----
-
-# PHASE 10 — Sauvegarde `.jacq` et sections `.chpt`
-
-## 10.1 Autosave
-
-Test :
-- effectuer une modification ;
-- fermer/recharger ;
-- modification conservée sans sauvegarde manuelle explicite.
-
-## 10.2 Undo/Redo
-
-Test :
-- réaliser plus de 50 actions ;
-- seules les 50 dernières sont disponibles dans l’historique d’annulation.
-
-## 10.3 Versions nommées
-
-Test :
-- créer V1 ;
-- modifier ;
-- créer V2 ;
-- les deux restent identifiables.
-
-## 10.4 Structure physique par chapitre
-
-Objectif :
-- conserver une section physique `.chpt` par chapitre dans le `.jacq` ;
-- garder les informations communes séparées ;
-- classer comme commune toute information qui n’appartient pas exclusivement à un seul chapitre, la liste du cahier des charges étant un minimum normatif et non une liste exhaustive champ par champ.
-
-Test critique :
-- modifier le chapitre 2 ;
-- enregistrer ;
-- vérifier que le `.chpt` du chapitre 2 est réécrit ;
-- vérifier que les `.chpt` des autres chapitres ne sont ni réécrits ni altérés ;
-- vérifier qu’une donnée utilisée par plusieurs chapitres reste dans la section commune du `.jacq` ;
-- vérifier qu’une donnée clairement propre au chapitre 2 reste dans son `.chpt`.
-
-La technologie de conteneur, le schéma, la sérialisation et la stratégie de version restent à décider. Le test ne doit pas supposer que `.jacq` est un ZIP.
-
-## 10.5 Export `.jacq`
-
-Test :
-- exporter le projet complet ;
-- vérifier qu’il inclut les médias réellement utilisés, les sections `.chpt` et les informations communes.
-
-## 10.6 Import `.jacq`
-
-Test :
-- fermer Jaquette ;
-- rouvrir le fichier ;
-- retrouver texte, annotations, réglages, médias, tâches, commentaires, validations et métadonnées.
-
-## 10.7 Projet autonome
-
-Test critique :
-- exporter `.jacq` ;
-- retirer toutes les bibliothèques originales ;
-- réimporter ;
-- toutes les annotations audio fonctionnent.
-
-## 10.8 Export d’un chapitre `.chpt`
-
-Test :
-- exporter un chapitre candidat ;
-- vérifier la présence de l’identité du projet et du livre, de l’identifiant du chapitre, de la base et de la filiation ;
-- vérifier les données de doublage, médias utilisés, tâches, commentaires, validations et informations d’audit nécessaires ;
-- vérifier que toute information n’appartenant pas exclusivement au chapitre est absente, notamment l’EPUB source, la structure textuelle globale, les métadonnées du livre et du projet, les paramètres généraux, les affectations globales, les versions nommées, les consentements IA, les commentaires et tâches du livre et toute donnée partagée par plusieurs chapitres ;
-- vérifier qu’une donnée clairement propre au chapitre reste présente.
-
-## 10.9 Import candidat sans écrasement
-
-Test critique :
-- conserver une version validée du chapitre ;
-- importer un `.chpt` candidat ;
-- vérifier que la version validée reste intacte ;
-- vérifier que la candidate est disponible pour révision.
-
-## 10.10 Déduplication à l’import
-
-Test :
-- importer deux chapitres utilisant un même média ;
-- vérifier que le média identique est reconnu par empreinte sans duplication inutile.
-
----
-
-# PHASE 11 — Tâches, commentaires et workflow de production
-
-L’ancien concept fonctionnel de ticket est abandonné. Aucun objet, écran, workflow ou tableau de bord actif ne doit le réintroduire.
-
-## 11.1 Génération automatique des tâches
-
-Test :
-- affecter un Sound Designer à un chapitre ;
-- une tâche « doubler le chapitre » est créée avec `Pas commencé` ;
-- aucune tâche libre ne peut être créée hors workflow.
-
-## 11.2 Cycle de statut des tâches
-
-Test :
-- passer manuellement de `Pas commencé` à `En cours` ;
-- accomplir l’action métier attendue ;
-- la tâche passe automatiquement à `Terminée` ;
-- aucun autre statut n’est proposé.
-
-## 11.3 Propriétés des tâches
-
-Test :
-- une tâche cible un livre ou un chapitre ;
-- elle possède un assigné et accepte une échéance facultative ;
-- aucun champ ni tri de priorité n’existe.
-
-## 11.4 Cas de génération obligatoires
-
-Test :
-- affectation Sound Designer → tâche de doublage de chapitre ;
-- affectation Réviseur → tâche de révision de chapitre ;
-- passage à l’état publiable → tâche de publication du livre dans Jacques ;
-- invalidation → nouvelle tâche de correction de chapitre.
-
-## 11.5 Nouvelle tâche à chaque invalidation
-
-Test critique :
-- invalider, corriger puis terminer un premier cycle ;
-- invalider de nouveau ;
-- une nouvelle occurrence de tâche est créée ;
-- la tâche et l’historique du premier cycle restent inchangés.
-
-## 11.6 Commentaire sur le livre
-
-Test :
-- créer un commentaire depuis la vue globale du projet ou de la révision ;
-- le commentaire reste dans la section commune du `.jacq`.
-
-## 11.7 Commentaire sur le chapitre
-
-Test :
-- créer un commentaire visant le chapitre entier ;
-- l’export `.chpt` du chapitre le transporte.
-
-## 11.8 Commentaire sur le texte
-
-Test :
-- sélectionner un mot puis une plage de mots ;
-- créer un commentaire pour chaque cible ;
-- rouvrir exactement le passage depuis le commentaire.
-
-## 11.9 Commentaire sur une occurrence audio
-
-Test :
-- commenter une occurrence dans la timeline textuelle ;
-- ouvrir l’annotation ou l’inspecteur correspondant ;
-- vérifier que le fichier de la bibliothèque audio n’est pas la cible.
-
-## 11.10 Fils, états et historique
-
-Test :
-- répondre en fil ;
-- passer de `Ouvert` à `Résolu` ;
-- modifier un commentaire ;
-- vérifier l’historique, l’auteur et les dates ;
-- tenter une suppression définitive et constater son refus.
-
-## 11.11 Identifiants et transport
-
-Test :
-- exporter puis réimporter le même `.chpt` ;
-- tâches et commentaires du chapitre ne sont pas dupliqués ;
-- les commentaires du livre ne voyagent pas avec le chapitre.
-
-## 11.12 Affectation et progression
-
-Test :
-- chapitre 1 assigné à A et chapitre 2 à B ;
-- chacun voit les tâches générées pour sa charge ;
-- le Sound Designer termine un chapitre ;
-- la progression Doublage est mise à jour.
-
----
-
-# PHASE 12 — Révision et candidates `.chpt`
-
-## 12.1 Interface Réviseur
-
-Test :
-- aucun outil de montage ;
-- simulation, commentaires, candidates et validation disponibles.
-
-## 12.2 Statut par chapitre et par Réviseur
-
-Test :
-- Non révisé → À corriger / Validé.
-
-## 12.3 Invalidation obligatoire avec commentaire
-
-Test :
-- tenter `À corriger` sans commentaire ;
-- action refusée ;
-- ajouter le commentaire ;
-- l’invalidation réussit et génère une nouvelle tâche de correction.
-
-## 12.4 Validation multi-réviseurs
-
-Test :
-- projet avec 3 Réviseurs examinant la même candidate ;
-- validation 1/3 et 2/3 ne suffit pas ;
-- 3/3 permet seul l’intégration de la candidate comme version validée ;
-- refaire le scénario avec un refus sur trois : le chapitre reste bloqué et aucune candidate n’est intégrée ;
-- vérifier qu’aucune majorité et aucun arbitrage du Chef d’équipe ne tranchent le choix éditorial.
-
-## 12.5 Calcul de progression Révision
-
-Test :
-- valeur calculée sur validations attendues/obtenues.
-
-## 12.6 Modification après validation
-
-Test critique :
-- valider un chapitre ;
-- le Sound Designer modifie une annotation et exporte une nouvelle candidate ;
-- validations actives annulées ;
-- chapitre repasse `À réviser` ;
-- anciennes validations conservées dans l’historique.
-
-## 12.7 Deux candidates concurrentes
-
-Test critique :
-- importer deux `.chpt` issus de la même base pour le même chapitre ;
-- conserver les deux candidates distinctes ;
-- vérifier qu’aucun merge détaillé d’annotations ou réglages n’est proposé ;
-- vérifier que tout Réviseur affecté peut proposer une candidate comme candidate active à examiner ;
-- faire proposer simultanément une candidate différente par deux Réviseurs ;
-- vérifier qu’aucune proposition ne remplace silencieusement l’autre et que le chapitre reste bloqué tant que tous les Réviseurs n’approuvent pas la même candidate ;
-- proposer explicitement une autre candidate ;
-- vérifier qu’une proposition ne vaut ni sélection définitive ni validation.
-
-## 12.8 Historique des candidates
-
-Test :
-- écarter une candidate ;
-- conserver toutes les candidates, propositions et décisions précédentes avec leur auteur, leur base et leur date ;
-- vérifier que deux propositions concurrentes ne se remplacent jamais silencieusement ;
-- vérifier qu’aucun fichier n’est détruit silencieusement.
-
-## 12.9 Soumission au Chef
-
-Test :
-- bouton bloqué tant que tous les Réviseurs n’approuvent pas la même candidate active ;
-- bouton bloqué en cas de désaccord, sans vote majoritaire ni arbitrage du Chef d’équipe sur le choix éditorial ;
-- disponible lorsque toutes les validations requises sont obtenues.
-
----
-
-# PHASE 13 — Chef d’équipe et validation finale
-
-## 13.1 Dashboard Chef
-
-Test :
-- affiche projets, doublage %, révision %, statut final.
-
-## 13.2 Vue par équipe
-
-Test :
-- Chef de deux équipes peut passer de l’une à l’autre.
-
-## 13.3 Vue consolidée
-
-Test :
-- “Toutes mes équipes” affiche l’ensemble des projets gérés.
-
-## 13.4 Simulation par le Chef
-
-Test :
-- simulation autorisée ;
-- aucun outil de montage accessible.
-
-## 13.5 Rejet vers Sound Designer
-
-Test :
-- changement de statut ;
-- commentaire explicatif et nouvelle tâche de workflow associés ;
-- projet revient au workflow approprié.
-
-## 13.6 Rejet vers Réviseur
-
-Test :
-- retour en révision sans modification audio directe par le Chef.
-
-## 13.7 Validation finale
-
-Test :
-- après validation, état `Validé` puis `Prêt à publier` accessible.
-
----
-
-# PHASE 14 — Contrôle qualité et pré-export
-
-## 14.1 Détecter média manquant
-
-Test :
-- créer une référence invalide ;
-- erreur bloquante.
-
-## 14.2 Détecter annotation invalide
-
-Test :
-- plage incohérente ;
-- erreur.
-
-## 14.3 Détecter conflit musical
-
-Test :
-- configuration créant deux musiques actives durablement ;
-- erreur ou correction imposée avant export.
-
-## 14.4 Détecter boucle invalide
-
-Test :
-- zone de boucle impossible ;
-- export bloqué.
-
-## 14.5 Estimer clipping / niveaux problématiques
-
-Test :
-- scénario volontairement excessif ;
-- avertissement ou erreur selon règle retenue.
-
-## 14.6 Vérifier métadonnées nécessaires
-
-Test :
-- champ obligatoire absent ;
-- signalement explicite.
-
-## 14.7 Écran pré-export
-
-Test :
-- résumé SFX/Ambiances/Musiques ;
-- erreurs ;
-- avertissements ;
-- poids estimé.
-
----
-
-# PHASE 15 — Export `.jacko`
-
-## 15.1 Construire le conteneur `.jacko`
-
-Test :
-- export crée un seul fichier ;
-- contenu logique inspectable en développement.
-
-## 15.2 Générer le manifeste
-
-Test :
-- contient version, livre, chapitres, tokens et événements.
-
-## 15.3 Exporter les médias réellement utilisés
-
-Test :
-- ressource inutilisée dans la bibliothèque absente du `.jacko`.
-
-## 15.4 Déduplication
-
-Test :
-- deux occurrences du même média ;
-- une seule ressource audio embarquée.
-
-## 15.5 Compression selon preset
-
-Test :
-- même projet exporté en Ultra léger et Haute qualité ;
-- poids et paramètres diffèrent.
-
-## 15.6 Estimation avant export vs poids réel
-
-Test :
-- comparer estimation et résultat ;
-- écart mesuré et jugé acceptable par l’équipe.
-
-## 15.7 Checksums
-
-Test :
-- modifier une ressource après export en environnement de test ;
-- incohérence détectable.
-
-## 15.8 Version du format
-
-Test :
-- `formatVersion` présent ;
-- lecteur de contrôle sait refuser une version inconnue.
-
----
-
-# PHASE 16 — Contrôle d’un `.jacko`
-
-## 16.1 Ouvrir `.jacko` en lecture seule
-
-Test :
-- fichier s’ouvre ;
-- aucun outil d’édition disponible.
-
-## 16.2 Reconstituer le livre
-
-Test :
-- chapitres, images, styles utiles, polices et texte présents.
-
-## 16.3 Rejouer le doublage
-
-Test :
-- simulation reproduit SFX, Ambiances et Musiques du projet source.
-
-## 16.4 Vérifier la parité `.jacq` / `.jacko`
-
-Test :
-- scénario de référence joué dans les deux ;
-- comportements équivalents pour les fonctionnalités supportées.
-
----
-
-# PHASE 17 — Métadonnées Jacques et signature
-
-## 17.1 Formulaire de métadonnées
-
-Test :
-- titre, auteur, couverture, résumé, langue, catégories, prix, devise, territoires, date, visibilité, version.
-
-## 17.2 Validation des champs
-
-Test :
-- champ requis manquant ;
-- passage à `Prêt à publier` bloqué.
-
-## 17.3 Gestion `bookId`
-
-Test :
-- export V1 puis V2 du même livre ;
-- `bookId` identique.
-
-## 17.4 Gestion `releaseId`
-
-Test :
-- chaque publication produit un `releaseId` différent.
-
-## 17.5 Signature numérique
-
-Test :
-- `.jacko` normal vérifié comme valide ;
-- modification manuelle invalide la vérification.
-
-## 17.6 État Prêt à publier
-
-Test :
-- validation éditoriale ne publie pas automatiquement ;
-- action séparée requise.
-
----
-
-# PHASE 18 — Prototype Web complet V1
-
-## 18.1 Test bout-en-bout officiel
-
-Scénario :
-
-1. connexion ;
-2. workspace ;
-3. création/affectation projet ;
-4. import EPUB ;
-5. indexation bibliothèque ;
-6. doublage SFX/Ambiance/Musique ;
-7. édition ;
-8. simulation ;
-9. sauvegarde ;
-10. fermeture ;
-11. réouverture `.jacq` ;
-12. candidate `.chpt`, tâches, commentaires et révision ;
-13. validations ;
-14. Chef ;
-15. métadonnées ;
-16. export `.jacko` ;
-17. fermeture ;
-18. ouverture `.jacko` ;
-19. simulation ;
-20. contrôle intégrité.
-
-Test d’acceptation :
-- scénario exécuté sans intervention manuelle sur les fichiers internes ;
-- aucun blocage critique.
-
-## 18.2 Test français
-
-Test :
-- workflow complet sur EPUB français.
-
-## 18.3 Test anglais
-
-Test :
-- workflow essentiel sur EPUB anglais.
-
-## 18.4 Test arabe / RTL
-
-Test :
-- import, sélection, annotation, sauvegarde et simulation sur contenu arabe.
-
-## 18.5 Test de projet volumineux
-
-Test :
-- projet proche du cas d’usage réel ;
-- mesurer temps d’ouverture, sauvegarde, simulation et export.
-
-## 18.6 Validation officielle V1 Web
-
-Critère :
-- aucun bug bloquant sur le scénario officiel ;
-- risques connus documentés ;
-- décision explicite de passage à Electron.
-
----
-
-# PHASE 19 — Migration Electron
-
-## 19.1 Créer le shell desktop
-
-Test :
-- application installable/lancée sur macOS et Windows.
-
-## 19.2 Ouvrir un `.jacq` local
-
-Test :
-- double parcours ouvrir/fermer/sauvegarder.
-
-## 19.3 Accès bibliothèques locales
-
-Test :
-- indexation d’un dossier audio volumineux sans dépendre du navigateur.
-
-## 19.4 Traitements audio desktop
-
-Test :
-- même opération audio que Web ;
-- résultat métier identique.
-
-## 19.5 Sécuriser les échanges entre interface et fonctions système
-
-Test :
-- l’interface n’obtient que les capacités nécessaires ;
-- un contenu EPUB ne peut pas invoquer directement des capacités système.
-
-## 19.6 Parité fonctionnelle Web/Desktop
-
-Test :
-- même `.jacq` ouvert dans les deux ;
-- annotations, médias et workflow cohérents.
-
-## 19.7 Builds Windows/macOS
-
-Test :
-- installation propre ;
-- démarrage ;
-- import ;
-- sauvegarde ;
-- export ;
-- désinstallation sans corruption des projets.
-
----
-
-# PHASE 20 — MCP et brouillon IA
-
-## 20.1 Activer l’état IA par projet
-
-Test :
-- IA interdite bloque toute exposition ;
-- IA autorisée nécessite consentement.
-
-## 20.2 Consentement explicite
-
-Test :
-- fournisseur affiché ;
-- utilisateur certifie l’autorisation ;
-- date, compte, fournisseur et version enregistrés.
-
-## 20.3 Révocation
-
-Test :
-- après révocation, nouvel appel IA bloqué.
-
-## 20.4 Exposer le livre comme ressource contrôlée
-
-Test :
-- agent autorisé peut lire un chapitre ;
-- ne peut pas lire un fichier arbitraire du disque.
-
-## 20.5 Exposer la bibliothèque
-
-Test :
-- agent peut chercher des sons par métadonnées/tags.
-
-## 20.6 Exposer les annotations
-
-Test :
-- agent peut comprendre les événements existants du chapitre.
-
-## 20.7 Créer un brouillon IA
-
-Test :
-- agent propose au moins un SFX, une Ambiance et une Musique ;
-- master inchangé.
-
-## 20.8 Proposition de modification
-
-Test :
-- agent propose de modifier une annotation humaine ;
-- changement visible comme proposition, pas appliqué.
-
-## 20.9 Acceptation unitaire
-
-Test :
-- accepter une proposition ;
-- seule cette proposition rejoint le master.
-
-## 20.10 Acceptation par chapitre
-
-Test :
-- toutes les propositions du chapitre sont appliquées.
-
-## 20.11 Acceptation globale
-
-Test :
-- tout le brouillon est appliqué en une action contrôlée.
-
-## 20.12 Rejet
-
-Test :
-- rejet ne modifie jamais le master.
-
-## 20.13 Audit IA
-
-Test :
-- chaque consentement, appel, acceptation et rejet apparaît dans l’historique prévu.
-
----
-
-# PHASE 21 — Comptes réels et organisations V2
-
-## 21.1 Inscription / identité réelle
-
-Test :
-- utilisateur avec email vérifié.
-
-## 21.2 Plusieurs emails par identité
-
-Test :
-- ajouter une seconde adresse ;
-- connexion via les deux vers la même identité.
-
-## 21.3 Fusion de comptes
-
-Test :
-- deux identités contrôlées fusionnées ;
-- projets et appartenances conservés.
-
-## 21.4 Invitation Maison
-
-Test :
-- Admin Maison invite ;
-- membre rejoint le bon workspace.
-
-## 21.5 Restrictions Admin Maison
-
-Test :
-- peut administrer ;
-- ne peut pas monter/reviser automatiquement sans rôle métier.
-
-## 21.6 Invitations Auteur
-
-Test :
-- Auteur invite un freelance ;
-- lui attribue un rôle projet.
-
-## 21.7 Switch multi-maison
-
-Test :
-- même identité présente dans plusieurs maisons ;
-- changement de contexte sans nouvelle connexion.
-
----
-
-# PHASE 22 — Collaboration offline et fusion de `.chpt`
-
-## 22.1 Export complet d’une candidate
-
-Test :
-- un Sound Designer exporte un chapitre ;
-- le `.chpt` contient les identités, la base, la filiation, le doublage, les médias utilisés, les tâches, les commentaires, les validations et l’audit nécessaires ;
-- aucune information commune étrangère au chapitre n’est embarquée.
-
-## 22.2 Import sans écrasement
-
-Test :
-- importer une candidate pour un chapitre déjà validé ;
-- la version validée reste inchangée ;
-- la candidate entre dans le cycle de révision.
-
-## 22.3 Correspondance des assignés importés
-
-Test documentaire :
-- importer entre deux copies ou organisations un `.chpt` dont l’assigné d’origine possède un identifiant Jaquette global strictement identique à celui de l’identité cible et les droits nécessaires dans le projet cible ;
-- vérifier que cette seule combinaison autorise la correspondance automatique ;
-- refaire l’import avec une identité inconnue ou privée des droits requis ;
-- vérifier qu’aucune correspondance silencieuse n’est faite par nom, adresse IP ou adresse électronique non vérifiée ;
-- vérifier que l’import suspend la finalisation de l’affectation jusqu’au choix explicite d’un assigné autorisé par le Chef d’équipe, ou par l’Auteur indépendant dans son workspace ;
-- conserver dans l’historique et l’audit l’identité et l’assigné d’origine ;
-- vérifier que la réaffectation explicite ne réécrit pas l’auteur historique de la contribution.
-
-## 22.4 Fusion de chapitres différents
-
-Test critique :
-- A modifie le chapitre 1 et B le chapitre 2 depuis des filiations compatibles ;
-- importer les deux `.chpt` ;
-- les contributions sont intégrables sans conflit ;
-- aucune intégration ne réécrit ou n’écrase l’autre chapitre.
-
-## 22.5 Concurrence sur un même chapitre
-
-Test critique :
-- A et B exportent chacun une version du chapitre 1 depuis la même base ;
-- les deux restent candidates distinctes ;
-- aucun merge détaillé n’est effectué ;
-- tout Réviseur affecté peut proposer une candidate active ;
-- aucune proposition ne remplace silencieusement l’autre et toutes restent consultables dans l’historique.
-
-## 22.6 Proposition active puis validations unanimes
-
-Test :
-- faire proposer une candidate concurrente comme candidate active par un Réviseur affecté ;
-- vérifier que cette proposition ne vaut ni sélection définitive ni validation ;
-- obtenir l’approbation de tous les Réviseurs affectés sur cette même candidate ;
-- intégrer seulement alors la candidate comme version validée ;
-- refaire avec un désaccord : aucune candidate n’est intégrée, sans vote majoritaire ni arbitrage du Chef d’équipe ;
-- proposer explicitement une autre candidate et conserver toutes les propositions et décisions précédentes dans l’historique.
-
-## 22.7 Origine ou filiation incompatible
-
-Test :
-- importer un `.chpt` d’un autre projet ou avec une filiation inconnue ;
-- intégration silencieuse refusée ;
-- conflit explicite et audité.
-
-## 22.8 Classement et conflit d’informations communes
-
-Test :
-- classer dans la section commune du `.jacq` une donnée utilisée par plusieurs chapitres et vérifier qu’elle n’est dans aucun `.chpt` ;
-- vérifier qu’une donnée clairement propre à un chapitre reste dans son `.chpt` ;
-- contrôler que l’EPUB source, la structure textuelle globale et ses identifiants de cohérence, les métadonnées du livre et du projet, les paramètres généraux, les affectations globales, les versions nommées, les consentements IA et les commentaires et tâches du livre restent communs ;
-- deux copies modifient différemment une métadonnée du livre ou un paramètre général ;
-- aucune valeur ne gagne automatiquement ;
-- le Chef d’équipe arbitre et la décision est journalisée ;
-- refaire le test en workspace Auteur indépendant avec arbitrage par l’Auteur.
-
-## 22.9 Invalidation et cycle de correction
-
-Test :
-- invalider une candidate avec un commentaire ;
-- une nouvelle tâche de correction est générée ;
-- les tâches, commentaires et validations des cycles précédents restent dans l’historique.
-
-## 22.10 Absence de fonctions live
-
-Test :
-- vérifier qu’aucune présence distante, aucun curseur ou sélection distante et aucune modification live ne sont proposés ;
-- l’accueil façon Figma reste uniquement une convention d’organisation visuelle.
-
----
-
-# PHASE 23 — Architecture hybride et frontières de données
-
-## 23.1 Séparer métadonnées et contenu sensible
-
-Test :
-- le control plane peut lister les identités, organisations, permissions, invitations et métadonnées non sensibles ;
-- EPUB, `.jacq`, `.chpt`, manuscrits et sources audio restent hors du stockage cloud Jaquette.
-
-## 23.2 Échange explicite de contenu
-
-Test :
-- un collaborateur autorisé reçoit puis importe un `.chpt` par un canal d’échange choisi ;
-- aucune synchronisation directe du montage n’est requise ni supposée ;
-- le choix du canal et de l’hébergement reste ouvert.
-
-## 23.3 Autorisation à l’import
-
-Test :
-- une identité ou un projet incompatible est détecté avant intégration ;
-- l’utilisateur non autorisé ne peut pas intégrer le chapitre.
-
-## 23.4 Audit administratif et métier
-
-Test :
-- connexions, invitations et permissions sont consultables selon les droits ;
-- exports, imports, conflits, arbitrages et intégrations de chapitres sont reliés à leurs auteurs et dates.
-
-## 23.5 Indisponibilité du stockage local
-
-Test :
-- l’interface indique clairement qu’un projet local ou un fichier d’échange est indisponible ;
-- aucune métadonnée n’est corrompue ;
-- aucune copie distante du contenu n’est supposée exister.
-
----
-
-# PHASE 24 — Publication Jacques
-
-## 24.1 Connexion Jaquette → Jacques
-
-Test :
-- action Publier transmet un `.jacko` valide et ses métadonnées.
-
-## 24.2 Publication distincte de validation
-
-Test :
-- un projet `Validé` n’apparaît pas dans Jacques avant action Publier.
-
-## 24.3 Nouvelle release
-
-Test :
-- V2 d’un livre existant met à jour le même `bookId` avec nouveau `releaseId`.
-
-## 24.4 Dépublication Admin Maison
-
-Test :
-- Admin autorisé peut retirer ;
-- action confirmée et auditée.
-
-## 24.5 Dépublication Super Admin
-
-Test :
-- même résultat avec droits globaux.
-
-## 24.6 Chef non autorisé à dépublier
-
-Test :
-- action absente ou refusée.
-
----
-
-# PHASE 25 — Stabilisation et version finale
-
-## 25.1 Campagne de régression
-
-Tester intégralement :
-- import ;
-- tokenisation ;
-- sélection ;
-- trois pistes ;
-- édition ;
-- bibliothèque ;
-- sauvegarde ;
-- révision ;
-- export ;
-- signature ;
-- collaboration offline et fusion de `.chpt` ;
-- IA ;
-- publication.
-
-Critère :
-- zéro bug bloquant connu.
-
-## 25.2 Test de récupération de projet
-
-Test :
-- fermeture forcée pendant une session ;
-- réouverture sans perte au-delà de la politique d’autosave prévue.
-
-## 25.3 Test changement de bibliothèque
-
-Test :
-- chemins déplacés ;
-- projet autonome toujours exploitable.
-
-## 25.4 Test multi-workspace
-
-Test :
-- utilisateur avec plusieurs maisons + espace Auteur ;
-- permissions correctes dans chaque contexte.
-
-## 25.5 Test publication de mise à jour
-
-Test :
-- livre publié → modification → invalidation → nouvelle révision → nouvelle release.
-
-## 25.6 Test de sécurité IA
-
-Test :
-- agent tente d’accéder à une ressource hors projet ;
-- refus.
-
-## 25.7 Test de signature
-
-Test :
-- `.jacko` altéré rejeté par le mécanisme de contrôle.
-
-## 25.8 Test de charge réel
-
-Mesurer :
-- taille de bibliothèque ;
-- gros projet ;
-- export ;
-- ouverture ;
-- simulation ;
-- imports de `.chpt` et arbitrages de conflits.
-
-Critère :
-- seuils d’acceptabilité définis à partir des mesures réelles avant release finale.
-
-## 25.9 Documentation de reprise
-
-Mettre à jour :
-- README ;
-- cahier des charges ;
-- AGENTS.md ;
-- documentation `.jacq` ;
-- documentation `.jacko` ;
-- règles de permissions ;
-- procédures de release.
-
-Test :
-- un développeur/agent externe peut lancer le projet et comprendre ses invariants sans explication orale.
-
-## 25.10 Release candidate
-
-Critère :
-- toutes les checklists produit passent ;
-- aucun bug bloquant ;
-- aucune dette connue empêchant l’usage métier réel.
-
-## 25.11 Version finale
-
-La version finale est considérée prête lorsque :
-
-- Jaquette Desktop est stable sur Windows et macOS ;
-- le workflow complet Sound Designer → Réviseur → Chef → Jacques fonctionne ;
-- `.jacq` est fiable et autonome ;
-- `.jacko` est optimisé, versionné et signé ;
-- les permissions multi-workspace sont cohérentes ;
-- la collaboration offline et la fusion de `.chpt` sont utilisables ;
-- le MCP est cloisonné ;
-- le brouillon IA ne modifie jamais le master sans acceptation ;
-- la publication et la dépublication respectent les droits ;
-- les tests de régression passent.
-
----
-
-# Risques transversaux liés à REC-01
-
-## Réécriture involontaire de chapitres
-
-Risque :
-- une sauvegarde de projet réécrit plusieurs `.chpt` et rend l’échange ou la fusion dangereux.
-
-Réduction :
-- instrumenter les écritures et exiger le test critique de la sous-étape 10.4 sur plusieurs chapitres.
-
-## Filiation insuffisante
-
-Risque :
-- une candidate d’origine inconnue est intégrée à tort.
-
-Réduction :
-- refuser l’intégration silencieuse et couvrir les identités, bases et filiations aux sous-étapes 10.8, 22.4 et 22.7.
-
-## Perte de candidates ou d’historique
-
-Risque :
-- le choix d’une version masque ou détruit les autres contributions, validations ou cycles de correction.
-
-Réduction :
-- conserver toutes les candidates et décisions ; tester l’historique aux sous-étapes 11.5, 12.8 et 22.8.
-
-## Duplication des médias, tâches ou commentaires
-
-Risque :
-- les imports répétés multiplient des objets identiques.
-
-Réduction :
-- empreinte pour les médias, identifiants stables pour tâches et commentaires, tests 10.10 et 11.11.
-
-## Conflits d’informations communes
-
-Risque :
-- une métadonnée ou un paramètre général gagne implicitement.
-
-Réduction :
-- séparation physique hors `.chpt`, arbitrage explicite selon le workspace et audit au test 22.8.
-
----
-
-# Jalons synthétiques
-
-## Prototype P0 — UI et projet local
-Phases 0 à 2.
-
-Objectif :
-Valider navigation, workspaces et expérience générale.
-
-## Prototype P1 — Texte
-Phases 3 à 5.
-
-Objectif :
-Valider EPUB, rendu, tokenisation et sélection.
-
-## Prototype P2 — Audio
-Phases 6 à 9.
-
-Objectif :
-Valider le concept “texte = timeline” avec les trois pistes.
-
-## Alpha — Projet autonome
-Phases 10 à 13.
-
-Objectif :
-Travailler réellement sur un `.jacq` autonome, sauvegardé par `.chpt`, avec workflow humain.
-
-## Beta Web — Export
-Phases 14 à 18.
-
-Objectif :
-Produire un `.jacko` réel depuis Chrome.
-
-## V1 Desktop
-Phase 19.
-
-Objectif :
-Passer en Electron sans changer les règles métier.
-
-## V1.5 IA
-Phase 20.
-
-Objectif :
-Premier doublage assisté et contrôlé par MCP.
-
-## V2 Comptes & Collaboration offline
-Phases 21 à 23.
-
-Objectif :
-Usage professionnel multi-utilisateur et multi-organisation par échange asynchrone de `.chpt`.
-
-## V2.x Jacques
-Phase 24.
-
-Objectif :
-Publication et cycle de vie boutique.
-
-## Release finale
-Phase 25.
-
-Objectif :
-Stabilisation, documentation et validation métier complète.
+## Ordre de livraison et correspondance avec l’ancien plan
+
+| Nouveau jalon | Étapes | Résultat démontré | Anciennes parties reprises |
+|---|---|---|---|
+| J0 — Choix éprouvés | 0–1 | Reprise reproductible, plateformes et risques principaux testés | Fin du prototype, décisions stockage, début Electron, frontières d’hébergement |
+| J1 — Production locale minimale | 2–3 | Même mot et même son après fermeture/réouverture, sauvegarde partielle | Anciennes phases 3–6, partie 7, stockage phase 10 et Electron phase 19 avancés |
+| Atelier complet | 4–7 | Invitation/offline, bibliothèque et moteur audio de production | Phases 2, 7–9, 21 et éléments de 19 |
+| J2 — Collaboration opérationnelle | 8–10 | Soumissions privées, révision offline et décisions cohérentes | Phases 11–13 et 21–23 |
+| Banques et IA | 11–12 | Banques privées et MCP utilisables au lancement | Bibliothèque Cloud ajoutée ; ancienne phase 20 replacée avant release |
+| J3 — Produit complet de production | 13 | Contrôle qualité, export autonome et contrat lecteur | Phases 14–18, préparation de signature 17 |
+| Première version distribuée | 14–16 | Installateurs/Web, performances, exploitation et pilotes validés | Stabilisation 25 enrichie, qualification desktop 19 |
+| Extension Jacques | F1 | Publication réelle après création de Jacques | Ancienne phase 24 et signature de publication |
+
+Le lot documentaire de reprise est **0.1 — Harmoniser les sources** ; sa décision et ses preuves sont consignées dans la PR liée au dossier 0.1. **Après Go de 0.1, prochaine action : 0.2 — Reproduire la base**, pas l’ancienne 2.1 ni la nouvelle étape 1. Aucun numéro de cette feuille de route ne vaut validation automatique d’une livraison.
