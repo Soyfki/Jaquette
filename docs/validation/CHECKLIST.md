@@ -10,9 +10,9 @@ Copier ce document pour chaque livraison. Remplacer tous les champs entre chevro
 - Branche : `<nom de branche>`
 - Commit testé : `<SHA complet>`
 - Pull request : `<URL ou numéro>`
-- Développeur : `<nom ou identifiant>`
-- Validateur utilisateur : `<nom ou identifiant>`
-- Responsable de validation : `<nom ou identifiant>`
+- Développeur : `<agent, nom ou identifiant>`
+- Validateur utilisateur : `<humain pour les observations obligatoires, ou aucun essai humain requis selon le périmètre>`
+- Responsable de validation : `<agent développeur cumulant ce rôle selon le mandat de septembre>`
 - Date et heure de début : `<date, heure et fuseau>`
 
 ## 2. Environnement testé
@@ -66,6 +66,7 @@ Une dette proposée ne vaut pas acceptation. Le responsable de validation doit v
 - Vérifications manuelles encore attendues : `<aucune ou liste>`
 - Date et heure de fin : `<date, heure et fuseau>`
 - Conclusion proposée : `<VALIDÉE/À CORRIGER/BLOQUÉE/VALIDÉE AVEC DETTE>`
+- Décision : `<GO/NO-GO, appliqué par le responsable, pas choisi par l’utilisateur>`
 - Justification : `<application concise de la matrice de décision>`
 - Signature du responsable de validation : `<nom, date>`
 

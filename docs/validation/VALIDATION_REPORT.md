@@ -15,9 +15,9 @@
 ## Environnement et participants
 
 - Environnement testé : `<système, navigateur/application, matériel et données de test>`
-- Développeur : `<nom ou identifiant>`
-- Validateur utilisateur : `<nom ou identifiant>`
-- Responsable de validation : `<nom ou identifiant>`
+- Développeur : `<agent, nom ou identifiant>`
+- Validateur utilisateur : `<humain pour les observations obligatoires, ou aucun essai humain requis selon le périmètre>`
+- Responsable de validation : `<agent développeur cumulant ce rôle selon le mandat de septembre>`
 - Période de validation : `<dates, heures et fuseau>`
 
 ## Contrôles effectués
@@ -61,5 +61,6 @@
 - SHA complet identifié : `<oui/non>`
 - Conclusion : `<VALIDÉE/À CORRIGER/BLOQUÉE/VALIDÉE AVEC DETTE>`
 - Justification selon le protocole : `<règle appliquée>`
+- Décision : `<GO/NO-GO appliqué par le responsable selon les preuves ; revue GitHub distincte>`
 - Confirmation Git : `<la pull request reste ouverte/fermée, en brouillon/prête et non fusionnée/fusionnée>`
 - Signature du responsable de validation : `<nom, date>`

@@ -1,6 +1,8 @@
 # Jaquette — Cahier des charges complet
 
-Version de cadrage : V1 Web → Electron → IA/MCP → Collaboration offline
+Version de cadrage : **11 septembre 2026 — lancement Web complet et Electron, collaboration et MCP inclus ; publication Jacques en extension F1**.
+
+Le [plan du 11 septembre 2026](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) remplace l’ancien calendrier sur ses seuls sujets. Les règles métier ci-dessous restent normatives ; les propositions techniques ne deviennent des décisions qu’après les preuves prévues.
 
 ## 1. Objet du document
 
@@ -25,9 +27,10 @@ Workflow principal :
 5. Validation par l’ensemble des réviseurs affectés.
 6. Soumission au Chef d’équipe.
 7. Validation finale.
-8. Préparation de publication.
-9. Export `.jacko` signé.
-10. Publication vers Jacques.
+8. Export `.jacko` optimisé pour contrôle.
+9. Réouverture en lecture seule et vérification du résultat.
+
+L’extension **F1**, après disponibilité du lecteur et de la boutique Jacques, ajoute préparation de publication, signature de publication et publication explicite. Elle ne conditionne pas le lancement de Jaquette.
 
 ## 3. Principes structurants
 
@@ -36,17 +39,19 @@ Workflow principal :
 - Le texte source ne peut pas être édité dans Jaquette.
 - Jaquette est local-first pour les manuscrits et les sources audio.
 - `.jacq` est le fichier de travail de production.
-- `.jacko` est le fichier final de distribution, optimisé, signé et destiné à Jacques.
+- `.jacko` est le format de distribution optimisé destiné à Jacques, exportable pour contrôle dès le lancement ; sa publication signée relève de F1.
 - Les sources audio restent non destructives.
 - L’IA travaille dans un brouillon séparé avant validation humaine.
 - La collaboration de contenu est locale et asynchrone, par échange de chapitres candidats.
 - Les droits dépendent du contexte de travail : workspace, équipe, projet.
 
-## 4. Périmètre V1
+## 4. Périmètre de la première livraison
 
-La V1 Web doit fonctionner sous Chrome et permettre :
+Jaquette est gratuit et accessible sur invitation. Le lancement comprend le Web complet sur ordinateur sous Chrome, Firefox et Safari (Safari qualifié sur macOS), ainsi qu’Electron Windows/macOS, Mac Intel et Apple Silicon. Les postes cibles sont un PC Windows 10 de génération 2018, un MacBook Intel précédant le M1 et un MacBook M1 ; configurations exactes et budgets seront fixés en nouvelle 0.4.
 
-- authentification prototype ;
+La première livraison doit permettre :
+
+- invitation et activation initiale en ligne, avec authentification réelle et récupération de l’environnement avant travail hors ligne ;
 - création et navigation entre espaces de travail locaux ;
 - écran d’accueil de type Figma avec équipes, projets, drafts et tâches ;
 - import d’un EPUB reflowable sans DRM ;
@@ -54,7 +59,7 @@ La V1 Web doit fonctionner sous Chrome et permettre :
 - tokenisation stable du texte ;
 - sélection mot, plage, phrase et paragraphe ;
 - association des trois types d’événements audio ;
-- bibliothèque audio locale avancée ;
+- bibliothèque audio locale avancée et banques privées de maison/équipe ;
 - préécoute ;
 - édition audio non destructive légère ;
 - simulation de lecture ;
@@ -67,17 +72,35 @@ La V1 Web doit fonctionner sous Chrome et permettre :
 - export/import `.jacq` et échange de chapitres `.chpt` ;
 - export `.jacko` ;
 - réouverture d’un `.jacko` en lecture seule pour contrôle ;
-- métadonnées de publication Jacques.
+- collaboration avec échanges connectés sur infrastructure privée, révision et validation finale ;
+- brouillon IA via MCP et agents externes utilisant les seuls sons autorisés, sans génération sonore ;
+- autonomie de cinq jours hors ligne après préparation initiale.
 
-Hors V1 :
+Hors première livraison :
 
 - PDF ;
 - EPUB fixed-layout ;
 - Linux ;
 - service de synchronisation directe du contenu ;
-- comptes invités cloud réels ;
+- publication effective, boutique, métadonnées de préparation de publication et dépublication Jacques (extension F1) ;
 - génération audio externe par IA ;
 - mode clair.
+
+### Accès, expiration et reconnexion
+
+À expiration des cinq jours, les nouvelles modifications sont bloquées, y compris l’application de propositions IA ; consultation, sauvegarde et archivage du travail existant restent possibles. Une simple présence de réseau ne renouvelle pas les droits.
+
+À reconnexion, les droits sont recontrôlés avant tout envoi de soumission, commentaire ou décision préparés. En cas de révocation, aucun envoi n’est autorisé : le travail du contexte est conservé et son archivage sur disque est accompagné jusqu’à vérification. Dans le navigateur, préparer la copie ne vaut pas enregistrement indépendant réussi. Annulation, refus, fermeture ou disque plein ne détruisent jamais l’original ; l’archivage reste à terminer.
+
+Le travail est local. Soumissions, transmission de commentaires/décisions et actualisation des tableaux de bord exigent une connexion. Réviseurs et Chefs peuvent télécharger en ligne puis lire, simuler et préparer leurs commentaires/décisions hors ligne ; une décision locale n’est officielle qu’après acceptation par le service autorisé, avec contrôle des droits. Aucun montage en direct n’est prévu.
+
+### Hébergement, IA et moyens
+
+Les EPUB, manuscrits, projets, chapitres, sons et commentaires de contenu restent sur stockage local ou infrastructure privée choisie par la maison ou l’auteur indépendant. Les services Jaquette se limitent à l’identité, aux invitations et aux données administratives explicitement autorisées ; aucun manuscrit ni banque audio n’est hébergé sur Jaquette Cloud.
+
+Le MCP fait partie du lancement. Un fonctionnement hors ligne exige un agent **et** un modèle locaux ; un client installé localement utilisant un modèle distant reste dépendant du réseau. Tout transfert à un fournisseur distant exige connexion et consentement explicite. Desktop peut fournir la connexion MCP locale au navigateur, avec appairage et périmètre autorisés à qualifier.
+
+Le développement est prévu par GPT.6, avec budget limité et sans échéance imposée : lots courts, réutilisation du socle et décisions techniques fondées sur preuves. La gratuité de Jaquette ne couvre pas les coûts éventuels du stockage privé, des agents tiers ou des appels IA ; aucun paiement ni abonnement Jaquette n’est ajouté.
 
 ## 5. Formats de fichiers
 
@@ -144,7 +167,7 @@ Il contient :
 - manifeste de déclenchements ;
 - métadonnées de publication ;
 - checksums ;
-- signature numérique ;
+- extension de signature numérique, obligatoire pour une publication F1 ; un export de contrôle peut rester non signé ;
 - version du format.
 
 Structure conceptuelle :
@@ -172,7 +195,7 @@ Le manifeste contient au minimum :
 
 - `formatVersion` ;
 - `bookId` ;
-- `releaseId` ;
+- `releaseId` pour une publication F1 ;
 - titre ;
 - langues ;
 - chapitres ;
@@ -184,13 +207,15 @@ Le manifeste contient au minimum :
 - règles musicales ;
 - spatialisation ;
 - preset d’export ;
-- signature et informations d’intégrité.
+- informations d’intégrité et extension de signature.
 
-Le format doit être versionné dès la première version.
+Le format doit être versionné dès la première version. Cette structure est conceptuelle, pas un choix de conteneur. Les données de publication et `releaseId` décrivent l’extension F1 ; un export de contrôle ne fabrique pas une publication réelle.
+
+Trois niveaux restent distincts : checksums d’intégrité pour détecter une corruption, signature avec clés de test pour éprouver le contrôle d’authenticité en étape 13, et signature de publication réelle en F1 après définition de l’autorité de confiance et de la garde des clés. Un export de contrôle non signé n’est jamais présenté comme authentifié ; une clé de test ne vaut jamais signature de publication. Aucun secret global de signature n’est exposé dans le navigateur. Le contrôle d’un `.jacko` reste en lecture seule et n’en fait jamais une source de production.
 
 ## 6. Import EPUB
 
-La V1 accepte :
+La première livraison accepte :
 
 - EPUB reflowable ;
 - EPUB sans DRM ;
@@ -349,7 +374,7 @@ Le ducking est configurable par occurrence, avec atténuation réglable en dB.
 
 ### Spatialisation
 
-La V1 doit pouvoir stocker et prévisualiser une position 3D autour du lecteur, par exemple :
+La première livraison doit pouvoir stocker et prévisualiser une position 3D autour du lecteur, par exemple :
 
 - azimuth ;
 - elevation ;
@@ -359,7 +384,7 @@ Le rendu final peut être adapté par Jacques pour casque et haut-parleurs.
 
 ## 12. Bibliothèque audio
 
-Jaquette peut indexer plusieurs dossiers locaux.
+Jaquette peut indexer plusieurs dossiers locaux et utiliser des banques privées de maison/équipe sur l’infrastructure choisie. La connexion est requise pour acquérir les sons distants ; le projet conserve les médias utilisés après retrait du son ou perte d’accès à la banque.
 
 La bibliothèque doit proposer :
 
@@ -379,7 +404,7 @@ La bibliothèque doit proposer :
 - préécoute ;
 - drag-and-drop.
 
-Pas de waveform en V1.
+La waveform n’est pas requise pour la première livraison.
 
 Les fichiers de bibliothèque ne sont pas dupliqués lors de l’indexation. En revanche, dès qu’un son est utilisé dans un projet, une copie est intégrée au `.jacq` afin de rendre le projet autonome.
 
@@ -521,13 +546,15 @@ Le contexte de travail contient :
 - drafts ;
 - permissions ;
 - activité ;
-- publication.
+- publication en extension F1.
 
 L’utilisateur peut changer d’espace rapidement via un switch de contexte façon Slack/Figma.
 
 ## 20. Rôles et permissions
 
 Les permissions appartiennent à une relation utilisateur ↔ workspace ↔ équipe ↔ projet.
+
+Les capacités de publication, préparation de publication et retrait de boutique décrites pour les rôles sont conservées comme règles de l’extension F1. Elles ne sont pas des opérations réelles du lancement ; les autres droits et interdictions s’appliquent dès celui-ci.
 
 ### Super Admin Jaquette
 
@@ -612,6 +639,8 @@ Un Chef d’équipe peut gérer plusieurs équipes et disposer d’un tableau de
 
 ## 22. Accueil façon Figma
 
+L’accueil est un tableau de bord général distinct de l’écran d’un projet. Dans le workspace courant, il affiche simultanément toutes les équipes et tous les projets du jeu de données disponible, sans exiger l’ouverture préalable d’un projet. Chaque équipe expose son nom, son nombre de membres et ses projets associés ou leur nombre ; chaque projet expose son nom, son équipe, son statut et un repère de progression ou d’activité.
+
 Navigation gauche :
 
 - switch de workspace ;
@@ -646,7 +675,7 @@ Livre plus large, bibliothèque et outils de montage masqués, simulation/commen
 
 ### Chef d’équipe
 
-Dashboard, lecture/simulation, commentaires, historique, validation finale, publication.
+Dashboard, lecture/simulation, commentaires, historique, validation finale ; publication en extension F1.
 
 ### Admin Maison
 
@@ -688,10 +717,12 @@ Les cas obligatoires sont :
 
 - doubler un chapitre ;
 - réviser un chapitre ;
-- publier un livre dans Jacques ;
+- publier un livre dans Jacques, en extension F1 ;
 - corriger un chapitre invalidé.
 
 Chaque invalidation crée une nouvelle occurrence de tâche de correction. Une tâche antérieure n’est ni réutilisée ni supprimée, afin de conserver l’historique de chaque cycle.
+
+En F1, le passage à l’état publiable génère automatiquement la tâche de publication, sans priorité. Elle suit les mêmes trois statuts et se termine après confirmation de la publication ; un réessai ne crée ni seconde tâche ni seconde release.
 
 Les tâches pertinentes restent dans le `.jacq` et voyagent dans le `.chpt` lorsqu’elles ciblent le chapitre exporté.
 
@@ -753,6 +784,8 @@ Exemple : 10 chapitres × 3 réviseurs = 30 validations nécessaires. Si 21 sont
 
 ### Validation finale
 
+Les états Prêt à publier et Publié sont conservés pour F1 ; le lancement qualifie la validation finale puis l’export et le contrôle.
+
 États :
 
 - Non soumis ;
@@ -763,6 +796,8 @@ Exemple : 10 chapitres × 3 réviseurs = 30 validations nécessaires. Si 21 sont
 - Publié.
 
 ## 28. Workflow éditorial
+
+Le cycle complet ci-dessous conserve sa destination F1. Au lancement, la validation finale conduit à l’export et au contrôle ; `Prêt à publier`, `Publié` et la publication effective appartiennent à F1.
 
 ```text
 Draft
@@ -806,11 +841,15 @@ Toutes les candidates et décisions précédentes restent consultables dans l’
 
 ## 30. Publication vers Jacques
 
+**Extension F1 uniquement**, après disponibilité de Jacques et d’un contrat testable. Les sections 30 à 33 ne sont pas des prérequis du lancement.
+
 Validation finale et publication sont deux actions distinctes.
 
 Après validation : `VALIDÉ → PRÊT À PUBLIER`.
 
 Puis l’utilisateur autorisé lance explicitement : `Publier dans Jacques`.
+
+Avant l’état `Validé`, aucune préparation de publication ne doit être présentée. Pour `Non soumis`, `En attente Chef` ou `À corriger`, le panneau, les boutons, les contrôles et les métadonnées de destination sont absents du DOM ; les laisser montés mais désactivés n’est pas conforme. Après validation, ces capacités restent réservées à F1 ; aucun succès fictif ne vaut publication réelle.
 
 ## 31. Métadonnées boutique
 
@@ -857,7 +896,7 @@ Toute dépublication doit être confirmée explicitement et journalisée.
 
 ## 34. Signature `.jacko`
 
-Tout `.jacko` publié doit être signé numériquement.
+Tout `.jacko` publié doit être signé numériquement en F1. Au lancement, l’export de contrôle et les essais avec clés de test restent distincts de cette authentification de publication (section 5.3).
 
 Processus :
 
@@ -880,38 +919,38 @@ Le modèle doit prévoir :
 
 Partage et transfert restent deux actions distinctes.
 
-## 36. Authentification prototype V1
+## 36. Invitation, activation et droits hors ligne
 
-La V1 fournit une porte d’entrée avec deux comptes administrateur de test définis hors dépôt.
+Le lancement exige de vrais accès sur invitation, une première authentification en ligne et la préparation de l’environnement. Les règles des cinq jours, d’expiration, de reconnexion et d’archivage sont définies en section 4 ; aucune simulation de rôle ne constitue une authentification ou une permission réelle.
 
-Les identifiants de prototype ne doivent jamais être placés en clair dans le frontend ou versionnés dans Git.
-
-Ils doivent être injectés via configuration locale, variables d’environnement ou mécanisme équivalent.
+L’ancien scénario de deux comptes administrateur de prototype n’est plus une exigence active. Aucun identifiant, secret ou jeton ne doit être placé en clair dans le frontend ou dans Git. Les mécanismes techniques d’identité restent à choisir et éprouver dans les nouvelles étapes 1 et 4.
 
 ## 37. Architecture hybride et collaboration offline
 
 L’architecture reste local-first.
 
-### Control plane Jaquette Cloud
+### Services administratifs Jaquette
 
 - identités ;
 - authentification ;
 - organisations ;
 - permissions ;
 - invitations ;
-- métadonnées non sensibles ;
+- données administratives explicitement autorisées, sans contenu sensible ;
 - audit administratif.
 
-### Data plane Maison/Auteur
+### Stockage local ou infrastructure privée Maison/Auteur
 
 - EPUB ;
 - `.jacq` ;
 - `.chpt` ;
 - sources audio ;
 - manuscrits ;
+- banques audio et commentaires de contenu ;
+- audit sensible et états détaillés des contributions ;
 - ressources sensibles.
 
-Le cloud Jaquette ne stocke pas ces contenus sans décision explicite et ne synchronise pas en direct le montage. La collaboration sur le contenu repose sur l’échange contrôlé de fichiers `.chpt`. Les choix de transport, d’hébergement et de conteneur restent ouverts.
+Jaquette Cloud n’héberge pas ces contenus. La maison ou l’auteur choisit son stockage privé. La collaboration repose sur l’échange connecté et contrôlé de fichiers `.chpt`, commentaires et décisions, sans synchronisation du montage en direct. Les données administratives autorisées seront énumérées et les autorités des états définies en 9.1 ; aucun backend ni connecteur n’est choisi ici.
 
 ## 38. Collaboration offline, import et fusion
 
@@ -924,6 +963,8 @@ Flux normal :
 3. le fichier est importé pour révision sans écraser la version validée ;
 4. les Réviseurs contrôlent la candidate ;
 5. une fois toutes les validations requises obtenues, la candidate devient la version validée du chapitre dans le `.jacq`.
+
+Les opérations préparées hors ligne restent locales jusqu’à transmission connectée et acceptation autorisée. Avant tout envoi à reconnexion, les droits sont revérifiés ; une révocation bloque les envois en attente et conserve le travail pour archivage. Le tableau de bord distingue sa dernière actualisation des modifications locales non transmises.
 
 Des contributions portant sur des chapitres différents s’intègrent sans conflit lorsque leur identité et leur filiation sont compatibles. Leur intégration ne réécrit ni n’écrase les autres chapitres. Les médias identiques restent dédupliqués par empreinte.
 
@@ -962,7 +1003,7 @@ Journaliser notamment :
 
 ## 40. MCP / IA
 
-Le serveur MCP Jaquette est local en première version Electron.
+Le MCP est requis dès le lancement sur les parcours Web et Electron. Les agents externes proposent un doublage avec les seuls médias des bibliothèques autorisées ; aucune génération sonore n’est incluse. Un agent et un modèle locaux peuvent fonctionner hors ligne ; tout fournisseur distant exige consentement et connexion. Desktop peut fournir une connexion locale au navigateur, à qualifier selon le plan.
 
 L’agent ne doit jamais recevoir un accès arbitraire au filesystem.
 
@@ -978,22 +1019,24 @@ jaquette://taxonomy
 jaquette://project
 ```
 
-### Outils possibles
+### Exemples de capacités, sans contrat figé
+
+Ces noms illustrent lecture/recherche et propositions dans un brouillon séparé. Aucun outil ne modifie directement le master ; paramètres, schémas, transports et noms définitifs restent à définir en 12.1.
 
 ```text
 search_sounds
 get_sound_metadata
 preview_sound
-create_punctual
-create_ambience
-create_music
-set_volume
-set_loop
-set_fade
-set_ducking
-set_spatial_position
-update_annotation
-delete_annotation
+propose_sfx
+propose_ambience
+propose_music
+propose_volume
+propose_loop
+propose_fade
+propose_ducking
+propose_spatial_position
+propose_annotation_update
+propose_annotation_deletion
 ```
 
 ## 41. Brouillon IA
@@ -1035,7 +1078,7 @@ Chaque maison d’édition peut interdire certains fournisseurs.
 
 ## 43. Architecture logicielle recommandée
 
-Monorepo TypeScript partagé entre Web et Electron :
+Le socle React/TypeScript/Vite et la DA existants sont réutilisés. L’arborescence suivante est une proposition historique de monorepo, non adoptée : ne pas restructurer automatiquement le dépôt. Comparer les options dans la nouvelle 1.1 et créer des packages seulement si nécessaires.
 
 ```text
 Jaquette/
@@ -1068,7 +1111,7 @@ Recommandations :
 
 ## 44. Stockage abstrait
 
-Créer une abstraction `ProjectStorage` dès le départ. Elle devra permettre la sauvegarde atomique ou équivalente d’un chapitre sans réécrire les autres `.chpt` ; la forme exacte de cette capacité reste à décider.
+Une abstraction de stockage est à définir dans la nouvelle 1.1 ; `ProjectStorage` et les méthodes ci-dessous ne sont qu’une proposition. Elle devra permettre la sauvegarde atomique ou équivalente d’un chapitre sans réécrire les autres `.chpt` ; la forme exacte reste à décider.
 
 ```text
 open()
@@ -1079,11 +1122,13 @@ deleteAsset()
 exportProject()
 ```
 
-Implémentation Web : File System Access API / OPFS.
+Options Web à comparer : accès fichier et OPFS, sans dépendance obligatoire à une API propre à Chrome. Option Electron : système de fichiers natif. Aucun choix de stockage, de ZIP ou de conteneur `.jacq`/`.chpt` n’est adopté ici.
 
-Implémentation Electron : filesystem natif.
+Le parcours de sauvegarde de la section 4 du plan et la distinction éventuelle espace de travail/copie portable restent des propositions. Leur décision exige les preuves de la **nouvelle 1.2** : écritures physiques par chapitre, croissance, interruption, récupération et portabilité sur toutes les cibles. Une archive régénérée à l’export ou des empreintes identiques ne prouvent pas une autosauvegarde physique partielle.
 
 ## 45. Audio Web et Electron
+
+Pistes techniques à éprouver, sans nouvelle dépendance adoptée en 0.1 :
 
 Web :
 
@@ -1154,143 +1199,42 @@ Composants :
 - champs fortement arrondis ;
 - interface épurée ;
 - contraste accessible ;
-- mode sombre en V1 ;
+- mode sombre au lancement ;
 - mode clair plus tard.
 
-## 48. Plan de développement incrémental
+## 48. Plan de développement actif et conservation de l’historique
 
-### Étape 0 — Fondation technique
-Monorepo, TypeScript, React, design tokens, tests, CI.
-**Acceptation :** Jaquette démarre avec shell fonctionnel.
+Le [plan du 11 septembre 2026](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) est l’unique calendrier actif : étape 0 de reprise, étapes 1 à 16 jusqu’au lancement, puis extension F1. Ses prérequis et critères d’acceptation font autorité ; aucun numéro ne vaut validation.
 
-### Étape 1 — Design system et layout
-Palette, Manrope, page de livre claire, composants capsules, layout desktop.
-**Acceptation :** écran vide conforme à la DA.
+L’ancienne phase 0, les anciennes sous-étapes 1.1 à 1.3 et le lot 1.4.1 sont acquis. Sur main à la base de 0.1, le prototype propose Sound Designer et Réviseur. Les quatre rôles et les correctifs de l’ancien 1.4.2 sont présents uniquement dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9), branche codex/phase-1-4-2-team-lead-admin-variants, SHA 5cabbb016d3ce5480b165512c1aa7814b8367802, tant qu’ils ne sont pas fusionnés. Le lot 1.4.2 reste non acquis avant sa revalidation humaine.
 
-### Étape 2 — Domaine Identity / Workspace / Team / Project
-Modèles métier sans backend cloud.
-**Acceptation :** créer plusieurs espaces, équipes, rôles et projets en local.
+L’ancien 1.4.3 n’est plus une prochaine livraison autonome. Aucun périmètre précis n’a été retrouvé dans l’ancien plan : ses reliquats réellement identifiables seront inventoriés en 0.3/0.5, puis rattachés aux futures sous-étapes correspondantes. Aucun besoin ne lui est attribué rétroactivement ; l’ancienne sous-étape 1.4 et la phase 1 ne sont pas clôturées.
 
-### Étape 3 — Auth prototype et switch de contexte
-Connexion locale, sessions, switch workspace, logout.
-**Acceptation :** les comptes de test configurés localement accèdent aux bons espaces sans exposer de secret dans le bundle.
+La nouvelle étape 0 est distincte de l’ancienne phase 0 acquise. Après Go de 0.1, la prochaine action est **0.2 — Reproduire la base**, sans démarrer l’ancienne 2.1 ni la nouvelle étape 1. La version reste **0.0.0**.
 
-### Étape 4 — Accueil / Drafts / équipes / projets
-Dashboard Figma-like, cartes de projet, Mes tâches, équipes, Drafts.
-**Acceptation :** créer un draft, l’affecter à une équipe et voir son statut évoluer.
+Les listes d’étapes historiques sont conservées dans le [cahier antérieur](https://github.com/Soyfki/Jaquette/blob/8a9e9a7ed692f26e3969641a4584669bfa1d93a9/CAHIER_DES_CHARGES_JAQUETTE.md) et le [plan antérieur](https://github.com/Soyfki/Jaquette/blob/8a9e9a7ed692f26e3969641a4584669bfa1d93a9/PLAN_DE_DEVELOPPEMENT_JAQUETTE.md). Elles n’imposent plus leur ordre de livraison.
 
-### Étape 5 — Import EPUB
-Extraction, package, spine, chapitres, styles, images.
-**Acceptation :** importer le livre de référence et naviguer dans tous les chapitres.
+## 49. Jalons actifs et correspondance historique
 
-### Étape 6 — Tokenisation stable
-Tokens, phrases, paragraphes, RTL, IDs stables.
-**Acceptation critique :** deux imports identiques génèrent les mêmes IDs de tokens.
+| Jalon actif | Périmètre et preuve attendue | Correspondance historique, sans équivalence d’acquis |
+|---|---|---|
+| J0 — Choix éprouvés | Étapes 0–1 : reprise et expériences des risques | Fin du prototype, stockage et premiers essais Electron avancés |
+| J1 — Production locale minimale | Étapes 2–3 : ancres, vrai son, réouverture et sauvegarde partielle | Ancien V0.1 textuel et partie stockage de V0.3 |
+| Atelier complet | Étapes 4–7 : invitation, cinq jours offline, bibliothèque, moteur et réglages | Ancien V0.2 audio et fonctions locales |
+| J2 — Collaboration opérationnelle | Étapes 8–10 : tâches, échanges privés, unanimité et validation finale | Ancien V2 Collaboration avancé avant lancement |
+| Banques et IA | Étapes 11–12 : banques privées et MCP | Ancien V1.5 IA avancé avant lancement |
+| J3 — Produit complet de production | Étape 13 : qualité, export et contrôle ; MCP requis | Ancien V0.3 Production Web, signature réelle séparée en F1 |
+| Première version distribuée | Étapes 14–16 : Web complet et Electron qualifiés, pilotes | Ancien V1 Desktop rejoint le lancement Web |
+| Extension Jacques | F1 : contrat réel, métadonnées boutique, signature de publication, publication et retrait | Anciennes fonctions de publication Jacques différées |
 
-### Étape 7 — Sélection du texte
-Clic, drag, Shift+clic, double/triple clic.
-**Acceptation :** tester français, anglais et arabe.
-
-### Étape 8 — Modèle d’annotations
-SFX, Ambiance, Musique et rails colorés.
-**Acceptation :** superposer trois types sur une même phrase sans ambiguïté visuelle.
-
-### Étape 9 — Bibliothèque locale
-Dossiers, indexation, recherche, tags, catégories, collections, favoris, préécoute.
-**Acceptation :** indexer la bibliothèque de test et préécouter des médias.
-
-### Étape 10 — Association audio
-Drag-and-drop, inspecteur, copie/duplication.
-**Acceptation :** associer un son à un mot et le retrouver après navigation.
-
-### Étape 11 — Édition audio non destructive
-Trim, loop, volume, fades, normalisation, ducking, spatialisation.
-**Acceptation :** modifier tous les paramètres sans modifier la source originale.
-
-### Étape 12 — Moteur de simulation
-Web Audio, 3 SFX max, ambiances superposables, musique exclusive + crossfade, ducking, spatialisation.
-**Acceptation :** scénario automatique couvrant tous ces cas.
-
-### Étape 13 — Lecture simulée
-Souris-regard, mots/minute, x1/x2/x4, lire sélection, lire depuis ici.
-**Acceptation :** événements déclenchés aux bonnes plages.
-
-### Étape 14 — Sauvegarde `.jacq` et sections `.chpt`
-Autosave, undo 50, sources embarquées, versions, import/export `.jacq`, sauvegarde et échange par chapitre.
-**Acceptation :** supprimer la bibliothèque d’origine puis rouvrir le `.jacq` sans perte ; modifier un chapitre et constater que seul son `.chpt` est réécrit ; exporter puis réimporter une candidate sans écraser la version validée.
-
-### Étape 15 — Tâches / commentaires / workflow
-Tâches automatiques sans priorité, trois statuts officiels, commentaires à quatre cibles, fils, résolution et historique.
-**Acceptation :** une invalidation avec commentaire obligatoire crée une nouvelle tâche de correction et conserve le cycle précédent.
-
-### Étape 16 — Révision multi-réviseurs et candidates
-Validations individuelles et agrégées, candidates `.chpt`, proposition d’une candidate active en cas de concurrence, unanimité et historique.
-**Acceptation :** trois Réviseurs doivent approuver la même candidate avant son intégration ; le refus de l’un d’eux bloque le chapitre ; deux propositions concurrentes restent distinctes sans remplacement silencieux ; proposer une candidate ne vaut ni sélection définitive ni validation, et ni majorité ni arbitrage du Chef ne tranche ce choix éditorial.
-
-### Étape 17 — Validation Chef d’équipe
-Dashboard, soumission, rejet vers Réviseur ou Sound Designer, validation finale.
-**Acceptation :** le Chef ne peut jamais modifier l’audio mais peut faire progresser/reculer le workflow.
-
-### Étape 18 — QA et pré-export
-Diagnostics, erreurs bloquantes, warnings, clipping estimé.
-**Acceptation :** un projet invalide ne peut pas être exporté.
-
-### Étape 19 — Export `.jacko`
-Compression, Opus, presets, déduplication, manifeste, checksums, version format.
-**Acceptation :** exporter, fermer Jaquette, rouvrir le `.jacko` en lecture seule et simuler correctement le doublage.
-
-### Étape 20 — Métadonnées Jacques et signature
-Formulaire boutique, signature numérique, état Prêt à publier.
-**Acceptation :** `.jacko` signé, signature vérifiable, métadonnées complètes.
-
-### Étape 21 — Publication Jacques
-Intégration API entre Jaquette et Jacques lorsque l’API de Jacques est disponible.
-**Acceptation :** publication distincte de la validation et création d’un `releaseId` versionné.
-
-### Étape 22 — Migration Electron
-Shell Electron, storage natif, FFmpeg natif, sécurité IPC, builds Windows/macOS.
-**Acceptation :** même `.jacq`, même comportement métier entre Web et Electron.
-
-### Étape 23 — MCP / IA
-Serveur MCP local, ressources, outils, consentement, brouillon IA, diff, accept/reject.
-**Acceptation :** un agent peut analyser un chapitre et proposer un doublage sans modifier le master ni lire hors projet.
-
-### Étape 24 — Collaboration offline et fusion de `.chpt`
-Comptes réels, organisations et invitations selon les besoins de contexte ; export/import de chapitres ; vérification d’identité et de filiation ; fusion des chapitres différents ; proposition et approbation unanime des candidates concurrentes ; arbitrage des informations communes.
-**Acceptation :** deux chapitres compatibles s’intègrent sans réécriture mutuelle ; deux versions d’un même chapitre restent distinctes jusqu’à la proposition explicite d’une candidate active puis à son approbation unanime ; un désaccord ne permet aucune intégration ; un assigné n’est rapproché automatiquement que par identifiant global strict et droits valides, sinon une réaffectation explicite est requise sans réécrire l’auteur historique ; toute donnée partagée par plusieurs chapitres reste commune au `.jacq` et un conflit commun exige l’arbitrage du rôle autorisé.
-
-## 49. Jalons produit
-
-### V0.1 — Preuve du modèle textuel
-Étapes 0 à 8.
-Objectif : prouver qu’un EPUB peut devenir une timeline textuelle stable et annotable.
-
-### V0.2 — Preuve du moteur audio
-Étapes 9 à 13.
-Objectif : produire et simuler un doublage complet.
-
-### V0.3 — Production Web
-Étapes 14 à 20.
-Objectif : produire un `.jacko` fiable, révisé et signé.
-
-### V1 Desktop
-Étape 22.
-Objectif : application Electron Windows/macOS.
-
-### V1.5 IA
-Étape 23.
-Objectif : premier doublage assisté par agent.
-
-### V2 Collaboration offline
-Étape 24.
-Objectif : échange asynchrone de chapitres entre contributeurs et maisons d’édition, avec conflits explicites.
+Les configurations, volumes et performances de la section 5 du plan sont des **cibles proposées**, à adopter ou ajuster en 0.4 et à mesurer ensuite. Ce ne sont ni des résultats acquis ni des promesses de performance déjà qualifiées. Les choix de la section 4 restent à prouver en 1.2. Les versions nommées « V1 — Premier doublage », « V2 — Retours éditoriaux » et « V3 — Mix final » de la section 17 gardent leur sens : ce sont des états d’un projet, pas des jalons.
 
 ## 50. Risques techniques prioritaires
 
 1. Stabilité de la tokenisation EPUB.
 2. Conservation du rendu des EPUB complexes.
 3. Synchronisation fiable texte ↔ audio.
-4. Performances d’encodage dans Chrome.
+4. Performances d’encodage dans Chrome, Firefox, Safari et Electron.
 5. Poids des `.jacko` réels.
 6. Sécurité de l’import HTML/CSS EPUB.
 7. Cohérence des validations entre candidates et cycles offline.
@@ -1298,27 +1242,14 @@ Objectif : échange asynchrone de chapitres entre contributeurs et maisons d’�
 9. Signature et compatibilité de version du format `.jacko`.
 10. Sécurité du serveur MCP et cloisonnement des ressources.
 
-## 51. Critère global de validation V1
+## 51. Critère global de la première livraison
 
-La V1 est considérée comme validée si l’on peut réaliser de bout en bout, sans outil externe :
+Sur les plateformes qualifiées, un utilisateur invité doit pouvoir activer son accès en ligne, préparer son environnement, importer les EPUB FR/EN/arabe, sonoriser avec SFX/Ambiance/Musique, régler et simuler, sauvegarder puis retrouver exactement ses ancres et ses sons après réouverture. Une modification de chapitre ne réécrit aucun autre .chpt ; les médias embarqués restent lisibles sans accès à la bibliothèque source.
 
-1. Se connecter.
-2. Ouvrir un workspace.
-3. Créer/affecter un projet.
-4. Importer l’EPUB de référence.
-5. Indexer une bibliothèque audio réelle.
-6. Sonoriser un chapitre avec les trois types de pistes.
-7. Ajouter fades, ducking et spatialisation.
-8. Simuler la lecture.
-9. Sauvegarder et fermer Jaquette.
-10. Rouvrir le `.jacq` sans perte et confirmer qu’une modification de chapitre n’a réécrit aucun autre `.chpt`.
-11. Exporter un `.chpt` candidat, l’importer sans écraser la version validée et faire réviser le chapitre.
-12. Obtenir toutes les validations requises.
-13. Faire valider le livre par le Chef d’équipe.
-14. Renseigner les métadonnées Jacques.
-15. Exporter un `.jacko` optimisé et signé.
-16. Fermer Jaquette.
-17. Rouvrir le `.jacko` en mode contrôle.
-18. Vérifier que le doublage et les métadonnées sont corrects.
+Le parcours comprend cinq jours hors ligne, puis consultation/sauvegarde/archivage conservés après expiration ; à reconnexion, contrôle des droits avant tout envoi et archivage accompagné sans destruction en cas de révocation. Les échanges privés de candidates, les commentaires, les tâches automatiques, l’unanimité de révision et la validation finale sont éprouvés. Les décisions préparées offline ne deviennent officielles qu’après acceptation autorisée.
 
-Le premier jalon technique critique reste : importer l’EPUB de référence, produire des ancres textuelles stables, associer un son à une ancre et retrouver cette association après fermeture/réouverture.
+Un agent externe peut produire un brouillon MCP sur les sons autorisés, sans génération sonore ni modification directe du master ; l’acceptation humaine est contrôlée. Le fonctionnement sans réseau exige agent et modèle locaux ; un fournisseur distant exige consentement et connexion.
+
+L’utilisateur exporte un .jacko optimisé puis le rouvre en contrôle/lecture seule avec parité vérifiée. La signature avec clés de test démontre le mécanisme sans authentifier une publication réelle. Publication, boutique et dépublication Jacques ne conditionnent pas cette livraison : leurs capacités, tâche automatique, métadonnées et signature restent obligatoires en F1.
+
+Le premier jalon technique critique demeure l’association exacte entre ancre et son après fermeture/réouverture. La conservation de la DA, la confidentialité, les permissions contextuelles, les interdictions de montage Réviseur/Chef et la protection du master restent des invariants.
