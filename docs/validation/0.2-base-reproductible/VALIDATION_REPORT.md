@@ -6,7 +6,7 @@ Base reproductible de Jaquette : installation propre sans upgrade, runtime préc
 
 Branche : codex/etape-0-2-base-reproductible. Base main **d7ddeea09f3fc60146454b935192cb3d1c91ee54**. Le **SHA final réellement testé**, les commandes, résultats et liens CI sont consignés dans la PR de cette branche et ses artefacts, afin de ne pas créer un commit pour inscrire son propre SHA. Les essais de développement avec modifications non commitées sont séparés des preuves de qualification.
 
-Aucune dépendance ajoutée, aucun lockfile ou manifeste réécrit, version 0.0.0. Aucun changement de src/ ni reprise des variantes de PR 9. Les nouveaux tests concernent l'outillage de qualification ; le scénario E2E clavier reçoit les mêmes assertions console/page que les autres scénarios.
+Aucune dépendance ajoutée, aucun lockfile ou manifeste réécrit, version 0.0.0. Aucun code applicatif ni variante de PR 9 repris. Le seul changement sous src/ synchronise le test de recherche avec le focus initial existant et vérifie les valeurs saisies, sans retirer ses assertions. Les nouveaux tests concernent l'outillage de qualification ; le scénario E2E clavier reçoit les mêmes assertions console/page que les autres scénarios.
 
 ## Environnement et participants
 
@@ -24,7 +24,7 @@ Aucun essai humain requis pour 0.2, aucune observation simulée. Le lot 1.4.2 re
 
 ### Régressions
 
-La couverture réellement exécutée de main est comptée dans la PR ; les nombres historiques de PR 9 ne servent pas de critère. Les défauts annoncés pour 0.3 restent dans ce lot futur. Les E2E contrôlent le prototype Vite dev, pas un build distribué ni la matrice Firefox/Safari/Electron.
+La couverture réellement exécutée de main est comptée dans la PR ; les nombres historiques de PR 9 ne servent pas de critère. Les défauts annoncés pour 0.3 restent dans ce lot futur, notamment l'avertissement React de fin de simulation reproduit par un contrôle diagnostique détaillé dans le [rapport de bug](BUG_REPORT.md). Les E2E contrôlent le prototype Vite dev, pas un build distribué ni la matrice Firefox/Safari/Electron.
 
 ## Simulations de décision
 

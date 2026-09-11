@@ -266,12 +266,17 @@ describe('Jaquette application shell', () => {
     const user = userEvent.setup()
     setPath('/projet')
     render(<AppShell />)
+    // Route entry places focus on the next animation frame. Start typing only
+    // after that transition, otherwise it can interrupt user-event's keystrokes.
+    await waitFor(() => expect(screen.getByRole('heading', { level: 1, name: 'Le livre attend sa scène.' })).toHaveFocus())
     const search = screen.getByRole('searchbox', { name: 'Rechercher dans la bibliothèque fictive' })
     await user.type(search, 'pluie')
+    expect(search).toHaveValue('pluie')
     expect(screen.getByText('jardin-pluie.ogg')).toBeVisible()
     expect(screen.queryByText('pas-gravier.wav')).not.toBeInTheDocument()
     await user.clear(search)
     await user.type(search, 'introuvable')
+    expect(search).toHaveValue('introuvable')
     expect(screen.getByText('Aucun résultat dans les données fictives.')).toBeVisible()
   })
 
