@@ -13,6 +13,8 @@ let report;
 const result = document.querySelector('#result');
 document.querySelector('#measure').onclick = async () => {
   report = {tool:'0.4.1', machine:document.querySelector('#machine').value, at:new Date().toISOString(), userAgent:navigator.userAgent, platform:navigator.platform, language:navigator.language, screen:{width:screen.width,height:screen.height,pixelRatio:devicePixelRatio}, audioProbe:'NOT_RUN', visibility:document.visibilityState, limitations:['rAF estimates are not certified display Hz or product fps','No audio latency measured']};
+  try { report.browserDetails = navigator.userAgentData ? await navigator.userAgentData.getHighEntropyValues(['fullVersionList','architecture','bitness']) : null } catch(e) { report.browserDetails = null }
+  if(!report.browserDetails) report.limitations.push('Exact browser build must come from native collector; otherwise BLOCKED, userAgent may be reduced');
   const frames=[];let previous;const start=performance.now();
   await new Promise(resolve => {function frame(t){if(previous)frames.push(t-previous);previous=t;if(t-start<5000)requestAnimationFrame(frame);else resolve()}requestAnimationFrame(frame)});
   report.frameIntervalsMs=frames;report.visibilityAtEnd=document.visibilityState;

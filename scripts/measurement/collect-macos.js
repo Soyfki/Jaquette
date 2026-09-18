@@ -5,7 +5,7 @@ function run(argv) {
   app.includeStandardAdditions = true
   var missing = []
   function read(label, command) {
-    try { return app.doShellScript(command) } catch (e) { missing.push(label); return null }
+    try { var value = app.doShellScript(command); if (!value || !value.trim()) throw new Error('Empty'); return value } catch (e) { missing.push(label); return null }
   }
   function sys(key) { return read(key, '/usr/sbin/sysctl -n ' + key) }
   var displays = [], audio = []
@@ -26,6 +26,7 @@ function run(argv) {
     return { name: b[0], version: version, build: build }
   })
   var storage = read('capacity/free', '/bin/df -Pk . | /usr/bin/tail -1 | /usr/bin/awk \'{print $2 " " $3 " " $4}\'')
+  if (storage && !/^\d+ \d+ \d+$/.test(storage.trim())) { storage = null; missing.push('storage numeric fields') }
   var result = { collectorVersion: '0.4.1', machine: argv[0], collectedAt: new Date().toISOString(),
     state: missing.length ? 'BLOCKED' : 'COLLECTED_NOT_QUALIFIED',
     hardware: { model: sys('hw.model'), cpu: sys('machdep.cpu.brand_string'), physicalCores: sys('hw.physicalcpu'), logicalCores: sys('hw.logicalcpu'), ramBytes: sys('hw.memsize'), architecture: read('arch', '/usr/bin/uname -m'), arm64Capable: sys('hw.optional.arm64') },

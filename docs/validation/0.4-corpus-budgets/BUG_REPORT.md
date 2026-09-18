@@ -20,3 +20,11 @@ SHA `944157fd83e0c886b5605c8ceff0b74bcc8f8808`, `pnpm lint` : FAIL, quatre erreu
 ## B04-CIM — Collecte Windows dans le sandbox
 
 Même SHA : premier lancement du collecteur sous PowerShell 5.1, CIM/WMI empêché ; JSON partiel correctement marqué BLOCKED, champs null et liste d'obstacles, jamais valeurs inventées. Reprise autorisée en lecture seule hors sandbox sur le même poste, sans changement du collecteur. L'obstacle initial reste conservé dans les preuves locales.
+
+## B04-SMOKE — Assertion et répétition du dispositif
+
+SHA `e944ec2726cd37b5a340fa6856407c6bd2dcc292`, `pnpm measure:prototype` : FAIL après dix navigations, l'assertion comparait textContent à un rôle alors que le bouton actif contient aussi le texte « Actif » masqué à l'accessibilité. Correction : locator par nom accessible et assertion aria-pressed, sans changer le prototype. La revue ciblée a aussi identifié le dossier de sortie fixe, empêchant une seconde invocation : chaque campagne dispose désormais d'un sous-dossier SHA/horodatage distinct, sans écrasement.
+
+## Revue ciblée des collecteurs
+
+Revue en lecture seule par un sous-agent : ajout des détails de version Chromium lorsque disponibles (UA réduite insuffisante), refus des sorties macOS vides/malformées, harmonisation de la conclusion du plan. Ce contrôle statique ne remplace pas l'exécution sur les deux Mac, toujours BLOCKED.

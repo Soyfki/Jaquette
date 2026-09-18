@@ -3,16 +3,17 @@ import { spawn, spawnSync } from 'node:child_process'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { setTimeout } from 'node:timers/promises'
-import { chromium } from '@playwright/test'
+import { chromium, expect } from '@playwright/test'
 import { generate, verify } from './corpus.mjs'
 import { stats } from './contract.mjs'
 
-const output = resolve(process.env.MEASUREMENT_OUTPUT ?? 'test-results/measurement-prototype')
-mkdirSync(output, { recursive: true })
 const gitArgs = ['-c', `safe.directory=${process.cwd().replaceAll('\\', '/')}`]
 const git = (...args) => { const r = spawnSync('git', [...gitArgs, ...args], { encoding: 'utf8' }); if (r.status !== 0) throw new Error('Git unavailable'); return r.stdout.trim() }
 const sha = git('rev-parse', 'HEAD')
 assert.equal(git('status', '--porcelain'), '', 'Commit changes before measuring; SHA must identify tested files')
+const output = resolve(process.env.MEASUREMENT_OUTPUT ?? `test-results/measurement-prototype/${sha}-${Date.now()}`)
+mkdirSync(output, { recursive: true })
+console.log(`Measurement output: ${output}`)
 const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', 'preview', '--host', '127.0.0.1', '--port', '4174', '--strictPort'], { stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true })
 let serverLog = '', browser
 server.stdout.on('data', b => { serverLog += b })
@@ -56,8 +57,10 @@ try {
       for (let i = 0; i < 110; i++) {
         const role = i % 2 ? 'Sound Designer' : 'Réviseur'
         const before = await page.evaluate(() => window.measurementClicks.length)
-        await page.getByRole('button', { name: role, exact: true }).click()
-        await page.waitForFunction(({ role, before }) => [...document.querySelectorAll('button')].some(b => b.textContent?.trim() === role && b.getAttribute('aria-pressed') === 'true') && window.measurementClicks.length > before, { role, before })
+        const button = page.getByRole('button', { name: role, exact: true })
+        await button.click()
+        await expect(button).toHaveAttribute('aria-pressed', 'true')
+        await page.waitForFunction(before => window.measurementClicks.length > before, before)
       }
       const samples = await page.evaluate(() => window.measurementClicks)
       assert.equal(samples.length, 110)
