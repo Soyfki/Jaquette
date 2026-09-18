@@ -1,5 +1,25 @@
 # Recette humaine — 0.3 et historique 1.4.2
 
+## Reprise ciblée après le retour sur a93e5464b427ee575db06bb41fa39f46db09502c
+
+Les onze PASS reçus sont consignés dans le [rapport](VALIDATION_REPORT.md). Le changement porte uniquement sur la disposition des tuiles Admin. Les contrôles techniques complets sont rejoués ; seuls les deux points ci-dessous demandent une nouvelle observation humaine. Le SHA corrigé est affiché dans le guide local et la PR.
+
+| ID | Parcours et résultat à observer | Observation / PASS, FAIL ou BLOCKED |
+|---|---|---|
+| H14-6 | Ouvrir Projet → Admin Maison. À 1440 × 1000 : première rangée Membres / Équipes / Invitations ; deuxième rangée Projets / Permissions / Audit. Les trois tuiles de chaque rangée ont leurs bords haut et bas alignés, les colonnes et espacements sont réguliers. À 768 × 1024 : faire défiler les six tuiles dans cet ordre ; largeur et espacement cohérents, aucun contenu coupé. Les six régions restent lisibles et fictives. | À réobserver |
+| H14-10 | Relire les deux nouvelles captures Admin (1440 × 1000 et 768 × 1024) au SHA affiché. Confirmer que l’organisation des tuiles, leurs alignements, espacements et notes de bas de tuile sont satisfaisants. Les captures Accueil/Chef ont été régénérées et comparées par l’agent ; leur observation humaine précédente reste applicable. | À réobserver |
+
+Retour à transmettre :
+
+- SHA présenté : celui affiché dans le guide.
+- H14-6 — observation aux deux formats — PASS/FAIL/BLOCKED :
+- H14-10 — observation des nouvelles captures Admin — PASS/FAIL/BLOCKED :
+- Défauts éventuels :
+
+## Recette initiale conservée pour référence
+
+Les parcours ci-dessous décrivent la première campagne. Ils ne constituent pas une demande de refaire les onze observations PASS déjà reçues.
+
 L’agent fournit dans la PR et dans la tâche le SHA complet, l’URL locale, les fenêtres Chrome déjà réglées à 1440 × 1000 et 768 × 1024 et les six captures. Les vérifications techniques sont préremplies dans la preuve au même SHA. Vous observez l’interface ; aucun DOM, timer ou journal à inspecter.
 
 ## Correctifs 0.3

@@ -37,3 +37,11 @@ Sur `f3f12b69a4d9b5261c8b0502dec556fb5e98aa35`, la CI et validate:all locale pas
 ## B03-5 — Contour de focus trop proche de l’activité sur Accueil
 
 Relecture des captures de `f3f12b69a4d9b5261c8b0502dec556fb5e98aa35` aux deux formats : le contour du bouton « Ouvrir l’état du projet » touche la ligne d’activité précédente. Une marge minimale utilisant le token existant space-2 sépare les deux, sans changer palette, typographies, ordre ou fonction. Les captures sont régénérées et relues sur le SHA final.
+
+## B03-6 — Tuiles Admin mal alignées (retour humain H14-6/H14-10)
+
+Recette présentée : `a93e5464b427ee575db06bb41fa39f46db09502c`. L’utilisateur rapporte « Les alignements et espacements entre les tuiles sont hasardeux » et demande leur réorganisation. Il renseigne H14-6 et H14-10 BLOCKED ; cette observation décrit un défaut visuel confirmé par la capture Admin bureau, donc un FAIL de disposition selon le protocole, puis une revalidation humaine attendue après correction. Les onze autres observations sont PASS et restent tracées dans le rapport.
+
+Cause : les tuiles Membres, Projets et Audit occupent deux pistes de grille tout en gardant une hauteur de contenu et un alignement en haut. Les pistes réservées produisent des vides et décalent la deuxième rangée. Correction limitée au CSS Admin : retrait de ces spans, hauteur étirée par rangée, espacement unique space-3, notes de bas de tuile alignées. Le DOM conserve les six régions et leur ordre, les contenus et les permissions simulées. En format réduit, les tuiles restent sur une colonne et s’adaptent à leur contenu, sans hauteur fixe.
+
+Contrôle T12 fixé avant reprise : mesurer alignements et espacements dans Chrome aux deux formats, relire les nouvelles captures et rejouer la campagne complète locale/CI. Seuls H14-6 et la partie Admin de H14-10 sont à réobserver ; H14-9 est couvert techniquement de nouveau pour le responsive affecté. Aucun PASS humain attribué à la correction avant retour.
