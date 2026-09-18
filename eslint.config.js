@@ -25,7 +25,7 @@ export default tseslint.config(
   {
     files: ['scripts/measurement/collect-macos.js'],
     languageOptions: { globals: { Application: 'readonly' } },
-    rules: { 'no-unused-vars': ['error', { varsIgnorePattern: '^run$', caughtErrors: 'none' }] },
+    rules: { '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '^run$', caughtErrors: 'none' }] },
   },
   {
     files: ['**/*.{ts,tsx}'],
