@@ -28,14 +28,16 @@ L’utilisateur a répondu dans cette tâche à la recette présentée au SHA `a
 | H14-9 | Lisibilité, défilement et navigation clavier aux deux formats | PASS |
 | H14-10 | « Se référer à H14-6 Admin et rectifier les alignements et espacements des tuiles sur l’écran admin. » | BLOCKED déclaré par l’utilisateur ; B03-6, relecture Admin à reprendre |
 
-Le responsable interprète les deux BLOCKED comme un défaut observé, donc FAIL de disposition sur ce SHA, et conserve le libellé du retour original. Après correction, H14-6 et la partie Admin de H14-10 restent BLOCKED jusqu’à leur nouvelle observation humaine. Les autres PASS sont réutilisables pour une modification limitée aux règles CSS Admin ; les écrans Accueil/Chef/Fondations, le DOM, les données, la simulation et les rôles ne changent pas. H14-9 est rejoué techniquement pour les dimensions, le défilement et l’absence de contenu tronqué. La campagne complète et les six captures sont renouvelées au nouveau SHA consigné dans la PR.
+Le responsable interprète les deux BLOCKED comme un défaut observé, donc FAIL de disposition sur ce SHA, et conserve le libellé du retour original. Après correction, H14-6 et H14-10 restent BLOCKED jusqu’à leur nouvelle observation humaine. Les autres PASS fonctionnels sont réutilisables : le DOM, les données, les interactions de focus, la simulation et les rôles ne changent pas. H14-9 est rejoué techniquement pour les dimensions, le défilement et l’absence de contenu tronqué. La campagne complète et les six captures sont renouvelées au nouveau SHA consigné dans la PR.
+
+Retour complémentaire : l’utilisateur demande que les pastilles de couleur du design system et le pseudo-logo J soient parfaitement ronds. B03-7 corrige leurs rayons CSS et protège leur forme carrée. Le J commun affecte visuellement les en-têtes Accueil/Chef/Admin/Fondations et Connexion, sans en modifier les parcours. H03-4 est ajouté pour cette nouvelle observation visuelle ; H14-10 reprend les captures pour la disposition Admin et le J commun, sans redemander les onze PASS fonctionnels. T12/T13 et la campagne complète sont relancés sur le SHA réunissant les deux corrections, après interruption documentée de la campagne intermédiaire Admin seule.
 
 ## Deux décisions distinctes après correction
 
 | Campagne | État en attente de la revalidation ciblée | Justification |
 |---|---|---|
-| 0.3 | BLOQUÉE / NO-GO pour l’intégration de PR 9 | H03-1/H03-2/H03-3 PASS ; aucun Go final avant correction et revalidation complète du diff hérité |
-| Revalidation historique 1.4.2 | BLOQUÉE / NO-GO | H14-6 et H14-10 Admin à réobserver après B03-6 ; huit autres points historiques PASS conservés |
+| 0.3 | BLOQUÉE / NO-GO | H03-1/H03-2/H03-3 PASS ; H03-4 attendu après B03-7, et aucun Go final avant revalidation complète du diff hérité |
+| Revalidation historique 1.4.2 | BLOQUÉE / NO-GO | H14-6 et H14-10 à réobserver après B03-6/B03-7 ; huit autres points historiques PASS conservés |
 
 La PR reste ouverte, en brouillon et non fusionnée. Aucun lot n’est acquis par ces seuls documents. Aucun Go si un critère obligatoire manque ou échoue. L’agent interprète les observations et signe la décision ; il ne demande pas à l’humain de choisir Go/No-Go. Aucune dette acceptée à ce stade.
 

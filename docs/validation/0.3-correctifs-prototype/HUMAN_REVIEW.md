@@ -2,18 +2,20 @@
 
 ## Reprise ciblée après le retour sur a93e5464b427ee575db06bb41fa39f46db09502c
 
-Les onze PASS reçus sont consignés dans le [rapport](VALIDATION_REPORT.md). Le changement porte uniquement sur la disposition des tuiles Admin. Les contrôles techniques complets sont rejoués ; seuls les deux points ci-dessous demandent une nouvelle observation humaine. Le SHA corrigé est affiché dans le guide local et la PR.
+Les onze PASS fonctionnels reçus sont consignés dans le [rapport](VALIDATION_REPORT.md). Les changements portent sur la disposition des tuiles Admin et sur les pastilles/le pseudo-logo J signalés ensuite. Les contrôles techniques complets sont rejoués ; seuls les trois points ci-dessous demandent une nouvelle observation humaine. Le SHA corrigé est affiché dans le guide local et la PR.
 
 | ID | Parcours et résultat à observer | Observation / PASS, FAIL ou BLOCKED |
 |---|---|---|
 | H14-6 | Ouvrir Projet → Admin Maison. À 1440 × 1000 : première rangée Membres / Équipes / Invitations ; deuxième rangée Projets / Permissions / Audit. Les trois tuiles de chaque rangée ont leurs bords haut et bas alignés, les colonnes et espacements sont réguliers. À 768 × 1024 : faire défiler les six tuiles dans cet ordre ; largeur et espacement cohérents, aucun contenu coupé. Les six régions restent lisibles et fictives. | À réobserver |
-| H14-10 | Relire les deux nouvelles captures Admin (1440 × 1000 et 768 × 1024) au SHA affiché. Confirmer que l’organisation des tuiles, leurs alignements, espacements et notes de bas de tuile sont satisfaisants. Les captures Accueil/Chef ont été régénérées et comparées par l’agent ; leur observation humaine précédente reste applicable. | À réobserver |
+| H14-10 | Relire les captures régénérées au SHA affiché : disposition des tuiles sur les deux vues Admin, puis forme ronde du J commun sur Accueil/Chef/Admin aux deux formats. Les autres éléments Accueil/Chef ne changent pas. Confirmer les alignements, espacements et notes de bas de tuile Admin. | À réobserver |
+| H03-4 | Ouvrir Fondations 1.1 → Palette générale aux deux formats : les cinq pastilles ont un contour parfaitement rond. Vérifier aussi le J dans l’en-tête de l’application et le grand J de la carte Connexion ; aucun côté plat ni forme écrasée. Les nouvelles captures Fondations/Connexion sont fournies. | À observer |
 
 Retour à transmettre :
 
 - SHA présenté : celui affiché dans le guide.
 - H14-6 — observation aux deux formats — PASS/FAIL/BLOCKED :
 - H14-10 — observation des nouvelles captures Admin — PASS/FAIL/BLOCKED :
+- H03-4 — observation des pastilles et des deux J — PASS/FAIL/BLOCKED :
 - Défauts éventuels :
 
 ## Recette initiale conservée pour référence

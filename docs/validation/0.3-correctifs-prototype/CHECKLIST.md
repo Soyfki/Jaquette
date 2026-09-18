@@ -26,16 +26,18 @@ Windows, Node 24.19.0, pnpm 11.19.0, Chrome installé (version relevée dans le 
 | T10 | git diff --check ; empreintes | Aucun espace erroné ; corpus, EPUB tests et fichiers utilisateur préservés | diff et preservation.json |
 | T11 | CI PR au dernier SHA | Tous contrôles obligatoires à success, artefact consultable | GitHub Actions |
 | T12 | Reprise Admin après retour humain sur a93e5464b427ee575db06bb41fa39f46db09502c | Bureau : deux rangées de trois tuiles, bords alignés et espacements uniformes ; réduit : une colonne dans l’ordre Membres, Équipes, Invitations, Projets, Permissions, Audit ; aucun contenu perdu | Mesures Chrome et captures au nouveau SHA ; H14-6/H14-10 à reprendre |
+| T13 | Reprise des pastilles et du pseudo-logo J | Cinq pastilles de la palette et les deux usages du J (en-tête et Connexion) : largeur égale à la hauteur, quatre rayons à 50 %, aucun écrasement aux deux formats | Mesures Chrome et relecture des captures ; observation complémentaire H03-4 |
 
 ## Essais humains obligatoires
 
 H03-1 : comprendre les prérequis complets et les trois axes, depuis Accueil puis Chef.
 H03-2 : titre Fondations lisible et focus visible au clavier, précédent/suivant.
 H03-3 : simulation qui finit puis repart, lecture fluide et compréhensible.
+H03-4 (retour complémentaire) : pastilles de la palette et pseudo-logo J parfaitement ronds.
 H14-1 à H14-10 : les dix points de la checklist manuelle du [protocole 1.4.2](../1.4.2-team-lead-admin-variants.md), repris dans le [formulaire](HUMAN_REVIEW.md). Les inspections DOM/timers sont réalisées par l’agent ; l’humain observe le résultat.
 
 ## Régressions et conclusion
 
 Les tests hérités de 1.4.1/1.4.2, le correctif de focus de recherche 0.2, les scripts et la CI 0.2 restent applicables. Aucun résultat historique ne prouve le nouveau SHA. Toute modification de code/configuration/corpus entraîne une nouvelle exécution des contrôles concernés.
 
-Les résultats PASS/FAIL/BLOCKED, observations et preuves sont publiés à SHA fixe dans la PR. Après le premier retour humain, onze PASS sont conservés ; H14-6 et H14-10 Admin sont à réobserver après le correctif B03-6. **0.3 reste BLOQUÉE / NO-GO pour l’intégration de la PR ; 1.4.2 BLOQUÉE / NO-GO** jusqu’à ces deux retours. Aucune dette admissible ne dispense d’un critère obligatoire. Aucune acquisition de l’ancienne 1.4/phase 1/1.4.3 ni démarrage de 0.4.
+Les résultats PASS/FAIL/BLOCKED, observations et preuves sont publiés à SHA fixe dans la PR. Après le premier retour humain, onze PASS fonctionnels sont conservés ; H14-6 et H14-10 sont à réobserver après le correctif B03-6, avec H03-4 pour les cercles signalés ensuite (B03-7). **0.3 reste BLOQUÉE / NO-GO ; 1.4.2 BLOQUÉE / NO-GO** jusqu’à ces retours. Aucune dette admissible ne dispense d’un critère obligatoire. Aucune acquisition de l’ancienne 1.4/phase 1/1.4.3 ni démarrage de 0.4.
