@@ -26,7 +26,7 @@ Ce dossier rassemble la documentation complémentaire et les décisions techniqu
 
 - Acquis historiques : ancienne phase 0, anciennes sous-étapes 1.1 à 1.3 et lot 1.4.1.
 - Code sur main à la base de 0.1 : prototype Sound Designer et Réviseur, local et simulé.
-- Quatre rôles et correctifs 1.4.2 : présents dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9), SHA 5cabbb016d3ce5480b165512c1aa7814b8367802, tant qu’ils ne sont pas fusionnés sur main. Le lot 1.4.2 reste non acquis avant revalidation humaine.
+- Quatre rôles simulés et correctifs 1.4.2 : revalidation complète acquise le 18 septembre 2026, intégration suivie dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9).
 - Ancien 1.4.3 : plus de livraison autonome ; périmètre précis non retrouvé. Inventaire des reliquats réellement identifiables en 0.3/0.5, puis rattachement aux futures sous-étapes correspondantes. Aucune clôture rétroactive de l’ancienne 1.4 ni de l’ancienne phase 1.
 - Version de l’application : **0.0.0**, non publiée.
 - Cadrage actif : gratuit sur invitation ; Web complet Chrome/Firefox/Safari sur ordinateur et Electron Windows/macOS au lancement ; Safari qualifié sur Mac.
@@ -38,6 +38,6 @@ Ce dossier rassemble la documentation complémentaire et les décisions techniqu
 
 ## Reprise du 11 septembre 2026
 
-La nouvelle étape 0 est distincte de l’ancienne phase 0 acquise. **0.1 — Harmoniser les sources** et **0.2 — Reproduire la base** sont validées : [preuves 0.1](validation/0.1-harmonisation/README.md), [preuves 0.2](validation/0.2-base-reproductible/README.md) et [SHA/CI/fusion de PR 11](https://github.com/Soyfki/Jaquette/pull/11). **0.3 — Corriger les défauts du prototype** reprend PR 9 depuis son SHA historique ci-dessus, avec main 0.2 intégré : [checklist](validation/0.3-correctifs-prototype/CHECKLIST.md), [défauts](validation/0.3-correctifs-prototype/BUG_REPORT.md), [rapport à deux conclusions](validation/0.3-correctifs-prototype/VALIDATION_REPORT.md), [formulaire humain](validation/0.3-correctifs-prototype/HUMAN_REVIEW.md). 0.3 et 1.4.2 restent non acquis avant leurs observations humaines obligatoires.
+La nouvelle étape 0 est distincte de l’ancienne phase 0 acquise. 0.1 et 0.2 sont validées : [preuves 0.1](validation/0.1-harmonisation/README.md), [preuves 0.2](validation/0.2-base-reproductible/README.md). **0.3 — Corriger les défauts du prototype** et la **revalidation historique 1.4.2** sont **VALIDÉES / GO**, décisions distinctes du 18 septembre 2026 après campagne technique et observations humaines complètes au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`. L’intégration et les contrôles au dernier SHA sont tracés dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9). Voir la [checklist](validation/0.3-correctifs-prototype/CHECKLIST.md), les [défauts corrigés](validation/0.3-correctifs-prototype/BUG_REPORT.md), le [rapport à deux conclusions](validation/0.3-correctifs-prototype/VALIDATION_REPORT.md) et les [observations humaines](validation/0.3-correctifs-prototype/HUMAN_REVIEW.md). 0.4 n’est pas commencée.
 
 Cet index n’ajoute aucune règle métier et ne remplace pas les documents de référence.

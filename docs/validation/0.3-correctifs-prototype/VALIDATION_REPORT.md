@@ -28,20 +28,34 @@ L’utilisateur a répondu dans cette tâche à la recette présentée au SHA `a
 | H14-9 | Lisibilité, défilement et navigation clavier aux deux formats | PASS |
 | H14-10 | « Se référer à H14-6 Admin et rectifier les alignements et espacements des tuiles sur l’écran admin. » | BLOCKED déclaré par l’utilisateur ; B03-6, relecture Admin à reprendre |
 
-Le responsable interprète les deux BLOCKED comme un défaut observé, donc FAIL de disposition sur ce SHA, et conserve le libellé du retour original. Après correction, H14-6 et H14-10 restent BLOCKED jusqu’à leur nouvelle observation humaine. Les autres PASS fonctionnels sont réutilisables : le DOM, les données, les interactions de focus, la simulation et les rôles ne changent pas. H14-9 est rejoué techniquement pour les dimensions, le défilement et l’absence de contenu tronqué. La campagne complète et les six captures sont renouvelées au nouveau SHA consigné dans la PR.
+Le responsable interprète les deux BLOCKED comme un défaut observé, donc FAIL de disposition sur ce SHA, et conserve le libellé du retour original. À ce stade intermédiaire, H14-6 et H14-10 sont restés BLOCKED jusqu’à leur nouvelle observation humaine, reçue ci-dessous. Les autres PASS fonctionnels sont réutilisables : le DOM, les données, les interactions de focus, la simulation et les rôles ne changent pas. H14-9 est rejoué techniquement pour les dimensions, le défilement et l’absence de contenu tronqué. La campagne complète et les six captures sont renouvelées au nouveau SHA consigné dans la PR.
 
 Retour complémentaire : l’utilisateur demande que les pastilles de couleur du design system et le pseudo-logo J soient parfaitement ronds. B03-7 corrige leurs rayons CSS et protège leur forme carrée. Le J commun affecte visuellement les en-têtes Accueil/Chef/Admin/Fondations et Connexion, sans en modifier les parcours. H03-4 est ajouté pour cette nouvelle observation visuelle ; H14-10 reprend les captures pour la disposition Admin et le J commun, sans redemander les onze PASS fonctionnels. T12/T13 et la campagne complète sont relancés sur le SHA réunissant les deux corrections, après interruption documentée de la campagne intermédiaire Admin seule.
 
+## Revalidation humaine finale — 18 septembre 2026
+
+Le guide local et les captures présentés portent le SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`. L’utilisateur répond dans cette même tâche :
+
+| Point | Observation humaine reçue | Résultat |
+|---|---|---|
+| H14-6 | Alignement et espacement des tuiles Admin aux deux formats | PASS |
+| H14-10 | Nouvelles captures : grille Admin et « J » commun | PASS |
+| H03-4 | Pastilles de Fondations et deux usages du « J » bien ronds | PASS |
+
+Ces trois observations clôturent B03-6 et B03-7. Les onze PASS précédents restent applicables aux comportements inchangés, pour un total de quatorze points humains satisfaits. Aucun retour ne reste manquant et aucune dette n’est acceptée.
+
 ## Deux décisions distinctes après correction
 
-| Campagne | État en attente de la revalidation ciblée | Justification |
+| Campagne | Conclusion | Justification |
 |---|---|---|
-| 0.3 | BLOQUÉE / NO-GO | H03-1/H03-2/H03-3 PASS ; H03-4 attendu après B03-7, et aucun Go final avant revalidation complète du diff hérité |
-| Revalidation historique 1.4.2 | BLOQUÉE / NO-GO | H14-6 et H14-10 à réobserver après B03-6/B03-7 ; huit autres points historiques PASS conservés |
+| 0.3 | **VALIDÉE / GO** | H03-1 à H03-4 PASS ; contrôles T01 à T13 PASS et diff hérité entièrement revalidé |
+| Revalidation historique 1.4.2 | **VALIDÉE / GO** | H14-1 à H14-10 PASS ; quatre rôles, régions, restrictions DOM et six captures qualifiés aux deux formats |
 
-La PR reste ouverte, en brouillon et non fusionnée. Aucun lot n’est acquis par ces seuls documents. Aucun Go si un critère obligatoire manque ou échoue. L’agent interprète les observations et signe la décision ; il ne demande pas à l’humain de choisir Go/No-Go. Aucune dette acceptée à ce stade.
+Décisions signées par **l’agent Codex, développeur et responsable de validation**, le **18 septembre 2026**. Observations humaines : utilisateur. Le lot historique 1.4.2 est acquis ; aucune clôture de l’ancienne phase 1 ou de 1.4.3 n’en découle.
 
-Application de la matrice : obligatoire BLOCKED → BLOQUÉE ; sinon obligatoire FAIL → À CORRIGER ; sinon tous PASS et preuves complètes → VALIDÉE. La revue indépendante éventuellement exigée par GitHub reste distincte. Après Go : dernier SHA vérifié, CI, squash lié à la tête approuvée, merged=true, squash sur origin/main, CI/main et smoke. Rien de cela n’est revendiqué avant exécution.
+Preuves techniques au SHA de recette : deux campagnes locales complètes (validate:diagnostic puis validate:all), 54 tests composants, 28 tests d’outillage et 28 tests Chrome ; [CI 35333012707 réussie](https://github.com/Soyfki/Jaquette/actions/runs/35333012707), mesures CSS et dix captures relues. Les preuves détaillées et empreintes sont consignées dans la PR 9 et le dossier local final-28cb5d943e0617de0b6fec9e50e76ca3b54c9c51.
+
+La clôture après ce retour modifie seulement la documentation. L’identité du code, des tests, de la configuration et du corpus avec le SHA de recette est contrôlée ; les observations humaines et mesures visuelles restent applicables. Les contrôles documentaires et la CI sont vérifiés sur la nouvelle tête avant squash. La PR consigne ces résultats au SHA exact, les éventuelles protections, puis merged=true, le SHA de squash sur origin/main, la CI/main et le smoke après fusion. Ces opérations d’intégration ne sont pas revendiquées avant leur exécution.
 
 ## Reliquats identifiés, hors 0.3
 

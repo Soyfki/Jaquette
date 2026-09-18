@@ -12,11 +12,11 @@ Jaquette ne doit pas être confondu avec **Jacques** : Jaquette est l’outil de
 
 Les acquis historiques sont l’ancienne phase 0, les anciennes sous-étapes 1.1 à 1.3 et le lot 1.4.1. Sur main à la base du lot 0.1, le prototype propose Sound Designer et Réviseur, avec simulation locale non persistée et Sound Designer initial.
 
-Les quatre rôles et les correctifs de l’ancien **1.4.2 — Chef d’équipe et Admin Maison** sont présents dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9), branche codex/phase-1-4-2-team-lead-admin-variants, SHA 5cabbb016d3ce5480b165512c1aa7814b8367802, tant qu’ils ne sont pas fusionnés sur main. Ce lot reste **non acquis avant revalidation humaine**. L’harmonisation documentaire n’intègre aucun de ses changements applicatifs.
+Les quatre rôles simulés et les correctifs de l’ancien **1.4.2 — Chef d’équipe et Admin Maison** ont reçu leur revalidation complète le 18 septembre 2026. Le lot 1.4.2 est acquis ; sa branche historique est conservée. La [PR 9](https://github.com/Soyfki/Jaquette/pull/9) réunit cet héritage et les correctifs 0.3.
 
 L’ancien 1.4.3 n’est plus une prochaine livraison autonome : aucun périmètre précis retrouvé dans l’ancien plan. Les reliquats réellement identifiables seront inventoriés en 0.3/0.5 et rattachés aux futures sous-étapes correspondantes. L’ancienne 1.4 et l’ancienne phase 1 restent non acquises ; aucune clôture rétroactive.
 
-La nouvelle étape 0 de reprise est distincte de l’ancienne phase 0. **0.1 — Harmoniser les sources** et **0.2 — Reproduire la base** sont validées ; les [preuves 0.2 et le suivi de fusion](https://github.com/Soyfki/Jaquette/pull/11) précisent les SHA qualifiés. **0.3 — Corriger les défauts du prototype** reprend la PR 9 depuis son SHA historique ci-dessus avec main 0.2 intégré. La [campagne](docs/validation/0.3-correctifs-prototype/CHECKLIST.md) et le [formulaire humain complet](docs/validation/0.3-correctifs-prototype/HUMAN_REVIEW.md) couvrent les correctifs et tout le diff 1.4.2. Deux conclusions distinctes restent BLOQUÉES / NO-GO avant les observations humaines ; aucune fusion ni étape suivante à ce stade.
+La nouvelle étape 0 de reprise est distincte de l’ancienne phase 0. 0.1 et 0.2 sont validées. **0.3 — Corriger les défauts du prototype** et la **revalidation historique 1.4.2** sont **VALIDÉES / GO**, décisions distinctes du 18 septembre 2026 après campagne technique et observations humaines complètes au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`. L’intégration et les contrôles au dernier SHA sont tracés dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9). Le [rapport](docs/validation/0.3-correctifs-prototype/VALIDATION_REPORT.md) distingue résultats techniques et humains et conserve les défauts corrigés. 0.4 n’est pas commencée.
 
 Version : **0.0.0**, non publiée. Les [jalons actifs et leur correspondance historique](docs/VERSIONING.md) ne sont pas des versions applicatives ou de formats.
 
@@ -76,7 +76,7 @@ Avant toute contribution :
 
 1. vérifier la branche par défaut, le dernier commit et les changements déjà présents ;
 2. lire intégralement [`AGENTS.md`](AGENTS.md), puis le [cahier des charges](CAHIER_DES_CHARGES_JAQUETTE.md) et le [plan détaillé](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) ;
-3. reprendre le plan canonique actualisé sur main après chaque lot ; après les Go de 0.1 et 0.2, la prochaine sous-étape est 0.3 ; respecter ses prérequis et le mandat du lot demandé ;
+3. reprendre le plan canonique actualisé sur main après chaque lot ; après les Go de 0.1, 0.2 et 0.3, la prochaine sous-étape est 0.4, non commencée ; respecter ses prérequis et le mandat du lot demandé ;
 4. distinguer les règles produit validées des décisions techniques encore ouvertes ;
 5. documenter toute nouvelle décision technique sans en faire une règle métier implicite.
 

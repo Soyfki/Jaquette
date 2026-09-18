@@ -31,7 +31,7 @@ La [campagne 0.1](0.1-harmonisation/README.md) est exclusivement documentaire et
 
 La CI n’est requise pour 0.1 que si une configuration ou protection applicable existe déjà ; sa création et la réparation de l’installation transférée relèvent de 0.2. Dès 0.2, CI minimale et vérification CI/main sont obligatoires. Les tests applicatifs requis par les campagnes historiques gardent leur portée pour ces campagnes.
 
-L’ancien 1.4.2 reste non acquis avant sa revalidation humaine : [protocole PR 9](1.4.2-team-lead-admin-variants.md). L’ancien 1.4.3 n’est plus autonome ; aucun périmètre précis retrouvé, inventaire des reliquats en 0.3/0.5 puis rattachement aux étapes futures correspondantes. Aucune clôture rétroactive de l’ancienne phase 1. Après les Go de 0.1 et 0.2, prochaine action 0.3 ; celle-ci reste non commencée par le lot 0.2.
+L’ancien 1.4.2 est acquis après sa revalidation technique et humaine du 18 septembre 2026 : [rapport à deux conclusions 0.3/1.4.2](0.3-correctifs-prototype/VALIDATION_REPORT.md), suivant le [protocole PR 9](1.4.2-team-lead-admin-variants.md). L’ancien 1.4.3 n’est plus autonome ; aucun périmètre précis retrouvé, inventaire des reliquats en 0.3/0.5 puis rattachement aux étapes futures correspondantes. Aucune clôture rétroactive de l’ancienne phase 1. Après les Go de 0.1, 0.2 et 0.3, prochaine sous-étape 0.4, non commencée.
 
 ## Préparer une validation
 
