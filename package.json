@@ -21,8 +21,12 @@
     "check:reference": "node scripts/check-reference-integrity.mjs",
     "prepare:references": "node scripts/prepare-references.mjs",
     "test:tooling": "node --test scripts/qualification.test.mjs",
+    "corpus": "node scripts/measurement/corpus.mjs",
+    "test:measurement": "node --test scripts/measurement/measurement.test.mjs",
+    "package:measurement": "node scripts/measurement/package.mjs",
+    "measure:prototype": "pnpm build && node scripts/measurement/prototype.mjs",
     "validate:diagnostic": "node scripts/validate-diagnostic.mjs",
-    "validate:all": "pnpm validate && pnpm test:tooling && pnpm test:e2e",
+    "validate:all": "pnpm validate && pnpm test:tooling && pnpm test:measurement && pnpm test:e2e",
     "validate": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm check:links && pnpm check:secrets && pnpm check:reference"
   },
   "dependencies": {

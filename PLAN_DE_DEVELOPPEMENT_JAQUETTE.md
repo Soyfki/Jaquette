@@ -47,7 +47,7 @@ La nouvelle numérotation s’applique aux travaux à venir. Elle n’efface pas
 
 La version locale complète de ce plan reçue pour 0.1 le 11 septembre a été copiée depuis le checkout PR 9 avant harmonisation : SHA-256 ECBAAA8B5EA7A3130B4880FAB8D3A01AA022848DF7E5A38CC0D1F99B4AE65C09. La provenance et les modifications documentaires sont tracées dans le [dossier 0.1](docs/validation/0.1-harmonisation/README.md). Dès 0.2, utiliser ce plan canonique actualisé sur main ; ne pas restaurer le snapshot initial par-dessus les harmonisations ou budgets adoptés.
 
-**Suivi de la reprise :** 0.1 validée et intégrée par la PR 10 ; 0.2 validée avec preuves dans la PR 11. **0.3 — Corriger les défauts du prototype** et la **revalidation historique 1.4.2** sont **VALIDÉES / GO**, décisions distinctes du 18 septembre 2026 après campagne technique et observations humaines complètes au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`. L’intégration et les contrôles au dernier SHA sont tracés dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9). La [campagne commune](docs/validation/0.3-correctifs-prototype/CHECKLIST.md) est complète ; l’ancienne 1.4 et la phase 1 ne sont pas clôturées. 0.4 n’est pas commencée.
+**Suivi de la reprise :** 0.1 validée et intégrée par la PR 10 ; 0.2 validée avec preuves dans la PR 11. **0.3 — Corriger les défauts du prototype** et la **revalidation historique 1.4.2** sont **VALIDÉES / GO**, décisions distinctes du 18 septembre 2026 après campagne technique et observations humaines complètes au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`. L’intégration et les contrôles au dernier SHA sont tracés dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9). La [campagne commune](docs/validation/0.3-correctifs-prototype/CHECKLIST.md) est complète ; l’ancienne 1.4 et la phase 1 ne sont pas clôturées. 0.4 est en cours : contrat et corpus préparés, BLOQUÉE / NO-GO en attente des relevés matériels obligatoires.
 
 ## 3. Règles d’exécution et de validation
 
@@ -96,9 +96,9 @@ Le projet de travail doit respecter la séparation physique par chapitre. Une ar
 
 L’API standard d’écriture peut passer par un fichier temporaire ; le stockage OPFS ne garantit pas une correspondance simple entre fichier logique et fichier physique. Mesurer les écritures et la récupération sur chaque plateforme. Si le format proposé ne respecte pas l’invariant, arrêter ce choix et présenter le compromis produit avant de poursuivre ; ne pas supposer un ZIP. [Standard File System](https://fs.spec.whatwg.org/#api-filesystemfilehandle-createwritable), [représentation OPFS WebKit](https://webkit.org/blog/12257/the-file-system-access-api-with-origin-private-file-system/).
 
-## 5. Matrice de qualification et objectifs de performance proposés
+## 5. Matrice de qualification et budgets adoptés en 0.4
 
-Ces valeurs sont des **cibles de travail recommandées**, à figer en 0.4 après description des postes et à éprouver dès les prototypes. Elles ne sont ni des mesures de l’existant ni des performances promises avant qualification. Toute modification ultérieure conserve sa justification et les mesures précédentes.
+Les quatorze seuils sont **adoptés sans relèvement le 18 septembre 2026** (D04-01), avant les implémentations concernées. Le [contrat 0.4](docs/measurement/README.md), ses [protocoles](docs/measurement/PROTOCOLS.md) et sa [matrice](docs/measurement/MACHINES.md) fixent unités, charges, bornes, cache, statistiques et preuves. D04-02 précise le plateau mémoire : médiane finale après 20 cycles <115 % de la référence ; médiane dernière heure <=105 % de l’avant-dernière. Les configurations proposées ci-dessous ne remplacent jamais les relevés réels. 0.4 reste BLOQUÉE / NO-GO en attente des relevés et observations complets. Aucune performance du futur produit n’est acquise ; toute modification de seuil exige justification et historique avant implémentation.
 
 ### Postes et environnements
 
@@ -116,7 +116,7 @@ Le support technique d’un OS et son cycle de sécurité sont distingués. Elec
 
 ### Jeux de charge
 
-| Jeu | Volume proposé |
+| Jeu | Volume adopté |
 |---|---|
 | Référence | Les EPUB FR, EN et arabe validés, les trois médias de référence et des cas synthétiques dont les résultats sont connus. |
 | Nominal | EPUB jusqu’à 10 Mo, 150 000 mots, 30 chapitres, 3 000 annotations, 1 Go de médias utilisés ; banque de 10 000 fichiers ; workspace de 20 projets et 30 membres. |
@@ -128,7 +128,7 @@ Le téraoctet de banque n’est pas copié dans le navigateur. Le nombre de réf
 
 ### Budgets à contrôler
 
-| Mesure | Cible nominale proposée | Charge forte et preuve |
+| Mesure | Cible nominale adoptée | Charge forte et preuve |
 |---|---|---|
 | Démarrage à froid après activation | Interface utilisable en 5 s maximum | Mesurer avant ouverture du projet, réseau coupé. |
 | Ouverture d’un projet déjà importé | Premier chapitre utilisable en 5 s maximum | 15 s maximum ; ne pas attendre le décodage de tous les médias. |
@@ -475,4 +475,4 @@ Un membre révoqué ne peut plus soumettre à la reconnexion ; son travail est c
 | Première version distribuée | 14–16 | Installateurs/Web, performances, exploitation et pilotes validés | Stabilisation 25 enrichie, qualification desktop 19 |
 | Extension Jacques | F1 | Publication réelle après création de Jacques | Ancienne phase 24 et signature de publication |
 
-Les lots de reprise **0.1**, **0.2** et **0.3** sont validés ; leurs décisions et preuves sont consignées dans les PR 10, 11 et 9. La revalidation historique 1.4.2 est également VALIDÉE / GO, sans clôture de l’ancienne phase 1. **Prochaine sous-étape : 0.4, non commencée.** L’ancienne 2.1 et la nouvelle étape 1 ne démarrent pas ici. Aucun numéro de cette feuille de route ne vaut validation automatique d’une livraison.
+Les lots de reprise **0.1**, **0.2** et **0.3** sont validés ; leurs décisions et preuves sont consignées dans les PR 10, 11 et 9. La revalidation historique 1.4.2 est également VALIDÉE / GO, sans clôture de l’ancienne phase 1. **0.4 en cours, BLOQUÉE / NO-GO en attente des relevés matériels complets ; 0.5 non commencée.** L’ancienne 2.1 et la nouvelle étape 1 ne démarrent pas ici. Aucun numéro de cette feuille de route ne vaut validation automatique d’une livraison.

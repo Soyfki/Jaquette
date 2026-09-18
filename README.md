@@ -16,13 +16,13 @@ Les quatre rôles simulés et les correctifs de l’ancien **1.4.2 — Chef d’
 
 L’ancien 1.4.3 n’est plus une prochaine livraison autonome : aucun périmètre précis retrouvé dans l’ancien plan. Les reliquats réellement identifiables seront inventoriés en 0.3/0.5 et rattachés aux futures sous-étapes correspondantes. L’ancienne 1.4 et l’ancienne phase 1 restent non acquises ; aucune clôture rétroactive.
 
-La nouvelle étape 0 de reprise est distincte de l’ancienne phase 0. 0.1 et 0.2 sont validées. **0.3 — Corriger les défauts du prototype** et la **revalidation historique 1.4.2** sont **VALIDÉES / GO**, décisions distinctes du 18 septembre 2026 après campagne technique et observations humaines complètes au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`. L’intégration et les contrôles au dernier SHA sont tracés dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9). Le [rapport](docs/validation/0.3-correctifs-prototype/VALIDATION_REPORT.md) distingue résultats techniques et humains et conserve les défauts corrigés. 0.4 n’est pas commencée.
+La nouvelle étape 0 de reprise est distincte de l’ancienne phase 0. 0.1 et 0.2 sont validées. **0.3 — Corriger les défauts du prototype** et la **revalidation historique 1.4.2** sont **VALIDÉES / GO**, décisions distinctes du 18 septembre 2026 après campagne technique et observations humaines complètes au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`. L’intégration et les contrôles au dernier SHA sont tracés dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9). Le [rapport](docs/validation/0.3-correctifs-prototype/VALIDATION_REPORT.md) distingue résultats techniques et humains et conserve les défauts corrigés. 0.4 est en cours : contrat et corpus préparés, BLOQUÉE / NO-GO en attente des relevés matériels obligatoires.
 
 Version : **0.0.0**, non publiée. Les [jalons actifs et leur correspondance historique](docs/VERSIONING.md) ne sont pas des versions applicatives ou de formats.
 
 ## Cible de lancement décidée en septembre 2026
 
-Jaquette est un logiciel **gratuit sur invitation**, avec Web complet sur ordinateur dans Chrome, Firefox et Safari (Safari qualifié sur Mac), et Electron Windows/macOS au lancement. PC Windows 10 de génération 2018, MacBook Intel précédant le M1 et MacBook M1 sont les cibles matérielles ; leurs configurations et budgets restent à fixer en 0.4.
+Jaquette est un logiciel **gratuit sur invitation**, avec Web complet sur ordinateur dans Chrome, Firefox et Safari (Safari qualifié sur Mac), et Electron Windows/macOS au lancement. PC Windows 10 de génération 2018, MacBook Intel précédant le M1 et MacBook M1 sont les cibles matérielles ; les budgets sont adoptés en 0.4 et les relevés de configuration restent à compléter.
 
 Après activation initiale en ligne et préparation de l’environnement, cinq jours de travail hors ligne sont prévus. À expiration, nouvelles modifications bloquées ; consultation, sauvegarde et archivage conservés. À reconnexion, les droits sont recontrôlés avant tout envoi. En cas de révocation : travail conservé, aucun envoi et archivage sur disque accompagné jusqu’à vérification, sans destruction si l’utilisateur annule.
 
@@ -76,7 +76,7 @@ Avant toute contribution :
 
 1. vérifier la branche par défaut, le dernier commit et les changements déjà présents ;
 2. lire intégralement [`AGENTS.md`](AGENTS.md), puis le [cahier des charges](CAHIER_DES_CHARGES_JAQUETTE.md) et le [plan détaillé](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) ;
-3. reprendre le plan canonique actualisé sur main après chaque lot ; après les Go de 0.1, 0.2 et 0.3, la prochaine sous-étape est 0.4, non commencée ; respecter ses prérequis et le mandat du lot demandé ;
+3. reprendre le plan canonique actualisé sur main après chaque lot ; après les Go de 0.1, 0.2 et 0.3, 0.4 est en cours et non acquise ; respecter ses prérequis et le mandat du lot demandé ;
 4. distinguer les règles produit validées des décisions techniques encore ouvertes ;
 5. documenter toute nouvelle décision technique sans en faire une règle métier implicite.
 
@@ -95,3 +95,7 @@ Ne versionnez jamais de secret, mot de passe, clé, jeton ou identifiant de conn
 - [Validation du socle de rôle simulé et de la variante Réviseur 1.4.1](docs/validation/1.4-role-variants.md)
 - [Décision de socle Web](docs/decisions/0001-web-foundation.md)
 - [Plan détaillé de développement](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md)
+
+## Lot 0.4 en cours
+
+[Contrat, corpus et commandes](docs/measurement/README.md), [matrice matérielle](docs/measurement/MACHINES.md), [protocoles](docs/measurement/PROTOCOLS.md). Livraison préparée mais BLOQUÉE / NO-GO tant que les relevés obligatoires manquent ; aucune performance produit future acquise.

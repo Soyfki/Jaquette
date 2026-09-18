@@ -17,7 +17,7 @@ const report = {
   environment: { platform: platform(), release: release(), arch: arch(), node: process.version },
   checks: [],
 }
-for (const name of ['typecheck', 'lint', 'test', 'build', 'check:links', 'check:secrets', 'check:reference', 'test:tooling', 'test:e2e']) {
+for (const name of ['typecheck', 'lint', 'test', 'build', 'check:links', 'check:secrets', 'check:reference', 'test:tooling', 'test:measurement', 'test:e2e']) {
   const result = spawnSync(process.execPath, [pnpm, name], { encoding: 'utf8', maxBuffer: 20 * 1024 * 1024 })
   const log = `${result.stdout ?? ''}${result.stderr ?? ''}${result.error?.message ?? ''}`
   const file = `${name.replaceAll(':', '-')}.log`
