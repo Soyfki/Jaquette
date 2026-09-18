@@ -573,6 +573,8 @@ describe('Jaquette application shell', () => {
     setPath('/projet')
     ;(window as Window & { __jaquetteFourRoleMarker?: string }).__jaquetteFourRoleMarker = 'preserved'
     render(<AppShell />)
+    // Route entry focuses the title on the next frame; finish it before role clicks.
+    await waitFor(() => expect(screen.getByRole('heading', { level: 1, name: 'Le livre attend sa scène.' })).toHaveFocus())
     const initialHistoryLength = window.history.length
     const roleControl = screen.getByRole('group', { name: 'Rôle simulé' })
     const roles = [

@@ -27,3 +27,7 @@ B03-2 : h1 focalisable par tabIndex=-1 ; contour accent rétabli. Navigation SPA
 B03-3 : une échéance par mot, annulée au changement d’état ou démontage ; les deux mises à jour sont effectuées dans le callback, aucune dans un updater. Horloge E2E explicitement figée et avancée mot par mot. Console error/warn et erreurs de page font échouer les tests sans exception ; interceptions restaurées.
 
 Les premiers essais de développement ont aussi révélé des sélecteurs E2E ambigus (Accueil et fermeture du tiroir) et le contexte Réviseur masqué au petit format ; ils ont été corrigés avant la campagne finale. Ces essais sur arbre en cours ne remplacent pas les preuves finales au SHA publié.
+
+## B03-4 — Course dans le test hérité des quatre rôles
+
+La [CI de 6efc857c70d847e55ed3ff2f941ddf886ca4ff74](https://github.com/Soyfki/Jaquette/actions/runs/35327125335) échoue sur le test unitaire des bascules, alors que les 28 E2E et les nouveaux tests 0.3 passent. Le premier clic Sound Designer précède parfois le requestAnimationFrame de focus initial : le h1 récupère le focus attendu sur le bouton. La campagne locale de ce SHA passe, sans annuler cet échec CI. Correction du test : attendre explicitement le focus initial avant la première interaction, comme pour la recherche en 0.2 ; toutes les assertions de focus, isolation, URL et historique sont conservées. Nouveau SHA et campagne complète locale/CI exigés ; aucune modification applicative nécessaire.
