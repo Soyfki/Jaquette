@@ -4,8 +4,11 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { test } from 'node:test'
+import { pathToFileURL } from 'node:url'
+import { runInNewContext } from 'node:vm'
 import { crc32, inflateRawSync } from 'node:zlib'
 import { JSDOM } from 'jsdom'
+import { chromium } from '@playwright/test'
 import { generate, mediaPlan, PRESETS, verify } from './corpus.mjs'
 import { budgets, stats } from './contract.mjs'
 
@@ -142,4 +145,34 @@ test('all 14 adopted budgets have concrete protocols, boundaries, evidence and f
     assert.ok(doc.includes(b.protocol)); assert.equal(b.targetState, 'ADOPTED'); assert.equal(b.observationState, 'PLANNED')
     assert.equal(b.platforms.length, 11); assert.equal(b.longRuns, 10); assert.equal(b.interactionEvents, 100)
   }
+})
+
+test('portable HTML runs offline, collects frames and downloads a result without sending data', async t => {
+  const root = temp(t), browser = await chromium.launch({ channel: 'chrome', headless: true })
+  try {
+    const context = await browser.newContext({ acceptDownloads: true })
+    await context.setOffline(true)
+    const page = await context.newPage(), errors = [], remote = []
+    page.on('pageerror', e => errors.push(e.message))
+    page.on('request', r => { if (/^https?:/.test(r.url())) remote.push(r.url()) })
+    await page.goto(pathToFileURL(resolve('scripts/measurement/essai-materiel.html')).href)
+    await page.locator('#measure').click()
+    await page.waitForFunction(() => !document.querySelector('#save').disabled)
+    const download = page.waitForEvent('download')
+    await page.locator('#save').click()
+    const result = await download, file = join(root, 'hardware.json')
+    await result.saveAs(file)
+    const data = JSON.parse(readFileSync(file, 'utf8'))
+    assert.equal(data.machine, 'W18'); assert.ok(data.frameIntervalsMs.length > 50)
+    assert.ok(data.frameIntervalsMs.every(x => x > 0)); assert.equal(data.audioProbe, 'NOT_RUN')
+    assert.deepEqual(errors, []); assert.deepEqual(remote, [])
+  } finally { await browser.close() }
+})
+
+test('macOS report marks empty/failed collectors BLOCKED (JXA mocked, not native qualification)', () => {
+  const context = { Application: { currentApplication: () => ({ doShellScript: () => '' }) } }
+  runInNewContext(readFileSync('scripts/measurement/collect-macos.js', 'utf8'), context)
+  const data = JSON.parse(context.run(['MI']))
+  assert.equal(data.state, 'BLOCKED'); assert.equal(data.storage.capacityUsedAvailableKiB, null)
+  assert.equal(data.storage.solidState, null); assert.ok(data.missing.length > 0)
 })

@@ -4,9 +4,20 @@ Les configurations 8 Go/SSD du plan sont des propositions initiales. Seul le rel
 
 | Poste | Affectation | Configuration réelle | État du relevé |
 |---|---|---|---|
-| W18 | PC courant confirmé par l'utilisateur le 18 septembre 2026 | Collecteur Windows exécuté dans la campagne, résultat original et résumé liés dans la PR | Conditions audio/écran/alimentation à compléter par observation |
+| W18 | PC courant confirmé par l'utilisateur le 18 septembre 2026 | i5-4690K, 4 cœurs/4 threads, x64 ; 16 Gio installés ; MSI MS-7917 ; GTX 1060 6GB ; Windows 10 Famille 22H2 19045.6466 | Collecté réellement ; conditions audio/écran/alimentation à compléter |
 | MI | MacBook Intel avant M1 | CPU, cœurs, RAM, stockage, GPU, OS et navigateurs inconnus | BLOCKED : poste inaccessible |
 | M1 | MacBook M1 | CPU, cœurs, RAM, stockage, GPU, OS et navigateurs inconnus | BLOCKED : poste inaccessible |
+
+Relevé W18 **18 septembre 2026 à 12:34:30 UTC**, collecteur du SHA `d039e96211aca079dad25d4d9756822641a0a0c3`, PowerShell Windows 5.1 hors sandbox après obstacle CIM explicite. RAM : quatre modules de 4 294 967 296 octets, total installé 17 179 869 184 octets (16 Gio) ; mémoire physique exposée à l'OS 17 125 875 712 octets. CPU annoncé 3,50 GHz, quatre cœurs/logiques. Cette machine identifiée W18 par l'utilisateur n'est donc pas remplacée par l'hypothèse 8 Go/graphique intégré du plan.
+
+| Stockage réel W18 | Capacité utile volume | Libre au relevé | Support |
+|---|---:|---:|---|
+| C: NTFS, dossier de test | 499 431 501 824 octets | 336 269 361 152 octets | NVMe CT500P1SSD8, SSD physique 500 107 862 016 octets |
+| D: NTFS | 499 612 905 472 octets | 418 477 158 400 octets | ST9500325AS, HDD SATA physique 500 107 862 016 octets |
+
+Pilote graphique 32.0.15.6094 ; WMI rapporte 1920 × 1200 et 59 Hz, à confirmer dans les réglages (ne pas assimiler automatiquement à 60 Hz). Le nom GPU contient 6GB mais AdapterRAM WMI retourne 4 293 918 720 octets : limitation connue du compteur, aucune mémoire GPU déduite de cette valeur tronquée. Sorties détectées : NVIDIA/Realtek High Definition Audio et deux périphériques Steam Streaming ; la sortie réellement utilisée et son branchement restent une observation humaine. Aucun statut batterie détecté n'est une preuve d'alimentation secteur. Chrome 152.0.7977.84 détecté, Firefox non trouvé aux emplacements standards et aucun processus Firefox. ESU inconnu. 507 processus et CPU ponctuel 23 % pendant collecte : aucune mesure B11, ni état de repos revendiqué.
+
+Le JSON original sans numéro de série, réseau ni compte est conservé hors Git dans les preuves locales de la campagne. Les valeurs de capacité libre et d'activité sont datées et ne décrivent pas un état permanent.
 
 ## Versions retenues à qualifier
 
