@@ -751,6 +751,7 @@ test('runs and pauses the local text simulation without audio', async ({ page },
 test('offers visible keyboard focus on the project and its new controls', async ({ page }, testInfo) => {
   const errors = collectErrors(page)
   await page.goto('/projet')
+  await expect(page.getByRole('heading', { level: 1 })).toBeFocused()
   const menu = page.getByRole('button', { name: 'Ouvrir la navigation générale' })
   await menu.focus()
   await expect(menu).toBeFocused()
@@ -852,12 +853,14 @@ test('navigates without reload and restores history, URL, title and focus', asyn
 test('supports the regular-shell skip link and visible focus', async ({ page }) => {
   const errors = collectErrors(page)
   await page.goto('/accueil')
+  await expect(page.getByRole('heading', { level: 1 })).toBeFocused()
   const skipLink = page.getByRole('link', { name: 'Aller au contenu' })
   await skipLink.focus()
   await expect(skipLink).toHaveCSS('opacity', '1')
   await page.keyboard.press('Enter')
   await expect(page.getByRole('main')).toBeFocused()
   await page.goto('/accueil')
+  await expect(page.getByRole('heading', { level: 1 })).toBeFocused()
   const brandLink = page.getByRole('link', { name: 'Jaquette, aller à l’accueil' })
   await brandLink.focus()
   await page.keyboard.press('Tab')

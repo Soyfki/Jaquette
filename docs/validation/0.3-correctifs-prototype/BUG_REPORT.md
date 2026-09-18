@@ -31,3 +31,9 @@ Les premiers essais de développement ont aussi révélé des sélecteurs E2E am
 ## B03-4 — Course dans le test hérité des quatre rôles
 
 La [CI de 6efc857c70d847e55ed3ff2f941ddf886ca4ff74](https://github.com/Soyfki/Jaquette/actions/runs/35327125335) échoue sur le test unitaire des bascules, alors que les 28 E2E et les nouveaux tests 0.3 passent. Le premier clic Sound Designer précède parfois le requestAnimationFrame de focus initial : le h1 récupère le focus attendu sur le bouton. La campagne locale de ce SHA passe, sans annuler cet échec CI. Correction du test : attendre explicitement le focus initial avant la première interaction, comme pour la recherche en 0.2 ; toutes les assertions de focus, isolation, URL et historique sont conservées. Nouveau SHA et campagne complète locale/CI exigés ; aucune modification applicative nécessaire.
+
+Sur `f3f12b69a4d9b5261c8b0502dec556fb5e98aa35`, la CI et validate:all locale passent, mais le diagnostic local révèle la même course dans l’E2E du lien d’évitement : le focus du h1 interrompt le focus programmatique du lien, qui reste d’opacité 0. Les tests clavier hérités attendent désormais le focus initial avant de focaliser un autre contrôle ; aucune assertion ni seuil n’est assoupli. Cet échec reste conservé dans les preuves locales de ce SHA.
+
+## B03-5 — Contour de focus trop proche de l’activité sur Accueil
+
+Relecture des captures de `f3f12b69a4d9b5261c8b0502dec556fb5e98aa35` aux deux formats : le contour du bouton « Ouvrir l’état du projet » touche la ligne d’activité précédente. Une marge minimale utilisant le token existant space-2 sépare les deux, sans changer palette, typographies, ordre ou fonction. Les captures sont régénérées et relues sur le SHA final.
