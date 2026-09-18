@@ -45,3 +45,5 @@ Un poste inaccessible ou une observation matérielle manquante ne peut être acc
 ## 7. Synthèse
 
 Voir [rapport](VALIDATION_REPORT.md). Règle : un obligatoire BLOCKED implique BLOQUÉE / NO-GO, sinon FAIL implique À CORRIGER / NO-GO, sinon tous PASS autorisent VALIDÉE / GO. Aucune fusion avant Go.
+
+Campagne technique du 18 septembre au SHA `c3a7e7bd0dfb574aea13bbf97a5e296e3ea6c8b8` : T01/T02/T03/T04/T06/T07/T08/R01/R02 PASS ; T05/H-W18/H-MI/H-M1 BLOCKED. **9 PASS, 0 FAIL restant, 4 BLOCKED**. Commandes, résultats, reprises, preuves et limites dans le rapport. Responsable : agent Codex ; décision BLOQUÉE / NO-GO, sans dette acceptée.
