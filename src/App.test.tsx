@@ -390,12 +390,12 @@ describe('Jaquette application shell', () => {
 
   it('stops at the last word and clears the simulation timer when its panel closes', () => {
     vi.useFakeTimers()
-    const clearIntervalSpy = vi.spyOn(window, 'clearInterval')
+    const clearTimeoutSpy = vi.spyOn(window, 'clearTimeout')
     setPath('/projet')
     const firstRender = render(<AppShell />)
 
     fireEvent.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
-    act(() => vi.advanceTimersByTime(20_000))
+    for (let word = 1; word < 48; word++) act(() => vi.advanceTimersByTime(334))
     expect(screen.getByRole('status', { name: 'État de la simulation : Inactive' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Lancer la simulation' })).toBeVisible()
     expect(document.querySelector('[data-active-word="true"]')).toHaveTextContent('pluie.')
@@ -403,14 +403,14 @@ describe('Jaquette application shell', () => {
 
     const secondRender = render(<AppShell />)
     fireEvent.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
-    clearIntervalSpy.mockClear()
+    clearTimeoutSpy.mockClear()
     fireEvent.click(screen.getByRole('button', { name: 'Masquer Simulation/Navigation' }))
-    expect(clearIntervalSpy).toHaveBeenCalled()
+    expect(clearTimeoutSpy).toHaveBeenCalled()
     expect(document.querySelector('[data-active-word="true"]')).not.toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'Afficher Simulation/Navigation' }))
     expect(screen.getByRole('status', { name: 'État de la simulation : Inactive' })).toBeVisible()
     secondRender.unmount()
-    clearIntervalSpy.mockRestore()
+    clearTimeoutSpy.mockRestore()
   })
 
   it('opens and closes the fictive project history', async () => {
@@ -471,8 +471,8 @@ describe('Jaquette application shell', () => {
     ]) {
       expect(within(workspace).getByRole('region', { name: region })).toBeVisible()
     }
-    expect(within(workspace).getByRole('progressbar', { name: 'Doublage fictif : 7 chapitres terminés sur 10' })).toHaveValue(7)
-    expect(within(workspace).getByRole('progressbar', { name: 'Révision fictive : 21 validations obtenues sur 30 attendues' })).toHaveValue(21)
+    expect(within(workspace).getByRole('progressbar', { name: 'Doublage fictif : 10 chapitres terminés sur 10' })).toHaveValue(10)
+    expect(within(workspace).getByRole('progressbar', { name: 'Révision fictive : 30 validations obtenues sur 30 attendues' })).toHaveValue(30)
     expect(within(workspace).getByText('En attente Chef', { selector: 'strong' })).toBeVisible()
     expect(within(workspace).getByText(/La préparation de la publication deviendra disponible après la validation finale/)).toBeVisible()
     expect(within(workspace).getByText(/aucun pourcentage global/)).toBeVisible()
@@ -617,7 +617,7 @@ describe('Jaquette application shell', () => {
 
   it('cleans a running reduced Sound Designer drawer before mounting the Reviewer tree', async () => {
     const user = userEvent.setup()
-    const clearIntervalSpy = vi.spyOn(window, 'clearInterval')
+    const clearTimeoutSpy = vi.spyOn(window, 'clearTimeout')
     mockReducedWorkspace()
     setPath('/projet')
     render(<AppShell />)
@@ -627,12 +627,12 @@ describe('Jaquette application shell', () => {
     await user.click(screen.getByRole('button', { name: 'Historique' }))
     expect(document.querySelector('[data-active-word="true"]')).toBeInTheDocument()
     expect(document.querySelector('.sound-drawer')).toBeInTheDocument()
-    clearIntervalSpy.mockClear()
+    clearTimeoutSpy.mockClear()
 
     const reviewer = screen.getByRole('button', { name: 'Réviseur' })
     await user.click(reviewer)
     expect(reviewer).toHaveFocus()
-    expect(clearIntervalSpy).toHaveBeenCalled()
+    expect(clearTimeoutSpy).toHaveBeenCalled()
     expect(document.querySelector('[data-active-word="true"], .sound-drawer')).toBeNull()
     expect(screen.queryByRole('region', { name: 'Historique fictif du projet' })).not.toBeInTheDocument()
     expect(screen.getByLabelText('Workspace Réviseur fictif')).toBeVisible()
@@ -644,10 +644,10 @@ describe('Jaquette application shell', () => {
     expect(document.querySelector('[data-active-word="true"]')).toBeInTheDocument()
     expect(screen.getByRole('region', { name: 'Historique fictif du projet' })).toBeVisible()
 
-    clearIntervalSpy.mockClear()
+    clearTimeoutSpy.mockClear()
     await user.click(screen.getByRole('button', { name: 'Admin Maison' }))
     expect(screen.getByLabelText('Workspace Admin Maison fictif')).toBeVisible()
-    expect(clearIntervalSpy).toHaveBeenCalled()
+    expect(clearTimeoutSpy).toHaveBeenCalled()
     expect(document.querySelector('[data-active-word="true"], .sound-drawer')).toBeNull()
     expect(screen.queryByRole('region', { name: 'Historique fictif du projet' })).not.toBeInTheDocument()
 
@@ -658,7 +658,7 @@ describe('Jaquette application shell', () => {
     expect(screen.queryByRole('region', { name: 'Simulation/Navigation' })).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Ouvrir Simulation/Navigation' }))
     expect(screen.getByRole('status', { name: 'État de la simulation : Inactive' })).toBeVisible()
-    clearIntervalSpy.mockRestore()
+    clearTimeoutSpy.mockRestore()
   })
 
   it('uses the expected unfilled Material Symbols Rounded instead of initials', () => {
@@ -683,7 +683,7 @@ describe('Jaquette application shell', () => {
     const user = userEvent.setup()
     render(<AppShell />)
     window.history.pushState(null, '', '/projet')
-    window.dispatchEvent(new PopStateEvent('popstate'))
+    act(() => window.dispatchEvent(new PopStateEvent('popstate')))
     const heading = await screen.findByRole('heading', { level: 1, name: 'Le livre attend sa scène.' })
     await waitFor(() => expect(heading).toHaveFocus())
     await user.click(screen.getByRole('button', { name: 'Ouvrir la navigation générale' }))

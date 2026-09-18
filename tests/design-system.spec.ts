@@ -1,4 +1,5 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, type Page } from '@playwright/test'
+import { test } from './fixtures'
 
 const routeCases = [
   { path: '/connexion', heading: 'Entrez dans l’atelier Jaquette', title: 'Jaquette — Connexion' },
@@ -504,8 +505,8 @@ test('mounts the Team Lead and Admin Maison hierarchies as isolated responsive t
   for (const region of teamLeadRegions) {
     await expect(page.getByRole('region', { name: region, exact: true })).toBeVisible()
   }
-  await expect(page.getByRole('progressbar', { name: 'Doublage fictif : 7 chapitres terminés sur 10' })).toHaveAttribute('value', '7')
-  await expect(page.getByRole('progressbar', { name: 'Révision fictive : 21 validations obtenues sur 30 attendues' })).toHaveAttribute('value', '21')
+  await expect(page.getByRole('progressbar', { name: 'Doublage fictif : 10 chapitres terminés sur 10' })).toHaveAttribute('value', '10')
+  await expect(page.getByRole('progressbar', { name: 'Révision fictive : 30 validations obtenues sur 30 attendues' })).toHaveAttribute('value', '30')
   await expect(page.getByText('En attente Chef', { exact: true }).first()).toBeVisible()
   await expect(page.getByText(/La préparation de la publication deviendra disponible après la validation finale/)).toBeVisible()
   await expect(page.getByText(/aucun pourcentage global/)).toBeVisible()

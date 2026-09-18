@@ -7,7 +7,7 @@ L’agent fournit dans la PR et dans la tâche le SHA complet, l’URL locale, l
 | ID | Parcours et résultat à observer | Observation / PASS, FAIL ou BLOCKED |
 |---|---|---|
 | H03-1 | Accueil : Le Jardin de Minuit est En attente Chef, 10/10 chapitres et 30/30 validations. Ouvrir le projet, choisir Chef d’équipe : Doublage, Révision et Validation finale restent trois axes distincts, finale encore en attente. La préparation de publication n’est pas proposée. Le dénominateur 10 chapitres × 3 Réviseurs se comprend. | À renseigner |
-| H03-2 | Depuis Accueil, atteindre Fondations 1.1 avec Tab puis Entrée. Le titre reçoit un focus visible et reste confortable à lire. Précédent ramène à Accueil ; suivant retrouve Fondations et son titre. | À renseigner |
+| H03-2 | Dans Projet, ouvrir la navigation générale au clavier, atteindre Fondations 1.1 avec Tab puis Entrée. Le titre reçoit un focus visible et reste confortable à lire. Précédent ramène au projet ; suivant retrouve Fondations et son titre. | À renseigner |
 | H03-3 | Dans Projet, choisir Chef d’équipe ou Réviseur. Lancer la simulation (x4 pour raccourcir), laisser finir au dernier mot, puis relancer. Le surlignage repart au début, le statut reste compréhensible et la lecture semble fluide. | À renseigner |
 
 ## Revalidation historique complète 1.4.2

@@ -1521,9 +1521,12 @@ svg {
   .settings-list article { grid-template-columns: 2.75rem minmax(0, 1fr); }
   .settings-list article > :last-child { grid-column: 2; width: fit-content; }
 }
-.page-intro h1:focus,
-.foundations-page h1:focus {
+.page-intro h1:focus {
   outline: 0;
+}
+.foundations-page h1:focus {
+  outline: 0.2rem solid var(--color-accent);
+  outline-offset: 0.22rem;
 }
 /* Workspace Sound Designer vide 1.3 */
 .app-main--project {

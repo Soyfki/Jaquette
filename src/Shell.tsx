@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { FoundationsPage } from './App'
 import { MaterialSymbol, type MaterialSymbolName } from './MaterialSymbol'
 import { ProjectPage, type SimulatedProjectRole } from './ProjectPage'
+import { expectedValidations, submittedProject } from './demoScenario'
 
 type Navigate = (path: string) => void
 
@@ -61,11 +62,11 @@ const demoProjects: DemoProject[] = [
     id: 'jardin-minuit',
     name: 'Le Jardin de Minuit',
     teamId: 'studio-narratif',
-    status: 'En attente Chef',
-    activity: 'Soumis aujourd’hui à 09:42',
-    progressLabel: '7 chapitres doublés sur 10',
-    progressValue: 7,
-    progressMax: 10,
+    status: submittedProject.finalValidationState,
+    activity: `Soumis aujourd’hui à 09:42 · ${submittedProject.obtainedValidations} validations sur ${expectedValidations}`,
+    progressLabel: `${submittedProject.completedChapterCount} chapitres doublés sur ${submittedProject.chapterCount}`,
+    progressValue: submittedProject.completedChapterCount,
+    progressMax: submittedProject.chapterCount,
     opensProjectDemo: true,
   },
   {

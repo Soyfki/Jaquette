@@ -35,6 +35,8 @@ L’ancien 1.4.2 reste non acquis avant sa revalidation humaine : [protocole PR 
 
 ## Préparer une validation
 
+Pour **0.3 — Corriger les défauts du prototype**, la PR 9 historique est reprise après intégration de main 0.2 : [checklist](0.3-correctifs-prototype/CHECKLIST.md), [rapport](0.3-correctifs-prototype/VALIDATION_REPORT.md) et [formulaire humain exhaustif](0.3-correctifs-prototype/HUMAN_REVIEW.md). Les correctifs 0.3 et la revalidation historique 1.4.2 donnent deux conclusions distinctes sur le même SHA. Les observations H03 et les dix points historiques sont obligatoires avant tout Go et fusion.
+
 Pour **0.2 — Reproduire la base**, utiliser la [campagne technique dédiée](0.2-base-reproductible/README.md) et le [guide d'installation](../REPRODUCIBILITY.md). Aucun essai humain supplémentaire n'est requis pour ce lot. La récupération et la CI obligatoires doivent réussir avant acquisition ; la revalidation humaine de 1.4.2 reste distincte.
 
 Avant les tests :

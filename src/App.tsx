@@ -117,7 +117,7 @@ export function FoundationsPage() {
           <div className="hero__eyebrow">Design system de base</div>
           <div className="hero__layout">
             <div className="hero__copy">
-              <h1 id="hero-title">La voix du livre commence ici.</h1>
+              <h1 id="hero-title" tabIndex={-1}>La voix du livre commence ici.</h1>
               <p>
                 Une fondation visuelle calme et expressive pour associer le son au texte,
                 sans jamais perdre le fil de la lecture.

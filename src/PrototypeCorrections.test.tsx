@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { AppShell } from './Shell'
 
 function click(name: string) {
-  fireEvent.click(screen.getByRole('button', { name, exact: true }))
+  fireEvent.click(screen.getByRole('button', { name }))
 }
 
 describe('0.3 prototype corrections', () => {
@@ -29,7 +29,7 @@ describe('0.3 prototype corrections', () => {
     expect(homeProgress).toHaveAttribute('max', '10')
     expect(homeProgress).toHaveAccessibleName(/10 chapitres doublés sur 10/)
     fireEvent.click(within(home).getByRole('button'))
-    click('Chef d’équipe Actif'.replace(' Actif', ''))
+    click('Chef d’équipe')
     const progress = screen.getByRole('region', { name: 'Progression' })
     expect(progress.querySelectorAll('article')).toHaveLength(3)
     expect(progress).toHaveTextContent('10 chapitres × 3 Réviseurs = 30 validations attendues')
@@ -46,7 +46,7 @@ describe('0.3 prototype corrections', () => {
     expect(screen.getByRole('row', { name: /Le Jardin de Minuit/ })).toHaveTextContent('En attente Chef')
     click('Réviseur')
     expect(screen.getByText(/Scénario de révision antérieur à la soumission/)).toBeVisible()
-    const validation = screen.getByRole('region', { name: 'Validation', exact: true })
+    const validation = screen.getByRole('region', { name: 'Validation' })
     expect(validation).toHaveTextContent('2 sur 3')
     expect(validation).toHaveTextContent('Bloquée')
   })

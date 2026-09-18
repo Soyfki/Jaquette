@@ -11,7 +11,7 @@ Cette convention fournit un repère minimal pour versionner l’application Jaqu
 - Main à la base de 0.1 contient le prototype Sound Designer/Réviseur. Les quatre rôles et correctifs de l’ancien 1.4.2 sont sur la [PR 9](https://github.com/Soyfki/Jaquette/pull/9), SHA 5cabbb016d3ce5480b165512c1aa7814b8367802, tant qu’ils ne sont pas fusionnés.
 - 1.4.2 reste non acquis avant sa revalidation humaine ; aucune clôture rétroactive de l’ancienne 1.4 ou de l’ancienne phase 1.
 - Ancien 1.4.3 : plus de prochaine livraison autonome ; aucun périmètre précis retrouvé. Inventorier les reliquats réellement identifiables en 0.3/0.5 puis les rattacher aux sous-étapes futures correspondantes.
-- Nouvelle étape 0 distincte de l’ancienne phase 0 acquise. Après Go de 0.1, prochaine action : **0.2**, pas l’ancienne 2.1 ni la nouvelle étape 1.
+- Nouvelle étape 0 distincte de l’ancienne phase 0 acquise. 0.1 et 0.2 sont intégrées ; **0.3 est en validation dans PR 9 reprise**, depuis son SHA historique ci-dessus. La [campagne 0.3 et revalidation 1.4.2](validation/0.3-correctifs-prototype/CHECKLIST.md) attend les observations humaines ; aucune acquisition ni étape suivante à ce stade.
 - Cadrage actif du 11 septembre : lancement gratuit sur invitation, Web complet Chrome/Firefox/Safari (Safari sur Mac), Electron Windows/macOS, collaboration et MCP inclus ; publication Jacques en F1.
 
 La valeur 0.0.0 est conservée : le prototype et l’harmonisation documentaire ne constituent pas une version publiée, un format adopté ou un jalon fonctionnel démontré.

@@ -16,7 +16,7 @@ Les quatre rôles et les correctifs de l’ancien **1.4.2 — Chef d’équipe e
 
 L’ancien 1.4.3 n’est plus une prochaine livraison autonome : aucun périmètre précis retrouvé dans l’ancien plan. Les reliquats réellement identifiables seront inventoriés en 0.3/0.5 et rattachés aux futures sous-étapes correspondantes. L’ancienne 1.4 et l’ancienne phase 1 restent non acquises ; aucune clôture rétroactive.
 
-La nouvelle étape 0 de reprise est distincte de l’ancienne phase 0. **0.1 — Harmoniser les sources** et **0.2 — Reproduire la base** sont validées ; les [preuves 0.2 et le suivi de fusion](https://github.com/Soyfki/Jaquette/pull/11) précisent les SHA qualifiés. La prochaine action est **0.3 — Corriger les défauts du prototype**, non commencée ici.
+La nouvelle étape 0 de reprise est distincte de l’ancienne phase 0. **0.1 — Harmoniser les sources** et **0.2 — Reproduire la base** sont validées ; les [preuves 0.2 et le suivi de fusion](https://github.com/Soyfki/Jaquette/pull/11) précisent les SHA qualifiés. **0.3 — Corriger les défauts du prototype** reprend la PR 9 depuis son SHA historique ci-dessus avec main 0.2 intégré. La [campagne](docs/validation/0.3-correctifs-prototype/CHECKLIST.md) et le [formulaire humain complet](docs/validation/0.3-correctifs-prototype/HUMAN_REVIEW.md) couvrent les correctifs et tout le diff 1.4.2. Deux conclusions distinctes restent BLOQUÉES / NO-GO avant les observations humaines ; aucune fusion ni étape suivante à ce stade.
 
 Version : **0.0.0**, non publiée. Les [jalons actifs et leur correspondance historique](docs/VERSIONING.md) ne sont pas des versions applicatives ou de formats.
 

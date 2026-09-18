@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { expectedValidations, submittedProject } from './demoScenario'
 
 type TrackName = 'SFX' | 'Ambiance' | 'Musique'
 type AudioFolder = { name: string; files: string[] }
@@ -14,7 +15,7 @@ export type SimulatedProjectRole = 'sound-designer' | 'reviewer' | 'team-lead' |
 
 const REDUCED_WORKSPACE_QUERY = '(max-width: 56rem)'
 const BASE_WORDS_PER_MINUTE = 180
-const TEAM_LEAD_DEMO_FINAL_VALIDATION_STATE: FinalValidationState = 'En attente Chef'
+const TEAM_LEAD_DEMO_FINAL_VALIDATION_STATE: FinalValidationState = submittedProject.finalValidationState
 const PUBLICATION_PREPARATION_STATES: readonly FinalValidationState[] = ['Validé', 'Prêt à publier']
 
 function canShowPublicationPreparation(state: FinalValidationState) {
@@ -401,18 +402,13 @@ function SimulationControls({
 
   useEffect(() => {
     if (simulationState !== 'playing') return
-    const timer = window.setInterval(() => {
-      setActiveWordIndex((current) => {
-        const next = current === null ? 0 : current + 1
-        if (next >= lastWordIndex) {
-          setSimulationState('inactive')
-          return lastWordIndex
-        }
-        return next
-      })
+    const timer = window.setTimeout(() => {
+      const next = Math.min(lastWordIndex, activeWordIndex === null ? 0 : activeWordIndex + 1)
+      setActiveWordIndex(next)
+      if (next === lastWordIndex) setSimulationState('inactive')
     }, 60_000 / (BASE_WORDS_PER_MINUTE * speedMultiplier))
-    return () => window.clearInterval(timer)
-  }, [lastWordIndex, setActiveWordIndex, simulationState, speedMultiplier])
+    return () => window.clearTimeout(timer)
+  }, [activeWordIndex, lastWordIndex, setActiveWordIndex, simulationState, speedMultiplier])
 
   const toggleSimulation = () => {
     if (simulationState === 'playing') {
@@ -794,6 +790,7 @@ function ReviewerValidationPanel() {
         <div><span className="sound-panel__index">05 · État fictif</span><h2 id="reviewer-validation-title">Validation</h2></div>
         <span className="fiction-chip fiction-chip--static">Non exécutoire</span>
       </header>
+      <p className="reviewer-panel__note">Scénario de révision antérieur à la soumission · distinct de l’état présenté au Chef.</p>
       <dl className="reviewer-validation-summary">
         <div><dt>État de démonstration</dt><dd>Non révisé</dd></div>
         <div><dt>Approbations fictives</dt><dd>2 sur 3</dd></div>
@@ -871,14 +868,15 @@ function TeamLeadProgressPanel({ finalValidationState }: { finalValidationState:
       </header>
       <div className="progress-axis-list">
         <article>
-          <div><span>Doublage</span><strong>70 %</strong></div>
-          <progress aria-label="Doublage fictif : 7 chapitres terminés sur 10" value="7" max="10">7 sur 10</progress>
-          <p>7 chapitres déclarés terminés sur 10 · données fictives</p>
+          <div><span>Doublage</span><strong>{100 * submittedProject.completedChapterCount / submittedProject.chapterCount} %</strong></div>
+          <progress aria-label={`Doublage fictif : ${submittedProject.completedChapterCount} chapitres terminés sur ${submittedProject.chapterCount}`} value={submittedProject.completedChapterCount} max={submittedProject.chapterCount}>{submittedProject.completedChapterCount} sur {submittedProject.chapterCount}</progress>
+          <p>{submittedProject.completedChapterCount} chapitres déclarés terminés sur {submittedProject.chapterCount} · données fictives</p>
         </article>
         <article>
-          <div><span>Révision</span><strong>21 / 30</strong></div>
-          <progress aria-label="Révision fictive : 21 validations obtenues sur 30 attendues" value="21" max="30">21 sur 30</progress>
-          <p>21 validations obtenues sur 30 attendues · données fictives</p>
+          <div><span>Révision</span><strong>{submittedProject.obtainedValidations} / {expectedValidations}</strong></div>
+          <progress aria-label={`Révision fictive : ${submittedProject.obtainedValidations} validations obtenues sur ${expectedValidations} attendues`} value={submittedProject.obtainedValidations} max={expectedValidations}>{submittedProject.obtainedValidations} sur {expectedValidations}</progress>
+          <p>{submittedProject.obtainedValidations} validations obtenues sur {expectedValidations} attendues · données fictives</p>
+          <p>{submittedProject.chapterCount} chapitres × {submittedProject.reviewerCount} Réviseurs = {expectedValidations} validations attendues</p>
         </article>
         <article className="progress-axis-list__final">
           <span>Validation finale</span>
@@ -898,6 +896,7 @@ function TeamLeadHistoryPanel() {
       </header>
       <ol className="role-event-list">
         <li><span>Aujourd’hui · 09:42</span><strong>Projet soumis au Chef d’équipe</strong></li>
+        <li><span>Aujourd’hui · 09:30</span><strong>30e validation fictive obtenue · 10 chapitres terminés, révision complète</strong></li>
         <li><span>Hier · 17:18</span><strong>21e validation fictive obtenue</strong></li>
         <li><span>12 août · 11:03</span><strong>Version de repérage conservée</strong></li>
       </ol>
@@ -931,7 +930,7 @@ function TeamLeadFinalValidationPanel({ finalValidationState }: { finalValidatio
       </header>
       <dl className="role-definition-list">
         <div><dt>État présenté</dt><dd>{finalValidationState}</dd></div>
-        <div><dt>Révision</dt><dd>21 validations sur 30</dd></div>
+        <div><dt>Révision</dt><dd>{submittedProject.obtainedValidations} validations sur {expectedValidations}</dd></div>
       </dl>
       <div className="non-executive-actions" aria-label="Aperçu fictif des décisions finales">
         <button type="button" disabled>Valider le livre · simulation</button>
@@ -1054,7 +1053,7 @@ function AdminProjectsPanel() {
       <header className="role-panel__header"><div><span className="sound-panel__index">04 · Portefeuille fictif</span><h2 id="admin-projects-title">Projets</h2></div></header>
       <div className="admin-project-table" role="table" aria-label="Projets fictifs de la maison">
         <div role="row"><span role="columnheader">Projet</span><span role="columnheader">Équipe</span><span role="columnheader">Statut</span></div>
-        <div role="row"><strong role="cell">Le Jardin de Minuit</strong><span role="cell">Studio narratif</span><small role="cell">Révision</small></div>
+        <div role="row"><strong role="cell">Le Jardin de Minuit</strong><span role="cell">Studio narratif</span><small role="cell">{submittedProject.finalValidationState}</small></div>
         <div role="row"><strong role="cell">La Ville Haute</strong><span role="cell">Révision Minuit</span><small role="cell">Doublage</small></div>
       </div>
       <p className="role-panel__note">Données de management fictives ; aucun projet n’est créé, transféré ou publié.</p>
