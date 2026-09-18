@@ -1,4 +1,5 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, type Page } from '@playwright/test'
+import { test } from './fixtures'
 
 const routeCases = [
   { path: '/connexion', heading: 'Entrez dans l’atelier Jaquette', title: 'Jaquette — Connexion' },
@@ -49,6 +50,84 @@ test('opens every primary URL directly with its accessible shell', async ({ page
     await expectNoOverflow(page)
     await page.screenshot({ path: `test-results/visual/${route.path.slice(1)}-${testInfo.project.name}.png`, fullPage: true })
   }
+  expect(errors.consoleErrors).toEqual([])
+  expect(errors.pageErrors).toEqual([])
+})
+
+test('shows the complete local dashboard and enters the project through SPA navigation', async ({ page }, testInfo) => {
+  const errors = collectErrors(page)
+  await page.goto('/accueil')
+  const viewport = page.viewportSize()!
+  const teamsRegion = page.getByRole('region', { name: 'Toutes les équipes' })
+  const projectsRegion = page.getByRole('region', { name: 'Tous les projets' })
+
+  await expect(teamsRegion).toBeVisible()
+  await expect(projectsRegion).toBeVisible()
+  await expect(teamsRegion.getByRole('article')).toHaveCount(2)
+  await expect(projectsRegion.getByRole('article')).toHaveCount(5)
+
+  for (const [name, members, projectCount] of [
+    ['Studio narratif', '7 membres fictifs', '3 projets'],
+    ['Révision Minuit', '5 membres fictifs', '2 projets'],
+  ] as const) {
+    const team = teamsRegion.getByRole('article', { name })
+    await expect(team).toBeVisible()
+    await expect(team.getByText(members, { exact: true })).toBeVisible()
+    await expect(team.getByText(projectCount, { exact: true })).toBeVisible()
+  }
+
+  for (const [id, name, team, status] of [
+    ['jardin-minuit', 'Le Jardin de Minuit', 'Studio narratif', 'En attente Chef'],
+    ['atlas-brumes', 'L’Atlas des brumes', 'Studio narratif', 'Révision'],
+    ['voix-large', 'Les Voix du large', 'Studio narratif', 'Doublage'],
+    ['ville-haute', 'La Ville Haute', 'Révision Minuit', 'Doublage'],
+    ['heures-claires', 'Les Heures claires', 'Révision Minuit', 'Prêt à réviser'],
+  ] as const) {
+    const project = projectsRegion.locator(`[data-demo-project="${id}"]`)
+    await expect(project.getByRole('heading', { level: 3, name })).toBeVisible()
+    await expect(project.getByText(team, { exact: true })).toBeVisible()
+    await expect(project.getByText(status, { exact: true })).toBeVisible()
+    await expect(project.getByRole('progressbar')).toBeVisible()
+  }
+
+  await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+  await expectNoOverflow(page)
+  const clippedCards = await page.locator('[data-demo-team], [data-demo-project]').evaluateAll((cards) => cards.some((card) => (
+    card.scrollWidth > card.clientWidth || card.scrollHeight > card.clientHeight
+  )))
+  expect(clippedCards).toBe(false)
+
+  if (testInfo.project.name === 'chrome-reduced') {
+    const [teamsBox, projectsBox] = await Promise.all([teamsRegion.boundingBox(), projectsRegion.boundingBox()])
+    expect(teamsBox && projectsBox).toBeTruthy()
+    expect(projectsBox!.y).toBeGreaterThanOrEqual(teamsBox!.y + teamsBox!.height)
+  }
+
+  const openProject = page.getByRole('button', { name: 'Ouvrir l’état du projet' })
+  await openProject.focus()
+  await expect(openProject).toBeFocused()
+  const focus = await openProject.evaluate((element) => {
+    const style = getComputedStyle(element)
+    return { style: style.outlineStyle, width: Number.parseFloat(style.outlineWidth) }
+  })
+  expect(focus.style).not.toBe('none')
+  expect(focus.width).toBeGreaterThan(0)
+
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await page.screenshot({
+    path: `test-results/visual/accueil-dashboard-${viewport.width}x${viewport.height}.png`,
+    fullPage: true,
+  })
+
+  await page.evaluate(() => {
+    ;(window as Window & { __jaquetteHomeMarker?: string }).__jaquetteHomeMarker = 'preserved'
+  })
+  await openProject.press('Enter')
+  await expect(page).toHaveURL('/projet')
+  expect(await page.evaluate(() => (window as Window & { __jaquetteHomeMarker?: string }).__jaquetteHomeMarker)).toBe('preserved')
+  await expect(page.getByRole('button', { name: 'Sound Designer' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByLabel('Workspace Sound Designer fictif')).toBeVisible()
+  await expectNoOverflow(page)
   expect(errors.consoleErrors).toEqual([])
   expect(errors.pageErrors).toEqual([])
 })
@@ -376,6 +455,181 @@ test('switches the simulated role locally and mounts a wider Reviewer workspace'
   expect(errors.pageErrors).toEqual([])
 })
 
+test('mounts the Team Lead and Admin Maison hierarchies as isolated responsive trees', async ({ page }, testInfo) => {
+  test.setTimeout(120_000)
+  const errors = collectErrors(page)
+  await page.goto('/projet')
+  const viewport = page.viewportSize()!
+  const roleControl = page.getByRole('group', { name: 'Rôle simulé' })
+  const soundDesigner = roleControl.getByRole('button', { name: 'Sound Designer' })
+  const reviewer = roleControl.getByRole('button', { name: 'Réviseur' })
+  const teamLead = roleControl.getByRole('button', { name: 'Chef d’équipe' })
+  const publishingHouseAdmin = roleControl.getByRole('button', { name: 'Admin Maison' })
+  const browserState = await page.evaluate(() => {
+    ;(window as Window & { __jaquetteManagementRoleMarker?: string }).__jaquetteManagementRoleMarker = 'preserved'
+    return { historyLength: window.history.length, path: window.location.pathname }
+  })
+
+  await expect(roleControl.getByRole('button')).toHaveCount(4)
+  await expect(soundDesigner).toHaveAttribute('aria-pressed', 'true')
+  await expect(reviewer).toHaveAttribute('aria-pressed', 'false')
+  await expect(teamLead).toHaveAttribute('aria-pressed', 'false')
+  await expect(publishingHouseAdmin).toHaveAttribute('aria-pressed', 'false')
+
+  await teamLead.focus()
+  await teamLead.press('Space')
+  await expect(teamLead).toBeFocused()
+  await expect(teamLead).toHaveAttribute('aria-pressed', 'true')
+  const teamLeadFocus = await teamLead.evaluate((element) => {
+    const style = getComputedStyle(element)
+    return { style: style.outlineStyle, width: Number.parseFloat(style.outlineWidth) }
+  })
+  expect(teamLeadFocus.style).not.toBe('none')
+  expect(teamLeadFocus.width).toBeGreaterThan(0)
+  await expect(page).toHaveURL('/projet')
+  expect(await page.evaluate(() => window.history.length)).toBe(browserState.historyLength)
+  await expect(page.getByText('Atelier Chef d’équipe · rôle simulé')).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'Le projet garde son cap.' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+  await expect(page.getByLabel('Workspace Chef d’équipe fictif')).toBeVisible()
+
+  const teamLeadRegions = [
+    'Tableau de bord',
+    'Progression',
+    'Livre',
+    'Simulation/Navigation',
+    'Historique',
+    'Commentaires',
+    'Validation finale',
+  ]
+  for (const region of teamLeadRegions) {
+    await expect(page.getByRole('region', { name: region, exact: true })).toBeVisible()
+  }
+  await expect(page.getByRole('progressbar', { name: 'Doublage fictif : 10 chapitres terminés sur 10' })).toHaveAttribute('value', '10')
+  await expect(page.getByRole('progressbar', { name: 'Révision fictive : 30 validations obtenues sur 30 attendues' })).toHaveAttribute('value', '30')
+  await expect(page.getByText('En attente Chef', { exact: true }).first()).toBeVisible()
+  await expect(page.getByText(/La préparation de la publication deviendra disponible après la validation finale/)).toBeVisible()
+  await expect(page.getByText(/aucun pourcentage global/)).toBeVisible()
+  await expect(page.getByRole('region', { name: 'Préparation de la publication', exact: true })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: /publication/i })).toHaveCount(0)
+  await expect(page.locator('[data-workspace-region="publication-preparation"]')).toHaveCount(0)
+  await expect(page.getByRole('region', { name: 'Bibliothèque', exact: true })).toHaveCount(0)
+  await expect(page.getByRole('region', { name: 'Inspecteur audio', exact: true })).toHaveCount(0)
+  await expect(page.getByRole('searchbox', { name: 'Rechercher dans la bibliothèque fictive' })).toHaveCount(0)
+  await expect(page.getByLabel('Ouvrir un fichier local')).toHaveCount(0)
+  await expect(page.getByRole('button', { name: /Dépublier/i })).toHaveCount(0)
+  await expect(page.locator('[data-project-track], .responsive-panel-toolbar, .sound-drawer, [contenteditable], audio')).toHaveCount(0)
+  await expectNoOverflow(page)
+
+  const clippedRoleButtons = await roleControl.getByRole('button').evaluateAll((buttons) => buttons.some((button) => (
+    button.scrollWidth > button.clientWidth || button.scrollHeight > button.clientHeight
+  )))
+  expect(clippedRoleButtons).toBe(false)
+
+  if (testInfo.project.name === 'chrome-reduced') {
+    const ordered = await Promise.all(
+      ['Tableau de bord', 'Progression', 'Livre', 'Simulation/Navigation', 'Historique'].map((name) => (
+        page.getByRole('region', { name, exact: true }).boundingBox()
+      )),
+    )
+    expect(ordered.every(Boolean)).toBe(true)
+    for (let index = 1; index < ordered.length; index += 1) {
+      expect(ordered[index]!.y).toBeGreaterThanOrEqual(ordered[index - 1]!.y + ordered[index - 1]!.height)
+    }
+  }
+  await page.screenshot({
+    path: `test-results/visual/projet-team-lead-${viewport.width}x${viewport.height}.png`,
+    fullPage: true,
+  })
+
+  await page.getByRole('button', { name: 'Lancer la simulation' }).click()
+  await page.getByRole('button', { name: 'Historique' }).click()
+  await expect(page.locator('[data-active-word="true"]')).toHaveCount(1)
+  await expect(page.getByRole('region', { name: 'Historique fictif du projet' })).toBeVisible()
+
+  await publishingHouseAdmin.click()
+  await expect(publishingHouseAdmin).toBeFocused()
+  await expect(publishingHouseAdmin).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.locator('[data-active-word="true"]')).toHaveCount(0)
+  await expect(page.getByRole('region', { name: 'Historique fictif du projet' })).toHaveCount(0)
+  await expect(page.getByText('Atelier Admin Maison · rôle simulé')).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'La maison organise ses équipes.' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+  await expect(page.getByLabel('Workspace Admin Maison fictif')).toBeVisible()
+
+  const adminRegions = ['Membres', 'Équipes', 'Invitations', 'Projets', 'Permissions', 'Audit']
+  for (const region of adminRegions) {
+    await expect(page.getByRole('region', { name: region, exact: true })).toBeVisible()
+  }
+  await expect(page.getByText('Non accordés automatiquement')).toBeVisible()
+  await expect(page.getByText('Aucun e-mail réel')).toBeVisible()
+  for (const forbiddenRegion of [
+    'Bibliothèque',
+    'Livre',
+    'Inspecteur audio',
+    'Simulation/Navigation',
+    'Candidates de chapitre',
+    'Validation',
+    'Validation finale',
+    'Préparation de la publication',
+  ]) {
+    await expect(page.getByRole('region', { name: forbiddenRegion, exact: true })).toHaveCount(0)
+  }
+  await expect(page.getByRole('searchbox', { name: 'Rechercher dans la bibliothèque fictive' })).toHaveCount(0)
+  await expect(page.getByLabel('Ouvrir un fichier local')).toHaveCount(0)
+  await expect(page.locator('[data-project-track], .responsive-panel-toolbar, .sound-drawer, [contenteditable], audio')).toHaveCount(0)
+  await expectNoOverflow(page)
+
+  if (testInfo.project.name === 'chrome-reduced') {
+    const ordered = await Promise.all(adminRegions.map((name) => page.getByRole('region', { name, exact: true }).boundingBox()))
+    expect(ordered.every(Boolean)).toBe(true)
+    for (let index = 1; index < ordered.length; index += 1) {
+      expect(ordered[index]!.y).toBeGreaterThanOrEqual(ordered[index - 1]!.y + ordered[index - 1]!.height)
+    }
+  }
+  await page.screenshot({
+    path: `test-results/visual/projet-admin-maison-${viewport.width}x${viewport.height}.png`,
+    fullPage: true,
+  })
+
+  for (let cycle = 0; cycle < 2; cycle += 1) {
+    for (const [button, workspace] of [
+      [soundDesigner, 'Workspace Sound Designer fictif'],
+      [reviewer, 'Workspace Réviseur fictif'],
+      [teamLead, 'Workspace Chef d’équipe fictif'],
+      [publishingHouseAdmin, 'Workspace Admin Maison fictif'],
+    ] as const) {
+      await button.click()
+      await expect(button).toHaveAttribute('aria-pressed', 'true')
+      await expect(page.getByLabel(workspace)).toBeVisible()
+      await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+    }
+  }
+
+  await expect(page).toHaveURL('/projet')
+  expect(await page.evaluate(() => window.history.length)).toBe(browserState.historyLength)
+  expect(await page.evaluate(() => (window as Window & { __jaquetteManagementRoleMarker?: string }).__jaquetteManagementRoleMarker)).toBe('preserved')
+  await expectNoOverflow(page)
+
+  await page.reload()
+  await expect(soundDesigner).toHaveAttribute('aria-pressed', 'true')
+  await expect(reviewer).toHaveAttribute('aria-pressed', 'false')
+  await expect(teamLead).toHaveAttribute('aria-pressed', 'false')
+  await expect(publishingHouseAdmin).toHaveAttribute('aria-pressed', 'false')
+  await expect(page.getByLabel('Workspace Sound Designer fictif')).toBeVisible()
+  await expect(page).toHaveURL('/projet')
+
+  await publishingHouseAdmin.click()
+  await page.getByRole('button', { name: 'Ouvrir la navigation générale' }).click()
+  await page.getByRole('link', { name: 'Accueil', exact: true }).click()
+  await page.getByRole('button', { name: 'Ouvrir l’état du projet' }).click()
+  await expect(soundDesigner).toHaveAttribute('aria-pressed', 'true')
+  await expect(publishingHouseAdmin).toHaveAttribute('aria-pressed', 'false')
+  await expect(page.getByLabel('Workspace Sound Designer fictif')).toBeVisible()
+  expect(errors.consoleErrors).toEqual([])
+  expect(errors.pageErrors).toEqual([])
+})
+
 test('uses the local picker, synchronized pagination, chapter select, menu and history', async ({ page }, testInfo) => {
   const errors = collectErrors(page)
   await page.goto('/projet')
@@ -497,6 +751,7 @@ test('runs and pauses the local text simulation without audio', async ({ page },
 test('offers visible keyboard focus on the project and its new controls', async ({ page }, testInfo) => {
   const errors = collectErrors(page)
   await page.goto('/projet')
+  await expect(page.getByRole('heading', { level: 1 })).toBeFocused()
   const menu = page.getByRole('button', { name: 'Ouvrir la navigation générale' })
   await menu.focus()
   await expect(menu).toBeFocused()
@@ -507,6 +762,10 @@ test('offers visible keyboard focus on the project and its new controls', async 
   await expect(page.getByRole('button', { name: 'Sound Designer' })).toBeFocused()
   await page.keyboard.press('Tab')
   await expect(page.getByRole('button', { name: 'Réviseur' })).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('button', { name: 'Chef d’équipe' })).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('button', { name: 'Admin Maison' })).toBeFocused()
   await page.keyboard.press('Tab')
   const libraryToggle = page.getByRole('button', { name: /la bibliothèque/ })
   await expect(libraryToggle).toBeFocused()
@@ -594,12 +853,14 @@ test('navigates without reload and restores history, URL, title and focus', asyn
 test('supports the regular-shell skip link and visible focus', async ({ page }) => {
   const errors = collectErrors(page)
   await page.goto('/accueil')
+  await expect(page.getByRole('heading', { level: 1 })).toBeFocused()
   const skipLink = page.getByRole('link', { name: 'Aller au contenu' })
   await skipLink.focus()
   await expect(skipLink).toHaveCSS('opacity', '1')
   await page.keyboard.press('Enter')
   await expect(page.getByRole('main')).toBeFocused()
   await page.goto('/accueil')
+  await expect(page.getByRole('heading', { level: 1 })).toBeFocused()
   const brandLink = page.getByRole('link', { name: 'Jaquette, aller à l’accueil' })
   await brandLink.focus()
   await page.keyboard.press('Tab')

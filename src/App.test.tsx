@@ -50,6 +50,47 @@ describe('Jaquette application shell', () => {
     expect(screen.getByRole('heading', { level: 1, name: heading })).toBeVisible()
   })
 
+  it('shows every local demo team and project on the general dashboard before opening a project', async () => {
+    const user = userEvent.setup()
+    setPath('/accueil')
+    ;(window as Window & { __jaquetteHomeMarker?: string }).__jaquetteHomeMarker = 'preserved'
+    render(<AppShell />)
+
+    const teamsRegion = screen.getByRole('region', { name: 'Toutes les équipes' })
+    const projectsRegion = screen.getByRole('region', { name: 'Tous les projets' })
+    expect(within(teamsRegion).getAllByRole('article')).toHaveLength(2)
+    expect(within(projectsRegion).getAllByRole('article')).toHaveLength(5)
+
+    for (const [name, members, projectCount] of [
+      ['Studio narratif', '7 membres fictifs', '3 projets'],
+      ['Révision Minuit', '5 membres fictifs', '2 projets'],
+    ] as const) {
+      const team = within(teamsRegion).getByRole('article', { name })
+      expect(within(team).getByText(members)).toBeVisible()
+      expect(within(team).getByText(projectCount)).toBeVisible()
+    }
+
+    for (const [name, team, status] of [
+      ['Le Jardin de Minuit', 'Studio narratif', 'En attente Chef'],
+      ['L’Atlas des brumes', 'Studio narratif', 'Révision'],
+      ['Les Voix du large', 'Studio narratif', 'Doublage'],
+      ['La Ville Haute', 'Révision Minuit', 'Doublage'],
+      ['Les Heures claires', 'Révision Minuit', 'Prêt à réviser'],
+    ] as const) {
+      const project = within(projectsRegion).getByRole('article', { name })
+      expect(within(project).getByText(team)).toBeVisible()
+      expect(within(project).getByText(status)).toBeVisible()
+      expect(within(project).getByRole('progressbar')).toBeVisible()
+    }
+
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+    await user.click(screen.getByRole('button', { name: 'Ouvrir l’état du projet' }))
+    expect(window.location.pathname).toBe('/projet')
+    expect((window as Window & { __jaquetteHomeMarker?: string }).__jaquetteHomeMarker).toBe('preserved')
+    expect(screen.getByRole('button', { name: 'Sound Designer' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByLabelText('Workspace Sound Designer fictif')).toBeVisible()
+  })
+
   it('opens the three desktop panels with synchronized compact controls', () => {
     setPath('/projet')
     render(<AppShell />)
@@ -313,8 +354,8 @@ describe('Jaquette application shell', () => {
     expect(screen.getByText('Page 1 sur 9')).toBeVisible()
   })
 
-  it('launches, pauses, resumes and manually advances the text simulation', async () => {
-    const user = userEvent.setup()
+  it('launches, pauses, resumes and manually advances the text simulation', () => {
+    vi.useFakeTimers()
     setPath('/projet')
     render(<AppShell />)
     const x1 = screen.getByRole('button', { name: 'x1' })
@@ -323,38 +364,38 @@ describe('Jaquette application shell', () => {
 
     expect(x1).toHaveAttribute('aria-pressed', 'true')
     expect(x2).toHaveAttribute('aria-pressed', 'false')
-    await user.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
     expect(screen.getByRole('button', { name: 'Mettre en pause' })).toBeVisible()
     expect(screen.getByRole('status', { name: 'État de la simulation : En cours' })).toBeVisible()
     expect(document.querySelector('[data-active-word="true"]')).toHaveTextContent('À')
-    await user.click(screen.getByRole('button', { name: 'Mettre en pause' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Mettre en pause' }))
     expect(screen.getByRole('status', { name: 'État de la simulation : En pause' })).toBeVisible()
 
-    await user.click(screen.getByRole('button', { name: 'Mot suivant' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Mot suivant' }))
     expect(document.querySelector('[data-active-word="true"]')).toHaveTextContent('l’instant')
-    await user.click(screen.getByRole('button', { name: 'Mot précédent' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Mot précédent' }))
     expect(document.querySelector('[data-active-word="true"]')).toHaveTextContent('À')
 
-    await user.click(x2)
+    fireEvent.click(x2)
     expect(x2).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByText('Multiplicateur actif : x2')).toBeVisible()
-    await user.click(x4)
+    fireEvent.click(x4)
     expect(x4).toHaveAttribute('aria-pressed', 'true')
-    await user.click(x1)
+    fireEvent.click(x1)
     expect(x1).toHaveAttribute('aria-pressed', 'true')
 
-    await user.click(screen.getByRole('button', { name: 'Reprendre la simulation' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Reprendre la simulation' }))
     expect(screen.getByRole('button', { name: 'Mettre en pause' })).toBeVisible()
   })
 
   it('stops at the last word and clears the simulation timer when its panel closes', () => {
     vi.useFakeTimers()
-    const clearIntervalSpy = vi.spyOn(window, 'clearInterval')
+    const clearTimeoutSpy = vi.spyOn(window, 'clearTimeout')
     setPath('/projet')
     const firstRender = render(<AppShell />)
 
     fireEvent.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
-    act(() => vi.advanceTimersByTime(20_000))
+    for (let word = 1; word < 48; word++) act(() => vi.advanceTimersByTime(334))
     expect(screen.getByRole('status', { name: 'État de la simulation : Inactive' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Lancer la simulation' })).toBeVisible()
     expect(document.querySelector('[data-active-word="true"]')).toHaveTextContent('pluie.')
@@ -362,14 +403,14 @@ describe('Jaquette application shell', () => {
 
     const secondRender = render(<AppShell />)
     fireEvent.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
-    clearIntervalSpy.mockClear()
+    clearTimeoutSpy.mockClear()
     fireEvent.click(screen.getByRole('button', { name: 'Masquer Simulation/Navigation' }))
-    expect(clearIntervalSpy).toHaveBeenCalled()
+    expect(clearTimeoutSpy).toHaveBeenCalled()
     expect(document.querySelector('[data-active-word="true"]')).not.toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'Afficher Simulation/Navigation' }))
     expect(screen.getByRole('status', { name: 'État de la simulation : Inactive' })).toBeVisible()
     secondRender.unmount()
-    clearIntervalSpy.mockRestore()
+    clearTimeoutSpy.mockRestore()
   })
 
   it('opens and closes the fictive project history', async () => {
@@ -392,10 +433,14 @@ describe('Jaquette application shell', () => {
     const roleControl = screen.getByRole('group', { name: 'Rôle simulé' })
     const soundDesigner = within(roleControl).getByRole('button', { name: 'Sound Designer' })
     const reviewer = within(roleControl).getByRole('button', { name: 'Réviseur' })
+    const teamLead = within(roleControl).getByRole('button', { name: 'Chef d’équipe' })
+    const publishingHouseAdmin = within(roleControl).getByRole('button', { name: 'Admin Maison' })
     const workspace = screen.getByLabelText('Workspace Sound Designer fictif')
 
     expect(soundDesigner).toHaveAttribute('aria-pressed', 'true')
     expect(reviewer).toHaveAttribute('aria-pressed', 'false')
+    expect(teamLead).toHaveAttribute('aria-pressed', 'false')
+    expect(publishingHouseAdmin).toHaveAttribute('aria-pressed', 'false')
     expect(screen.getByText('Local · non persistant')).toBeVisible()
     expect(screen.getByText('Atelier Sound Designer · rôle simulé')).toBeVisible()
     expect(within(workspace).getByText('Aucune occurrence sélectionnée')).toBeVisible()
@@ -403,6 +448,77 @@ describe('Jaquette application shell', () => {
     expect(within(workspace).getByLabelText('Page de livre fictive non éditable')).toBeVisible()
     expect(workspace.querySelector('[contenteditable], audio')).toBeNull()
     expect(screen.getByText(/Aucun disque indexé · aucune connexion Drive · aucun média réel/)).toBeVisible()
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+  })
+
+  it('mounts the complete fictive Team Lead tree without editing or depublishing tools', async () => {
+    const user = userEvent.setup()
+    setPath('/projet')
+    render(<AppShell />)
+
+    await user.click(screen.getByRole('button', { name: 'Chef d’équipe' }))
+    const workspace = screen.getByLabelText('Workspace Chef d’équipe fictif')
+    expect(screen.getByText('Atelier Chef d’équipe · rôle simulé')).toBeVisible()
+    expect(screen.getByRole('heading', { level: 1, name: 'Le projet garde son cap.' })).toBeVisible()
+    for (const region of [
+      'Tableau de bord',
+      'Progression',
+      'Livre',
+      'Simulation/Navigation',
+      'Historique',
+      'Commentaires',
+      'Validation finale',
+    ]) {
+      expect(within(workspace).getByRole('region', { name: region })).toBeVisible()
+    }
+    expect(within(workspace).getByRole('progressbar', { name: 'Doublage fictif : 10 chapitres terminés sur 10' })).toHaveValue(10)
+    expect(within(workspace).getByRole('progressbar', { name: 'Révision fictive : 30 validations obtenues sur 30 attendues' })).toHaveValue(30)
+    expect(within(workspace).getByText('En attente Chef', { selector: 'strong' })).toBeVisible()
+    expect(within(workspace).getByText(/La préparation de la publication deviendra disponible après la validation finale/)).toBeVisible()
+    expect(within(workspace).getByText(/aucun pourcentage global/)).toBeVisible()
+    expect(within(workspace).queryByRole('region', { name: 'Préparation de la publication' })).not.toBeInTheDocument()
+    expect(within(workspace).queryByRole('button', { name: /publication/i })).not.toBeInTheDocument()
+    expect(workspace.querySelector('[data-workspace-region="publication-preparation"]')).toBeNull()
+
+    expect(screen.queryByRole('region', { name: 'Bibliothèque' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Inspecteur audio' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('searchbox', { name: 'Rechercher dans la bibliothèque fictive' })).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Ouvrir un fichier local')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Dépublier/i })).not.toBeInTheDocument()
+    expect(document.querySelector('[data-project-track], .responsive-panel-toolbar, .sound-drawer, [contenteditable], audio')).toBeNull()
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+  })
+
+  it('mounts an administration-only Admin Maison tree with all management regions', async () => {
+    const user = userEvent.setup()
+    setPath('/projet')
+    render(<AppShell />)
+
+    await user.click(screen.getByRole('button', { name: 'Admin Maison' }))
+    const workspace = screen.getByLabelText('Workspace Admin Maison fictif')
+    expect(screen.getByText('Atelier Admin Maison · rôle simulé')).toBeVisible()
+    expect(screen.getByRole('heading', { level: 1, name: 'La maison organise ses équipes.' })).toBeVisible()
+    for (const region of ['Membres', 'Équipes', 'Invitations', 'Projets', 'Permissions', 'Audit']) {
+      expect(within(workspace).getByRole('region', { name: region })).toBeVisible()
+    }
+    expect(within(workspace).getByText('Non accordés automatiquement')).toBeVisible()
+    expect(within(workspace).getByText('Aucun e-mail réel')).toBeVisible()
+
+    for (const forbiddenRegion of [
+      'Bibliothèque',
+      'Livre',
+      'Inspecteur audio',
+      'Simulation/Navigation',
+      'Candidates de chapitre',
+      'Validation',
+      'Validation finale',
+      'Préparation de la publication',
+    ]) {
+      expect(screen.queryByRole('region', { name: forbiddenRegion })).not.toBeInTheDocument()
+    }
+    expect(screen.queryByRole('searchbox', { name: 'Rechercher dans la bibliothèque fictive' })).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Ouvrir un fichier local')).not.toBeInTheDocument()
+    expect(document.querySelector('[data-project-track], .responsive-panel-toolbar, .sound-drawer, [contenteditable], audio')).toBeNull()
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
   })
 
@@ -452,9 +568,58 @@ describe('Jaquette application shell', () => {
     expect(window.history.length).toBe(initialHistoryLength)
   })
 
+  it('switches repeatedly between all four distinct role trees without changing browser navigation', async () => {
+    const user = userEvent.setup()
+    setPath('/projet')
+    ;(window as Window & { __jaquetteFourRoleMarker?: string }).__jaquetteFourRoleMarker = 'preserved'
+    render(<AppShell />)
+    // Route entry focuses the title on the next frame; finish it before role clicks.
+    await waitFor(() => expect(screen.getByRole('heading', { level: 1, name: 'Le livre attend sa scène.' })).toHaveFocus())
+    const initialHistoryLength = window.history.length
+    const roleControl = screen.getByRole('group', { name: 'Rôle simulé' })
+    const roles = [
+      { button: 'Sound Designer', workspace: 'Workspace Sound Designer fictif', heading: 'Le livre attend sa scène.' },
+      { button: 'Réviseur', workspace: 'Workspace Réviseur fictif', heading: 'Le livre passe en révision.' },
+      { button: 'Chef d’équipe', workspace: 'Workspace Chef d’équipe fictif', heading: 'Le projet garde son cap.' },
+      { button: 'Admin Maison', workspace: 'Workspace Admin Maison fictif', heading: 'La maison organise ses équipes.' },
+    ] as const
+
+    for (let cycle = 0; cycle < 2; cycle += 1) {
+      for (const role of roles) {
+        const button = within(roleControl).getByRole('button', { name: role.button })
+        await user.click(button)
+        expect(button).toHaveFocus()
+        expect(button).toHaveAttribute('aria-pressed', 'true')
+        expect(screen.getByLabelText(role.workspace)).toBeVisible()
+        expect(screen.getByRole('heading', { level: 1, name: role.heading })).toBeVisible()
+        expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+        expect(window.location.pathname).toBe('/projet')
+        expect(window.history.length).toBe(initialHistoryLength)
+      }
+    }
+
+    expect((window as Window & { __jaquetteFourRoleMarker?: string }).__jaquetteFourRoleMarker).toBe('preserved')
+  })
+
+  it('resets the simulated role when entering the project again', async () => {
+    const user = userEvent.setup()
+    setPath('/projet')
+    render(<AppShell />)
+
+    await user.click(screen.getByRole('button', { name: 'Admin Maison' }))
+    expect(screen.getByLabelText('Workspace Admin Maison fictif')).toBeVisible()
+    await user.click(screen.getByRole('button', { name: 'Ouvrir la navigation générale' }))
+    await user.click(screen.getByRole('link', { name: 'Accueil' }))
+    await user.click(screen.getByRole('button', { name: 'Ouvrir l’état du projet' }))
+
+    expect(screen.getByRole('button', { name: 'Sound Designer' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('button', { name: 'Admin Maison' })).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByLabelText('Workspace Sound Designer fictif')).toBeVisible()
+  })
+
   it('cleans a running reduced Sound Designer drawer before mounting the Reviewer tree', async () => {
     const user = userEvent.setup()
-    const clearIntervalSpy = vi.spyOn(window, 'clearInterval')
+    const clearTimeoutSpy = vi.spyOn(window, 'clearTimeout')
     mockReducedWorkspace()
     setPath('/projet')
     render(<AppShell />)
@@ -464,15 +629,29 @@ describe('Jaquette application shell', () => {
     await user.click(screen.getByRole('button', { name: 'Historique' }))
     expect(document.querySelector('[data-active-word="true"]')).toBeInTheDocument()
     expect(document.querySelector('.sound-drawer')).toBeInTheDocument()
-    clearIntervalSpy.mockClear()
+    clearTimeoutSpy.mockClear()
 
     const reviewer = screen.getByRole('button', { name: 'Réviseur' })
     await user.click(reviewer)
     expect(reviewer).toHaveFocus()
-    expect(clearIntervalSpy).toHaveBeenCalled()
+    expect(clearTimeoutSpy).toHaveBeenCalled()
     expect(document.querySelector('[data-active-word="true"], .sound-drawer')).toBeNull()
     expect(screen.queryByRole('region', { name: 'Historique fictif du projet' })).not.toBeInTheDocument()
     expect(screen.getByLabelText('Workspace Réviseur fictif')).toBeVisible()
+
+    await user.click(screen.getByRole('button', { name: 'Chef d’équipe' }))
+    expect(screen.getByLabelText('Workspace Chef d’équipe fictif')).toBeVisible()
+    await user.click(screen.getByRole('button', { name: 'Lancer la simulation' }))
+    await user.click(screen.getByRole('button', { name: 'Historique' }))
+    expect(document.querySelector('[data-active-word="true"]')).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: 'Historique fictif du projet' })).toBeVisible()
+
+    clearTimeoutSpy.mockClear()
+    await user.click(screen.getByRole('button', { name: 'Admin Maison' }))
+    expect(screen.getByLabelText('Workspace Admin Maison fictif')).toBeVisible()
+    expect(clearTimeoutSpy).toHaveBeenCalled()
+    expect(document.querySelector('[data-active-word="true"], .sound-drawer')).toBeNull()
+    expect(screen.queryByRole('region', { name: 'Historique fictif du projet' })).not.toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Sound Designer' }))
     expect(screen.getByLabelText('Workspace Sound Designer fictif')).toBeVisible()
@@ -481,7 +660,7 @@ describe('Jaquette application shell', () => {
     expect(screen.queryByRole('region', { name: 'Simulation/Navigation' })).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Ouvrir Simulation/Navigation' }))
     expect(screen.getByRole('status', { name: 'État de la simulation : Inactive' })).toBeVisible()
-    clearIntervalSpy.mockRestore()
+    clearTimeoutSpy.mockRestore()
   })
 
   it('uses the expected unfilled Material Symbols Rounded instead of initials', () => {
@@ -506,7 +685,7 @@ describe('Jaquette application shell', () => {
     const user = userEvent.setup()
     render(<AppShell />)
     window.history.pushState(null, '', '/projet')
-    window.dispatchEvent(new PopStateEvent('popstate'))
+    act(() => window.dispatchEvent(new PopStateEvent('popstate')))
     const heading = await screen.findByRole('heading', { level: 1, name: 'Le livre attend sa scène.' })
     await waitFor(() => expect(heading).toHaveFocus())
     await user.click(screen.getByRole('button', { name: 'Ouvrir la navigation générale' }))

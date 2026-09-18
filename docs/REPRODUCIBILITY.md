@@ -52,4 +52,4 @@ Le scanner de secrets couvre désormais .yaml/.yml, donc le workflow. Il recherc
 
 Google Chrome, viewports **1440 × 1000** et **768 × 1024**, `reuseExistingServer=false` et **serveur Vite de développement** sont conservés. Le build est compilé séparément ; il n'est pas le serveur des E2E. Firefox, Safari réel sur Mac, Electron, les performances produit et les machines W18/MI/M1 seront qualifiés aux jalons du [plan](../PLAN_DE_DEVELOPPEMENT_JAQUETTE.md), sans prétendre que cette CI Chrome démontre toute la matrice.
 
-La [campagne 0.2](validation/0.2-base-reproductible/README.md) reste distincte de la future qualification des quatre rôles en 0.3. La PR 9 et les corrections applicatives prévues restent indépendantes.
+La [campagne 0.2](validation/0.2-base-reproductible/README.md) reste distincte de la [qualification 0.3 et revalidation des quatre rôles](validation/0.3-correctifs-prototype/VALIDATION_REPORT.md), validées le 18 septembre 2026 dans la PR 9. Leurs SHA et preuves restent identifiés séparément.
