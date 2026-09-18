@@ -4,7 +4,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules', 'playwright-report', 'test-results'] },
+  { ignores: ['dist', 'node_modules', 'playwright-report', 'test-results', 'generated'] },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -13,8 +13,19 @@ export default tseslint.config(
       globals: {
         console: 'readonly',
         process: 'readonly',
+        Buffer: 'readonly',
+        fetch: 'readonly',
+        window: 'readonly',
+        document: 'readonly',
+        requestAnimationFrame: 'readonly',
+        performance: 'readonly',
       },
     },
+  },
+  {
+    files: ['scripts/measurement/collect-macos.js'],
+    languageOptions: { globals: { Application: 'readonly' } },
+    rules: { 'no-unused-vars': ['error', { varsIgnorePattern: '^run$', caughtErrors: 'none' }] },
   },
   {
     files: ['**/*.{ts,tsx}'],

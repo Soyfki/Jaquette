@@ -19,11 +19,11 @@ Le cahier des charges complet reste la source de référence détaillée. `AGENT
 - L’ancien lot 1.4.2 est acquis après sa revalidation technique et humaine du 18 septembre 2026 ; cette acquisition ne clôture ni l’ancienne 1.4 ni l’ancienne phase 1.
 - L’ancien 1.4.3 n’est plus une prochaine livraison autonome. Aucun périmètre précis n’a été retrouvé dans l’ancien plan ; les reliquats réellement identifiables sont à inventorier en 0.3/0.5 puis à rattacher aux futures sous-étapes correspondantes, sans exigences rétroactives.
 - Aucune clôture rétroactive de l’ancienne 1.4 ou de l’ancienne phase 1 ; l’ancienne phase 2 n’est pas commencée.
-- La nouvelle étape 0 est distincte de l’ancienne phase 0 acquise. 0.1 et 0.2 sont validées (PR 10 et 11). **0.3 — Corriger les défauts du prototype** et la **revalidation historique 1.4.2** sont **VALIDÉES / GO**, décisions distinctes du 18 septembre 2026 après campagne technique et observations humaines complètes au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`. L’intégration et les contrôles au dernier SHA sont tracés dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9). Le [rapport](docs/validation/0.3-correctifs-prototype/VALIDATION_REPORT.md) conserve les observations et les reprises. 0.4 est la prochaine sous-étape du plan, non commencée ici.
+- La nouvelle étape 0 est distincte de l’ancienne phase 0 acquise. 0.1 et 0.2 sont validées (PR 10 et 11). **0.3 — Corriger les défauts du prototype** et la **revalidation historique 1.4.2** sont **VALIDÉES / GO**, décisions distinctes du 18 septembre 2026 après campagne technique et observations humaines complètes au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`. L’intégration et les contrôles au dernier SHA sont tracés dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9). Le [rapport](docs/validation/0.3-correctifs-prototype/VALIDATION_REPORT.md) conserve les observations et les reprises. 0.4 est en cours, non acquise : BLOQUÉE / NO-GO jusqu’aux relevés et observations matériels complets.
 - Le socle de qualification 0.2 fixe Node 24.19.0, pnpm 11.19.0, installation frozen-lockfile, six références canoniques vérifiées et CI Chrome sur PR/main. Voir le [guide](docs/REPRODUCIBILITY.md). Ce socle ne qualifie pas les fonctions métier simulées ni toute la matrice produit.
 - Le recadrage REC-01 est conservé et complété par les règles d’échanges connectés de septembre.
 - La version de l’application reste **0.0.0**. Une simulation n’est ni une capacité réelle ni une permission.
-- Les propositions de stockage (section 4 du plan) attendent les preuves et la décision en nouvelle 1.2 ; les performances (section 5) restent des cibles proposées à fixer en 0.4, pas des résultats acquis.
+- Les propositions de stockage (section 4 du plan) attendent les preuves et la décision en nouvelle 1.2. Les quatorze budgets sont adoptés sans relèvement dans le [contrat 0.4](docs/measurement/README.md), distincts des mesures futures ; aucun Go matériel tant que W18/MI/M1 et leurs conditions ne sont pas relevés. Les données synthétiques ne définissent aucun schéma .jacq/.chpt.
 
 ### Règle de travail pour les futurs contributeurs
 
@@ -964,13 +964,13 @@ La page du livre doit visuellement se distinguer de l’interface sombre de Jaqu
 
 # 33. Périmètre de lancement et jalons
 
-Le lancement comprend **Web complet sur ordinateur : Chrome, Firefox, Safari (qualifié sur macOS)** et **Electron Windows/macOS**. Les cibles matérielles sont un PC Windows 10 de génération 2018, un MacBook Intel précédant le M1 et un MacBook M1. Les configurations exactes et budgets proposés attendent 0.4 ; aucune qualification multi-plateforme n’est acquise par les campagnes historiques Chrome.
+Le lancement comprend **Web complet sur ordinateur : Chrome, Firefox, Safari (qualifié sur macOS)** et **Electron Windows/macOS**. Les cibles matérielles sont un PC Windows 10 de génération 2018, un MacBook Intel précédant le M1 et un MacBook M1. Les budgets sont adoptés en 0.4 ; les configurations exactes attendent les relevés complets ; aucune qualification multi-plateforme n’est acquise par les campagnes historiques Chrome.
 
 La production locale, les comptes/invitations, les cinq jours offline, les bibliothèques locales et banques privées, les échanges connectés, la révision et le MCP sont inclus au lancement. Export et contrôle .jacko préparent Jacques ; publication réelle, boutique et dépublication restent en **F1**, avec droits, tâche automatique et signature de publication conservés.
 
 Le [plan](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) porte les jalons actifs : J0 (étapes 0–1), J1 (2–3), atelier complet (4–7), J2 (8–10), banques et IA (11–12), J3 (13), première version distribuée (14–16), puis F1. La [correspondance historique](docs/VERSIONING.md) remplace les anciens jalons V0.x/V1/V2 sans effacer les acquis.
 
-La section 4 du plan propose un parcours de sauvegarde ; OPFS, ZIP et distinction espace de travail/copie portable ne sont pas adoptés. Décision en nouvelle 1.2 après preuves physiques d’écriture, récupération et portabilité. La section 5 propose des performances, à fixer en 0.4 avant mesure. Aucun monorepo, backend, conteneur ou nouvelle bibliothèque métier n’est imposé par 0.1.
+La section 4 du plan propose un parcours de sauvegarde ; OPFS, ZIP et distinction espace de travail/copie portable ne sont pas adoptés. Décision en nouvelle 1.2 après preuves physiques d’écriture, récupération et portabilité. La section 5 et le contrat 0.4 adoptent les budgets, distincts des performances observées. Aucun monorepo, backend, conteneur ou nouvelle bibliothèque métier n’est imposé par 0.1.
 
 Développement prévu par GPT.6, budget limité, sans échéance imposée : lots courts et réutilisation du socle. La gratuité ne couvre pas les éventuels coûts du stockage choisi, des agents externes et de leurs appels IA ; aucun abonnement Jaquette n’est introduit.
 
