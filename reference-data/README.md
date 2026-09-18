@@ -1,6 +1,6 @@
 # Données de référence
 
-Ce dossier définit le jeu de données de référence du jalon **0.2 — Définir les données de référence**. Il couvre les trois langues minimales, les trois familles audio et un scénario de doublage reproductible, sans ajouter de code applicatif ni de dépendance au projet.
+Ce dossier définit le jeu de données de référence de l’ancien jalon historique **0.2 — Définir les données de référence**, distinct de la nouvelle **0.2 — Reproduire la base**. Il couvre les trois langues minimales, les trois familles audio et un scénario de doublage reproductible, sans ajouter de code applicatif ni de dépendance au projet.
 
 ## Contenu versionné
 
@@ -9,7 +9,7 @@ Ce dossier définit le jeu de données de référence du jalon **0.2 — Défini
 - [`manifest.json`](manifest.json) : inventaire machine-readable des fichiers attendus ;
 - [`.gitignore`](.gitignore) : exclusion explicite des binaires acquis.
 
-Les EPUB et les sons sont placés localement sous `reference-data/files/`. Ce répertoire est ignoré par Git : le dépôt ne redistribue donc aucun binaire tiers et ne déclenche aucun téléchargement automatique.
+Les EPUB et les sons sont placés localement sous `reference-data/files/`. Ce répertoire est ignoré par Git : aucun binaire tiers n'entre dans l'historique Git. La seule référence anglaise est aussi distribuée gratuitement comme [asset de Release de fixtures](ARCHIVE.md), avec licence et provenance conservées. La commande explicite `pnpm prepare:references` et la CI de qualification utilisent cette archive pour l'anglais et les cinq autres URL du manifeste ; l'application ne les télécharge pas.
 
 ## Arborescence locale attendue
 
@@ -28,27 +28,22 @@ reference-data/
 
 ## Acquisition reproductible
 
-Depuis la racine du dépôt, sous PowerShell :
+Depuis la racine du dépôt, avec Node 24.19.0 et pnpm 11.19.0 :
 
 ```powershell
-New-Item -ItemType Directory -Force reference-data/files/epubs, reference-data/files/audio
-
-Invoke-WebRequest 'https://www.gutenberg.org/ebooks/46541.epub.noimages' -OutFile 'reference-data/files/epubs/fr-le-tour-du-monde-en-quatre-vingts-jours.epub'
-Invoke-WebRequest 'https://www.gutenberg.org/ebooks/1661.epub3.images' -OutFile 'reference-data/files/epubs/en-the-adventures-of-sherlock-holmes.epub'
-Invoke-WebRequest 'https://github.com/IDPF/epub3-samples/releases/download/20230704/regime-anticancer-arabic.epub' -OutFile 'reference-data/files/epubs/ar-regime-anticancer-arabic.epub'
-
-Invoke-WebRequest 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Door_knocker_audio.ogg' -OutFile 'reference-data/files/audio/sfx-door-knocker.ogg'
-Invoke-WebRequest 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Rain_%281%29.ogg' -OutFile 'reference-data/files/audio/ambience-rain.ogg'
-Invoke-WebRequest 'https://upload.wikimedia.org/wikipedia/commons/7/7b/FurElise.ogg' -OutFile 'reference-data/files/audio/music-fur-elise.ogg'
+pnpm prepare:references
+pnpm check:reference
 ```
 
-Vérifier ensuite les empreintes attendues dans `manifest.json` :
+Les deux commandes comparent les tailles et SHA-256 attendus, sans modifier le manifeste. Le vérificateur rejette un manifeste invalide ou différent du contenu canonique ainsi que toute ressource obligatoire absente, illisible ou altérée. La préparation conserve un fichier existant invalide et refuse une réponse HTTP non conforme. Pour une inspection supplémentaire sous PowerShell :
 
 ```powershell
 Get-ChildItem reference-data/files -Recurse -File | Get-FileHash -Algorithm SHA256
 ```
 
-Une empreinte différente signifie que la source a changé ou que le téléchargement est incomplet. Il ne faut pas accepter cette différence silencieusement : contrôler le fichier, sa source et ses droits, puis mettre à jour ensemble `manifest.json` et `INVENTORY.md` si le changement est intentionnel.
+Une empreinte différente bloque la campagne : source modifiée ou téléchargement incomplet. Ne pas recalculer les empreintes, remplacer la référence ni employer un EPUB personnel pour obtenir un succès. Une évolution intentionnelle du corpus exige une décision distincte et documentée.
+
+**Incident du 11 septembre 2026 :** l'EPUB anglais à l'URL Gutenberg diffère du manifeste et est correctement refusé. Les mêmes octets canoniques ont été archivés, sans recompression, dans la [Release de fixtures](ARCHIVE.md). Cette source est sélectionnée explicitement avant téléchargement et journalisée ; un échec ne déclenche aucun recours silencieux à Gutenberg. Les valeurs et l'historique de qualification figurent dans le [rapport 0.2](../docs/validation/0.2-base-reproductible/BUG_REPORT.md).
 
 La référence française est la variante officielle **EPUB sans images pour anciens lecteurs** de l’eBook Project Gutenberg nº 46541. La [fiche de l’eBook](https://www.gutenberg.org/ebooks/46541), les crédits de production, les conditions Project Gutenberg et la vérification territoriale française sont détaillés dans [`INVENTORY.md`](INVENTORY.md). L’usage professionnel de test ne dispense pas de respecter le droit moral français, les conditions liées à la marque Project Gutenberg ni de refaire l’analyse pour un autre territoire ou une redistribution.
 

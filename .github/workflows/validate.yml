@@ -1,0 +1,81 @@
+name: Base reproducible
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  chrome:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+          run_install: false
+      - name: Record clean environment
+        run: |
+          mkdir -p test-results/qualification
+          test ! -e node_modules
+          {
+            git rev-parse HEAD
+            uname -srm
+            node --version
+            pnpm --version
+            sha256sum pnpm-lock.yaml reference-data/manifest.json
+            echo "node_modules absent; no dependency cache restored"
+          } | tee test-results/qualification/environment.log
+          sha256sum pnpm-lock.yaml > test-results/qualification/lockfile-before.sha256
+      - name: Frozen installation without node_modules
+        id: install
+        run: pnpm install --frozen-lockfile 2>&1 | tee test-results/qualification/install.log
+      - name: Verify unchanged lockfile
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: sha256sum --check test-results/qualification/lockfile-before.sha256
+      - name: Acquire canonical references
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: pnpm prepare:references 2>&1 | tee test-results/qualification/prepare-references.log
+      - name: Prepare real Chrome
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          pnpm exec playwright install --with-deps chrome 2>&1 | tee test-results/qualification/chrome-install.log
+          google-chrome --version | tee test-results/qualification/chrome-version.log
+      - name: Independent diagnostic checks including E2E
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: pnpm validate:diagnostic 2>&1 | tee test-results/diagnostic.log
+      - name: Complete campaign
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: pnpm validate:all 2>&1 | tee test-results/qualification/validate-all.log
+      - name: Check diff and tracked data
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          git diff --check
+          git diff --exit-code -- pnpm-lock.yaml reference-data/manifest.json
+          test -z "$(git ls-files reference-data/files 'EPUB tests')"
+          git status --short | tee test-results/qualification/git-status.log
+      - name: Preserve reports (no reference binaries)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: qualification-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: error
+          retention-days: 14

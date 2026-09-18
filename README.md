@@ -10,35 +10,55 @@ Jaquette ne doit pas être confondu avec **Jacques** : Jaquette est l’outil de
 
 ## État du projet
 
-La **phase 0 — Préparation du projet** et les sous-étapes applicatives **1.1 à 1.3** sont acquises. La sous-étape **1.4 — Adapter l’interface selon le rôle** est entamée : le lot **1.4.1 — Socle de rôle simulé et variante Réviseur** est acquis, tandis que le lot **1.4.2 — Variantes simulées Chef d’équipe et Admin Maison** est en correction après retour humain et reste non acquis jusqu’à sa revalidation. Le lot 1.4.3 et la clôture de la phase 1 n’ont pas commencé ; la sous-étape 1.4 et la phase 1 ne sont donc pas acquises, la phase 2 n’a pas commencé et la sous-étape 2.1 n’est pas encore la prochaine étape exécutable.
+Les acquis historiques sont l’ancienne phase 0, les anciennes sous-étapes 1.1 à 1.3 et le lot 1.4.1. Sur main à la base du lot 0.1, le prototype propose Sound Designer et Réviseur, avec simulation locale non persistée et Sound Designer initial.
 
-Le recadrage produit **REC-01 — Collaboration offline** reste intégré à la documentation : la collaboration repose sur des chapitres `.chpt` échangés et révisés comme candidates, sans fonctions live.
+Les quatre rôles et les correctifs de l’ancien **1.4.2 — Chef d’équipe et Admin Maison** sont présents dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9), branche codex/phase-1-4-2-team-lead-admin-variants, SHA 5cabbb016d3ce5480b165512c1aa7814b8367802, tant qu’ils ne sont pas fusionnés sur main. Ce lot reste **non acquis avant revalidation humaine**. L’harmonisation documentaire n’intègre aucun de ses changements applicatifs.
 
-La version actuelle de l’application est **`0.0.0` (pré-développement, non publiée)**. La [convention de version](docs/VERSIONING.md) explique la différence entre cette version, les jalons produit tels que V0.1 et les futures versions des formats `.jacq`, `.chpt` et `.jacko`.
+L’ancien 1.4.3 n’est plus une prochaine livraison autonome : aucun périmètre précis retrouvé dans l’ancien plan. Les reliquats réellement identifiables seront inventoriés en 0.3/0.5 et rattachés aux futures sous-étapes correspondantes. L’ancienne 1.4 et l’ancienne phase 1 restent non acquises ; aucune clôture rétroactive.
 
+La nouvelle étape 0 de reprise est distincte de l’ancienne phase 0. **0.1 — Harmoniser les sources** et **0.2 — Reproduire la base** sont validées ; les [preuves 0.2 et le suivi de fusion](https://github.com/Soyfki/Jaquette/pull/11) précisent les SHA qualifiés. La prochaine action est **0.3 — Corriger les défauts du prototype**, non commencée ici.
 
-## Lancer le prototype Web intermédiaire 1.4.2
+Version : **0.0.0**, non publiée. Les [jalons actifs et leur correspondance historique](docs/VERSIONING.md) ne sont pas des versions applicatives ou de formats.
 
-Pré-requis : Node.js 24 ou plus récent et Chrome. Le projet fixe pnpm 11.19.0 dans `package.json` et embarque les polices via des dépendances locales ; aucun service de polices distant n’est requis à l’exécution.
+## Cible de lancement décidée en septembre 2026
+
+Jaquette est un logiciel **gratuit sur invitation**, avec Web complet sur ordinateur dans Chrome, Firefox et Safari (Safari qualifié sur Mac), et Electron Windows/macOS au lancement. PC Windows 10 de génération 2018, MacBook Intel précédant le M1 et MacBook M1 sont les cibles matérielles ; leurs configurations et budgets restent à fixer en 0.4.
+
+Après activation initiale en ligne et préparation de l’environnement, cinq jours de travail hors ligne sont prévus. À expiration, nouvelles modifications bloquées ; consultation, sauvegarde et archivage conservés. À reconnexion, les droits sont recontrôlés avant tout envoi. En cas de révocation : travail conservé, aucun envoi et archivage sur disque accompagné jusqu’à vérification, sans destruction si l’utilisateur annule.
+
+Contenus, commentaires de contenu et banques restent sur stockage local ou infrastructure privée choisie. Les services Jaquette se limitent à l’identité, aux invitations et aux données administratives explicitement autorisées. Les bibliothèques locales et banques privées embarquent dans le projet les médias utilisés.
+
+Le travail est local ; soumissions, transmission de commentaires/décisions et actualisation sont connectées, sans montage en direct. Une décision préparée hors ligne ne devient officielle qu’après acceptation autorisée. Le MCP fait partie du lancement avec agents externes, bibliothèques autorisées et brouillon protégeant le master, sans génération sonore. Hors ligne : agent et modèle locaux ; transfert distant : consentement et connexion. Desktop peut fournir la liaison MCP locale au navigateur, à qualifier.
+
+Export et contrôle préparent Jacques ; publication effective, boutique et dépublication sont reportées à **F1**. La signature de publication et la tâche automatique associée restent des règles de F1 ; un export de contrôle ou une signature avec clés de test n’authentifient pas une publication réelle.
+
+Le [plan complet](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) distingue les décisions produit des propositions de stockage (section 4, décision en 1.2) et des cibles de performance (section 5, adoption en 0.4). OPFS, ZIP et distinction espace de travail/copie portable ne sont pas validés. Développement prévu par GPT.6, budget limité et sans échéance imposée ; la gratuité ne couvre pas les coûts du stockage choisi ni des agents/appels IA tiers.
+
+## Lancer le prototype Web intermédiaire 1.4.1
+
+Ce mode d’emploi décrit le prototype historique 1.4.1 sur main. Le [guide de reproductibilité](docs/REPRODUCIBILITY.md) fixe Node 24.19.0 et pnpm 11.19.0 pour la campagne 0.2, avec installation propre, diagnostic et CI Chrome. La référence anglaise utilise une archive explicite des octets canoniques : voir le [dossier 0.2](docs/validation/0.2-base-reproductible/README.md).
+
+Pré-requis du prototype historique : Node.js 24 ou plus récent et Chrome. Le projet fixe pnpm 11.19.0 dans `package.json` et embarque les polices via des dépendances locales ; aucun service de polices distant n’est requis à l’exécution.
 
 ```powershell
 corepack pnpm install --frozen-lockfile
+corepack pnpm prepare:references
 corepack pnpm dev
 ```
 
 Ouvrir ensuite <http://127.0.0.1:5173> dans Chrome.
 
-La route `/accueil` présente le tableau général fictif du workspace courant, avec les deux équipes et les cinq projets du jeu local visibles avant l’ouverture d’un projet. La route `/projet` démarre dans la vue Sound Designer héritée de la sous-étape 1.3. Un sélecteur permet de basculer localement entre Sound Designer, Réviseur, Chef d’équipe et Admin Maison. Dans l’état fictif `En attente Chef`, la préparation de publication reste absente jusqu’à la validation finale. Les rôles simulés ne modifient ni l’URL ni l’historique du navigateur, ne sont pas conservés après rechargement et n’implémentent aucune authentification, permission, persistance ou action métier réelle.
+La route `/projet` démarre dans la vue Sound Designer héritée de la sous-étape 1.3. Un sélecteur permet de basculer localement vers la vue Réviseur, centrée sur le livre, la simulation, les commentaires, les candidates de chapitre et l’état de validation. Ce rôle simulé ne modifie ni l’URL ni l’historique du navigateur, n’est pas conservé après rechargement et n’implémente aucune authentification, permission, persistance ou action métier réelle.
 
 Vérifications techniques :
 
 ```powershell
-corepack pnpm validate
-corepack pnpm test:e2e
+corepack pnpm validate:diagnostic
+corepack pnpm validate:all
 git diff --check
 ```
 
-`test:e2e` lance le prototype dans Google Chrome aux largeurs définies dans la configuration Playwright. Les contrôles du lot courant sont décrits dans la [validation 1.4.2 des variantes Chef d’équipe et Admin Maison](docs/validation/1.4.2-team-lead-admin-variants.md). Le protocole 1.4.1 reste disponible dans la [validation du socle de rôle simulé et de la variante Réviseur](docs/validation/1.4-role-variants.md), et la campagne historique du socle visuel dans la [validation de la sous-étape 1.1](docs/validation/1.1-design-system.md).
+Si Corepack est absent, utiliser directement pnpm 11.19.0. Préparer Chrome avec `pnpm exec playwright install chrome` avant les E2E. `validate:all` inclut `validate`, les tests d'outillage et `test:e2e`, avec propagation des échecs. Les E2E utilisent Google Chrome 1440 × 1000 et 768 × 1024, Vite dev et `reuseExistingServer=false` ; cela ne qualifie ni le build distribué ni toute la matrice produit. Les contrôles historiques restent dans la [validation 1.4.1](docs/validation/1.4-role-variants.md) et la [validation 1.1](docs/validation/1.1-design-system.md).
 
 ## Sources de vérité
 
@@ -56,7 +76,7 @@ Avant toute contribution :
 
 1. vérifier la branche par défaut, le dernier commit et les changements déjà présents ;
 2. lire intégralement [`AGENTS.md`](AGENTS.md), puis le [cahier des charges](CAHIER_DES_CHARGES_JAQUETTE.md) et le [plan détaillé](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) ;
-3. identifier la sous-étape en cours et respecter son périmètre ;
+3. reprendre le plan canonique actualisé sur main après chaque lot ; après les Go de 0.1 et 0.2, la prochaine sous-étape est 0.3 ; respecter ses prérequis et le mandat du lot demandé ;
 4. distinguer les règles produit validées des décisions techniques encore ouvertes ;
 5. documenter toute nouvelle décision technique sans en faire une règle métier implicite.
 
@@ -69,8 +89,9 @@ Ne versionnez jamais de secret, mot de passe, clé, jeton ou identifiant de conn
 - [Collaboration offline et échanges `.chpt`](docs/COLLABORATION_OFFLINE.md)
 - [Données de référence](reference-data/README.md)
 - [Protocole et modèles de validation](docs/validation/README.md)
+- [Preuves et correspondance des décisions de 0.1](docs/validation/0.1-harmonisation/README.md)
+- [Campagne de revalidation de l’ancien 1.4.2, PR 9](docs/validation/1.4.2-team-lead-admin-variants.md)
 - [Validation du design system 1.1](docs/validation/1.1-design-system.md)
 - [Validation du socle de rôle simulé et de la variante Réviseur 1.4.1](docs/validation/1.4-role-variants.md)
-- [Validation des variantes simulées Chef d’équipe et Admin Maison 1.4.2](docs/validation/1.4.2-team-lead-admin-variants.md)
 - [Décision de socle Web](docs/decisions/0001-web-foundation.md)
 - [Plan détaillé de développement](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md)

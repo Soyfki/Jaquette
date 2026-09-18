@@ -12,14 +12,18 @@ Le cahier des charges complet reste la source de référence détaillée. `AGENT
 
 ## État actuel du projet
 
-- La phase 0 et les sous-étapes applicatives 1.1, 1.2 et 1.3 sont acquises.
-- La sous-étape 1.4 est entamée par le lot 1.4.1 acquis — socle de rôle simulé et variante Réviseur — et par le lot 1.4.2 en correction après retour de validation humaine — variantes Chef d’équipe et Admin Maison.
-- Le prototype Web permet de basculer localement entre les quatre rôles simulés Sound Designer, Réviseur, Chef d’équipe et Admin Maison ; le rôle Sound Designer reste l’état initial et la simulation n’est pas persistée.
-- Le lot 1.4.2 reste non acquis jusqu’à sa revalidation humaine. Le lot 1.4.3 et la clôture de la phase 1 n’ont pas commencé ; la sous-étape 1.4 et la phase 1 ne sont donc pas acquises, la phase 2 n’a pas commencé et la sous-étape 2.1 n’est pas la prochaine étape exécutable.
-- Le recadrage produit REC-01 sur la collaboration offline est intégré à la documentation.
-- La version de l’application reste `0.0.0`.
-- Les choix d’implémentation qui ne sont pas explicitement validés restent ouverts.
-- Les futurs agents doivent distinguer une règle produit déjà décidée d’une décision technique encore à prendre.
+- Le cadrage du **11 septembre 2026** dans le [plan](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) remplace l’ancien calendrier sur ses seuls sujets.
+- Acquis historiques : ancienne phase 0, anciennes sous-étapes 1.1, 1.2, 1.3 et lot 1.4.1.
+- Sur main à la base de 0.1, le prototype propose les rôles simulés Sound Designer et Réviseur ; Sound Designer reste initial et la simulation n’est pas persistée.
+- Les quatre rôles, dont Chef d’équipe et Admin Maison, et les correctifs 1.4.2 sont présents dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9), branche codex/phase-1-4-2-team-lead-admin-variants, SHA 5cabbb016d3ce5480b165512c1aa7814b8367802. Ils ne sont pas sur main tant que cette PR n’est pas fusionnée.
+- L’ancien lot 1.4.2 reste non acquis avant sa revalidation humaine. Le lot 0.1 documentaire ne modifie ni ne fusionne la PR 9.
+- L’ancien 1.4.3 n’est plus une prochaine livraison autonome. Aucun périmètre précis n’a été retrouvé dans l’ancien plan ; les reliquats réellement identifiables sont à inventorier en 0.3/0.5 puis à rattacher aux futures sous-étapes correspondantes, sans exigences rétroactives.
+- Aucune clôture rétroactive de l’ancienne 1.4 ou de l’ancienne phase 1 ; l’ancienne phase 2 n’est pas commencée.
+- La nouvelle étape 0 est distincte de l’ancienne phase 0 acquise. Les lots **0.1 — Harmoniser les sources** et **0.2 — Reproduire la base** sont validés ; preuves et SHA qualifiés dans les PR 10 et [PR 11](https://github.com/Soyfki/Jaquette/pull/11). Prochaine action : **0.3 — Corriger les défauts du prototype**, non commencée par 0.2, pas l’ancienne 2.1 ni la nouvelle étape 1.
+- Le socle de qualification 0.2 fixe Node 24.19.0, pnpm 11.19.0, installation frozen-lockfile, six références canoniques vérifiées et CI Chrome sur PR/main. Voir le [guide](docs/REPRODUCIBILITY.md). Ce socle ne qualifie pas les fonctions métier simulées ni toute la matrice produit.
+- Le recadrage REC-01 est conservé et complété par les règles d’échanges connectés de septembre.
+- La version de l’application reste **0.0.0**. Une simulation n’est ni une capacité réelle ni une permission.
+- Les propositions de stockage (section 4 du plan) attendent les preuves et la décision en nouvelle 1.2 ; les performances (section 5) restent des cibles proposées à fixer en 0.4, pas des résultats acquis.
 
 ### Règle de travail pour les futurs contributeurs
 
@@ -88,7 +92,9 @@ Les sons sont associés à des mots ou à des plages de mots, et non à une time
 - Il n’est pas le fichier de production.
 - Il contient le contenu du livre, les ressources nécessaires à la lecture, l’audio compressé, le manifeste de déclenchements et les métadonnées nécessaires.
 - Le format `.jacko` est versionné.
-- Un `.jacko` destiné à la publication doit être signé numériquement.
+- Un `.jacko` destiné à la publication doit être signé numériquement en F1.
+- Au lancement, l’export de contrôle et les checksums d’intégrité sont distincts de l’authenticité. Les essais de signature avec clés de test ne valent pas signature de publication ; un export non signé n’est jamais présenté comme authentifié.
+- L’autorité de confiance et la garde des clés de publication sont à définir en F1 ; aucun secret global de signature dans le navigateur.
 - Une modification du contenu signé doit pouvoir être détectée.
 - Jaquette doit pouvoir rouvrir un `.jacko` en **mode contrôle / lecture seule** afin de vérifier un export.
 - Un `.jacko` ouvert pour contrôle ne devient pas une source de production.
@@ -99,11 +105,11 @@ Les sons sont associés à des mots ou à des plages de mots, et non à une time
 
 ## Format source
 
-- La V1 importe des **EPUB reflowables**.
+- La première livraison importe des **EPUB reflowables**.
 - Les PDF sont hors périmètre.
 - Les EPUB fixed-layout sont reportés.
 - Les EPUB protégés par DRM sont refusés explicitement.
-- La V1 cible Chrome pour la phase Web.
+- Le lancement Web complet cible Chrome, Firefox et Safari sur ordinateur ; Safari est qualifié sur macOS. Electron Windows/macOS est également requis au lancement.
 - Le format source cible est d’environ 10 Mo maximum.
 - Les langues à prendre en charge incluent le français, l’anglais et l’arabe.
 - Le contenu multilingue et RTL doit être pris en charge.
@@ -225,7 +231,8 @@ Règles :
 
 ## Organisation
 
-- Jaquette peut indexer plusieurs dossiers de bibliothèque.
+- Jaquette peut indexer plusieurs dossiers de bibliothèque et utiliser des banques privées de maison/équipe sur l’infrastructure choisie.
+- Les médias utilisés restent disponibles après retrait du son ou perte d’accès à la banque.
 - La hiérarchie dossiers / sous-dossiers doit rester exploitable.
 - Les fichiers ne sont pas dupliqués simplement parce qu’ils sont indexés.
 - Lorsqu’un fichier est effectivement utilisé dans un projet, une copie est intégrée au `.jacq`.
@@ -251,7 +258,7 @@ La bibliothèque prévoit :
 - préécoute ;
 - drag-and-drop.
 
-La waveform n’est pas requise en V1.
+La waveform n’est pas requise au lancement.
 
 ## Catégorisation
 
@@ -381,6 +388,8 @@ Le changement de workspace doit donner une expérience de switch comparable aux 
 
 # 17. Rôles et permissions
 
+Les droits de préparation de publication, publication et retrait de boutique ci-dessous sont conservés pour l’extension F1. Ils ne constituent pas des opérations réelles du lancement. Les interdictions de montage et les permissions contextuelles restent applicables.
+
 ## Super Admin Jaquette
 
 - Administre la plateforme globale.
@@ -494,7 +503,7 @@ Le Chef d’équipe **ne modifie jamais directement le montage audio**.
 
 L’accueil doit être conçu comme un espace de gestion de travail comparable dans son principe à Figma.
 
-L’accueil est un tableau de bord général distinct de l’écran d’un projet. Pour le workspace courant, il doit permettre de consulter simultanément toutes les équipes et tous les projets du jeu de données disponible, sans devoir ouvrir un projet. Chaque projet y expose au minimum son nom, son équipe, son statut et un repère de progression ou d’activité ; chaque équipe expose au minimum son nom, son nombre de membres et ses projets associés ou leur nombre.
+L’accueil est un tableau de bord général distinct de l’écran projet. Il permet de consulter simultanément toutes les équipes et tous les projets du jeu disponible dans le workspace. Chaque projet expose nom, équipe, statut et progression ou activité ; chaque équipe expose nom, nombre de membres et projets associés ou leur nombre.
 
 Il doit mettre en évidence :
 
@@ -582,7 +591,8 @@ Ne pas confondre les deux concepts.
 - Une tâche cible un livre ou un chapitre, possède un assigné, peut avoir une échéance et ne possède aucune priorité.
 - Ses seuls statuts sont `Pas commencé`, `En cours` et `Terminée`.
 - Elle est créée avec `Pas commencé`, passe manuellement à `En cours`, puis automatiquement à `Terminée` lorsque l’action métier attendue est accomplie.
-- Les cas obligatoires comprennent : doubler un chapitre, réviser un chapitre, publier un livre dans Jacques et corriger un chapitre invalidé.
+- Les cas obligatoires comprennent : doubler un chapitre, réviser un chapitre et corriger un chapitre invalidé ; publier un livre dans Jacques reste obligatoire en extension F1.
+- En F1, le passage à l’état publiable génère la tâche automatique de publication, sans priorité ; elle se termine après confirmation de publication, sans doublon lors d’un réessai.
 - Une invalidation crée une nouvelle occurrence de tâche de correction. Elle ne réutilise pas l’ancienne tâche et ne détruit pas l’historique des cycles précédents.
 - Les tâches pertinentes voyagent dans le `.jacq` et dans le `.chpt` lorsqu’elles ciblent le chapitre exporté.
 
@@ -622,6 +632,8 @@ Exemple :
 
 ## Validation finale
 
+Prêt à publier et Publié sont des états de l’extension F1 ; au lancement, la validation finale mène à l’export et au contrôle.
+
 États prévus :
 
 - Non soumis ;
@@ -634,6 +646,8 @@ Exemple :
 ---
 
 # 23. Workflow éditorial
+
+Le workflow complet conserve sa destination F1. Au lancement, validation finale puis export et contrôle ; les états Prêt à publier/Publié et la publication effective relèvent de F1.
 
 Workflow principal :
 
@@ -696,6 +710,8 @@ Règles :
 
 # 25. Publication vers Jacques
 
+**Extension F1**, après disponibilité du lecteur et de la boutique Jacques. Les capacités, métadonnées et règles de retrait ci-dessous sont conservées, mais ne conditionnent pas le lancement.
+
 ## Validation ≠ publication
 
 La validation finale et la mise en boutique sont deux actions distinctes.
@@ -708,7 +724,7 @@ Validé
 → Publier dans Jacques
 ```
 
-La préparation de la publication n’est présentée qu’après la validation finale. Dans les états antérieurs à `Validé` — notamment `Non soumis`, `En attente Chef` et `À corriger` — aucun panneau, bouton, contrôle ni métadonnée de préparation de publication ne doit être monté ; un contrôle seulement désactivé ne suffit pas.
+La préparation de publication n’est présentée qu’après validation finale. Avant Validé, notamment Non soumis, En attente Chef et À corriger, aucun panneau, bouton, contrôle ni métadonnée de préparation ne doit être monté ; un contrôle désactivé ne suffit pas. Après validation, la préparation réelle reste réservée à F1.
 
 ## Métadonnées de publication
 
@@ -767,13 +783,16 @@ L’historique doit être conservé.
 
 ---
 
-# 27. Confidentialité et données
+# 27. Confidentialité, accès et données
 
-- Les manuscrits peuvent être confidentiels.
-- Le fonctionnement doit rester local-first pour les livres et bibliothèques audio.
-- En V2, le cloud Jaquette gère principalement les identités, droits, invitations et métadonnées non sensibles.
-- Les EPUB, `.jacq`, `.chpt`, manuscrits et sources audio restent sur le stockage local ou l’infrastructure de l’éditeur / auteur sauf choix explicite contraire.
-- La collaboration sur le contenu repose sur l’échange explicite de fichiers `.chpt`, sans synchronisation en direct du manuscrit ou du montage.
+- Jaquette est gratuit sur invitation. Activation initiale, première authentification et préparation de l’environnement exigent une connexion.
+- L’autonomie est de cinq jours sans reconnexion. À expiration, nouvelles modifications et application de propositions IA sont bloquées ; consultation, sauvegarde et archivage du travail existant restent possibles.
+- Une simple disponibilité du réseau ne renouvelle pas les droits. À reconnexion, droits recontrôlés avant tout envoi de soumission, commentaire ou décision, y compris ceux préparés hors ligne.
+- En cas de révocation, aucun envoi ; le travail du contexte reste conservé et son archivage sur disque est accompagné jusqu’à vérification. Dans le navigateur, copie préparée ne signifie pas copie indépendante enregistrée. Annulation, refus ou échec conservent l’original et l’archivage à terminer.
+- EPUB, manuscrits, .jacq, .chpt, sons, banques et commentaires de contenu restent localement ou sur l’infrastructure privée choisie par la maison ou l’auteur indépendant.
+- Les services Jaquette sont limités à l’identité, aux invitations et aux données administratives explicitement autorisées. Aucun hébergement de manuscrits ou de banques audio sur Jaquette Cloud.
+- Le travail est local ; soumissions, transmission des commentaires/décisions et actualisation des tableaux de bord sont connectées. Aucun montage partagé en direct.
+- Réviseurs et Chefs peuvent télécharger en ligne puis lire, simuler et préparer commentaires/décisions hors ligne. Une décision préparée localement ne devient officielle qu’après acceptation par le service autorisé avec contrôle des droits.
 
 ---
 
@@ -829,7 +848,9 @@ Le MCP sert à permettre à des agents IA de lire les informations explicitement
 
 ## Accès
 
-- Le serveur MCP est prévu localement dans la phase Electron initiale.
+- MCP requis dès le lancement, avec agents externes utilisant exclusivement les bibliothèques autorisées, sans génération sonore.
+- Fonctionnement hors ligne uniquement avec agent et modèle locaux. Tout transfert distant exige consentement et connexion ; un agent local ne rend pas son modèle distant local.
+- Desktop peut fournir la connexion MCP locale au navigateur, avec appairage et ressources autorisées à qualifier.
 - Un agent ne reçoit jamais un accès arbitraire au système de fichiers.
 - Il ne voit que les ressources exposées explicitement par Jaquette.
 - Les opérations proposées à l’agent doivent rester limitées aux capacités que Jaquette choisit d’exposer.
@@ -936,50 +957,22 @@ La page du livre doit visuellement se distinguer de l’interface sombre de Jaqu
 
 ## Thèmes
 
-- V1 : mode sombre.
+- Au lancement : mode sombre.
 - Mode clair : prévu plus tard.
 
 ---
 
-# 33. Périmètre des versions
+# 33. Périmètre de lancement et jalons
 
-## V1 Web
+Le lancement comprend **Web complet sur ordinateur : Chrome, Firefox, Safari (qualifié sur macOS)** et **Electron Windows/macOS**. Les cibles matérielles sont un PC Windows 10 de génération 2018, un MacBook Intel précédant le M1 et un MacBook M1. Les configurations exactes et budgets proposés attendent 0.4 ; aucune qualification multi-plateforme n’est acquise par les campagnes historiques Chrome.
 
-Doit valider de bout en bout :
+La production locale, les comptes/invitations, les cinq jours offline, les bibliothèques locales et banques privées, les échanges connectés, la révision et le MCP sont inclus au lancement. Export et contrôle .jacko préparent Jacques ; publication réelle, boutique et dépublication restent en **F1**, avec droits, tâche automatique et signature de publication conservés.
 
-- workspace et projets ;
-- import EPUB ;
-- texte stable ;
-- sélection ;
-- annotations SFX / Ambiance / Musique ;
-- bibliothèque locale ;
-- édition audio légère ;
-- simulation ;
-- sauvegarde `.jacq` et sauvegarde physique par chapitre `.chpt` ;
-- workflow de révision ;
-- contrôle qualité ;
-- métadonnées de publication ;
-- export `.jacko` ;
-- vérification du `.jacko`.
+Le [plan](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) porte les jalons actifs : J0 (étapes 0–1), J1 (2–3), atelier complet (4–7), J2 (8–10), banques et IA (11–12), J3 (13), première version distribuée (14–16), puis F1. La [correspondance historique](docs/VERSIONING.md) remplace les anciens jalons V0.x/V1/V2 sans effacer les acquis.
 
-## Desktop
+La section 4 du plan propose un parcours de sauvegarde ; OPFS, ZIP et distinction espace de travail/copie portable ne sont pas adoptés. Décision en nouvelle 1.2 après preuves physiques d’écriture, récupération et portabilité. La section 5 propose des performances, à fixer en 0.4 avant mesure. Aucun monorepo, backend, conteneur ou nouvelle bibliothèque métier n’est imposé par 0.1.
 
-Après validation de la version Web, Jaquette doit être porté sur desktop via Electron.
-
-## IA / MCP
-
-Arrive après le socle de production et la version desktop initiale.
-
-## Collaboration offline
-
-Inclut notamment :
-
-- comptes réels, invitations et organisations lorsque ce contexte est nécessaire ;
-- export et import de `.chpt` ;
-- candidates de chapitre ;
-- fusion de chapitres différents ;
-- proposition et approbation unanime des candidates concurrentes, ainsi qu’arbitrage explicite des informations communes ;
-- audit des échanges et décisions.
+Développement prévu par GPT.6, budget limité, sans échéance imposée : lots courts et réutilisation du socle. La gratuité ne couvre pas les éventuels coûts du stockage choisi, des agents externes et de leurs appels IA ; aucun abonnement Jaquette n’est introduit.
 
 ---
 
@@ -1004,7 +997,7 @@ La sauvegarde par chapitre doit en outre permettre de modifier puis réécrire l
 
 # 35. Ce qui n’est pas encore une règle
 
-Le projet n’ayant pas encore commencé, **ne pas transformer en règles de dépôt des choix techniques qui restent à implémenter ou à confirmer**.
+Le prototype étant déjà commencé, **ne pas transformer en règles de dépôt des choix techniques qui restent à implémenter ou à confirmer**.
 
 En particulier, lorsqu’une décision technique n’est pas explicitement figée par le cahier des charges ou par une décision ultérieure du projet :
 

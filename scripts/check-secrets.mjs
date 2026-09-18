@@ -3,7 +3,7 @@ import { extname, join } from 'node:path'
 
 const root = process.cwd()
 const ignoredDirectories = new Set(['.git', 'node_modules', 'dist', 'playwright-report', 'test-results', 'reference-data', 'EPUB tests'])
-const allowedExtensions = new Set(['', '.css', '.html', '.js', '.json', '.jsx', '.md', '.mjs', '.ts', '.tsx'])
+const allowedExtensions = new Set(['', '.css', '.html', '.js', '.json', '.jsx', '.md', '.mjs', '.ts', '.tsx', '.yaml', '.yml'])
 const findings = []
 const privateKeyMarker = ['-----BEGIN', 'PRIVATE KEY-----'].join(' ')
 const patterns = [

@@ -1,6 +1,7 @@
 # Décision d’implémentation 0002 — Navigation du shell Web
 
-- Statut : retenue pour la sous-étape 1.2, révisable
+- Statut : retenue pour l’ancienne sous-étape 1.2, révisable
+- Portée historique : tous les numéros de cette décision visent l’ancien plan. La nouvelle 1.2 concerne les preuves de stockage. Chrome reste la portée du prototype, sans qualification Firefox/Safari/Electron.
 - Date : 2026-08-23
 - Version de l’application : 0.0.0
 

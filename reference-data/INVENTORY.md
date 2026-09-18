@@ -1,6 +1,6 @@
 # Inventaire des données de référence
 
-Validation effectuée les **21 et 23 août 2026**. Les tailles et empreintes portent sur les fichiers téléchargés depuis les URL directes indiquées. Les binaires restent locaux sous `reference-data/files/` et ne sont pas versionnés.
+Validation effectuée les **21 et 23 août 2026**. Les tailles et empreintes portent sur les fichiers téléchargés depuis les URL directes indiquées. Les binaires sous `reference-data/files/` ne sont pas versionnés dans Git. Depuis le 11 septembre 2026, les mêmes octets de la seule référence anglaise sont disponibles dans une [archive de fixtures hors Git](ARCHIVE.md), avec vérification de redistribution France/États-Unis, attribution et licence intactes. Les résultats historiques ci-dessous restent distincts de cette acquisition.
 
 ## EPUB
 

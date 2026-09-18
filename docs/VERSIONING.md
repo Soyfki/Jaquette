@@ -6,16 +6,15 @@ Cette convention fournit un repère minimal pour versionner l’application Jaqu
 
 ## État actuel
 
-- Version de l’application : **`0.0.0`**.
-- État : **pré-développement, non publié**.
-- Phase 0 : **acquise**.
-- Sous-étapes 1.1 à 1.3 : **acquises**.
-- Sous-étape 1.4 : **lot 1.4.1 acquis ; lot 1.4.2 — variantes simulées Chef d’équipe et Admin Maison — en correction après retour humain et non acquis jusqu’à sa revalidation**.
-- Lot 1.4.3 et clôture de la phase 1 : **non commencés** ; la sous-étape 1.4 et la phase 1 ne sont pas acquises, la phase 2 n’a pas commencé et 2.1 n’est pas encore la prochaine étape exécutable.
-- Recadrage REC-01 : **collaboration offline intégrée à la documentation**.
-- Jalon produit visé par la roadmap : **V0.1 — Preuve du modèle textuel**.
+- Version de l’application : **0.0.0**, non publiée.
+- Acquis historiques : ancienne phase 0, anciennes sous-étapes 1.1 à 1.3 et lot 1.4.1.
+- Main à la base de 0.1 contient le prototype Sound Designer/Réviseur. Les quatre rôles et correctifs de l’ancien 1.4.2 sont sur la [PR 9](https://github.com/Soyfki/Jaquette/pull/9), SHA 5cabbb016d3ce5480b165512c1aa7814b8367802, tant qu’ils ne sont pas fusionnés.
+- 1.4.2 reste non acquis avant sa revalidation humaine ; aucune clôture rétroactive de l’ancienne 1.4 ou de l’ancienne phase 1.
+- Ancien 1.4.3 : plus de prochaine livraison autonome ; aucun périmètre précis retrouvé. Inventorier les reliquats réellement identifiables en 0.3/0.5 puis les rattacher aux sous-étapes futures correspondantes.
+- Nouvelle étape 0 distincte de l’ancienne phase 0 acquise. Après Go de 0.1, prochaine action : **0.2**, pas l’ancienne 2.1 ni la nouvelle étape 1.
+- Cadrage actif du 11 septembre : lancement gratuit sur invitation, Web complet Chrome/Firefox/Safari (Safari sur Mac), Electron Windows/macOS, collaboration et MCP inclus ; publication Jacques en F1.
 
-La valeur `0.0.0` reste inchangée malgré l’existence du prototype Web intermédiaire jusqu’au lot 1.4.2 : aucun livrable applicatif publié n’a encore reçu de version. Elle ne signifie ni que le lot 1.4.2, la sous-étape 1.4 ou la phase 1 sont acquis, ni que le jalon produit V0.1 est atteint.
+La valeur 0.0.0 est conservée : le prototype et l’harmonisation documentaire ne constituent pas une version publiée, un format adopté ou un jalon fonctionnel démontré.
 
 ## Version de l’application
 
@@ -25,15 +24,34 @@ Jaquette utilisera [Semantic Versioning 2.0.0](https://semver.org/) sous la form
 - `MINEURE` pour une évolution compatible ;
 - `CORRECTIF` pour une correction compatible.
 
-Avant une première version stable, la série `0.y.z` signale un produit en développement. La première version applicative ne sera attribuée que lorsqu’un livrable exécutable correspondant aura été défini et publié ; cette décision n’est pas prise dans la sous-étape 0.1.
+Avant une première version stable, la série `0.y.z` signale un produit en développement. La première version applicative ne sera attribuée que lorsqu’un livrable exécutable correspondant aura été défini et publié ; cette décision n’a été prise ni dans l’ancienne sous-étape documentaire 0.1 ni dans la nouvelle 0.1 de septembre.
 
-## Jalon produit
+## Jalons produit actifs et correspondance historique
 
-Les libellés **V0.1**, **V0.2**, **V1** ou **V2** présents dans le cahier des charges et le plan sont des **jalons produit**. Ils regroupent des objectifs et des étapes de la roadmap. Ils ne constituent pas automatiquement une version publiée de l’application et ne commandent pas mécaniquement son numéro SemVer.
+Le [plan du 11 septembre 2026](../PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) porte seul le calendrier actif. Les anciens libellés V0.x/V1/V2 sont historiques ; aucune équivalence ci-dessous ne transfère automatiquement un acquis.
+
+| Actuel | Étapes | Ancien périmètre repris |
+|---|---|---|
+| J0 — Choix éprouvés | 0–1 | Reprise prototype, stockage et premiers essais Electron |
+| J1 — Production locale minimale | 2–3 | V0.1 textuel et sauvegarde de V0.3 |
+| Atelier complet | 4–7 | V0.2 audio, bibliothèque et accès réels |
+| J2 — Collaboration opérationnelle | 8–10 | V2 Collaboration avancé avant lancement |
+| Banques et IA | 11–12 | V1.5 IA avancé avant lancement, banques privées |
+| J3 — Produit complet de production | 13 | V0.3 Production Web, export de contrôle |
+| Première version distribuée | 14–16 | V1 Desktop rejoint le Web complet |
+| Extension Jacques | F1 | Publication effective, boutique et retrait, signature réelle |
+
+Les étapes détaillées des deux anciens documents avaient des numérotations différentes ; leur historique au SHA 8a9e9a7ed692f26e3969641a4584669bfa1d93a9 reste consultable dans le [cahier](https://github.com/Soyfki/Jaquette/blob/8a9e9a7ed692f26e3969641a4584669bfa1d93a9/CAHIER_DES_CHARGES_JAQUETTE.md) et le [plan](https://github.com/Soyfki/Jaquette/blob/8a9e9a7ed692f26e3969641a4584669bfa1d93a9/PLAN_DE_DEVELOPPEMENT_JAQUETTE.md). Le tableau final du plan actuel conserve la correspondance avec ses anciennes phases.
+
+Les exemples de versions nommées « V1 — Premier doublage », « V2 — Retours éditoriaux » et « V3 — Mix final » restent des états de travail d’un projet. Ils ne désignent ni roadmap ni SemVer.
+
+Les propositions de sauvegarde de la section 4 du plan (dont OPFS, ZIP éventuel et distinction espace de travail/copie portable) attendent les preuves et la décision de 1.2. Les cibles de section 5 attendent 0.4 et leur qualification : aucun choix ni résultat acquis par un changement de numéro.
+
+L’export .jacko de contrôle, les checksums et la signature avec clés de test en étape 13 se distinguent de la signature authentifiant une publication en F1. Les droits de publication, la tâche automatique associée et la dépublication restent documentés pour F1.
 
 ## Versions des formats `.jacq`, `.chpt` et `.jacko`
 
-Les formats de travail `.jacq`, d’échange de chapitre `.chpt` et de distribution `.jacko` devront disposer des informations de compatibilité nécessaires, distinctes de la version de l’application et des jalons produit. Le plan prévoit déjà un futur champ `formatVersion` pour `.jacko`.
+Les formats de travail `.jacq`, d’échange de chapitre `.chpt` et de distribution `.jacko` devront disposer des informations de compatibilité nécessaires, distinctes de la version de l’application et des jalons produit. Le [cahier des charges, section 5.3](../CAHIER_DES_CHARGES_JAQUETTE.md) prévoit un futur champ `formatVersion` pour `.jacko`.
 
 Pour `.jacq` et `.chpt`, aucun nom de champ, numéro de format, schéma physique, valeur initiale ni règle de compatibilité n’est décidé. Ces choix restent **à définir dans les sous-étapes qui leur sont consacrées**, après validation de la sauvegarde physique partielle par chapitre.
 
