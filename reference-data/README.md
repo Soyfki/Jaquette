@@ -9,7 +9,7 @@ Ce dossier définit le jeu de données de référence de l’ancien jalon histor
 - [`manifest.json`](manifest.json) : inventaire machine-readable des fichiers attendus ;
 - [`.gitignore`](.gitignore) : exclusion explicite des binaires acquis.
 
-Les EPUB et les sons sont placés localement sous `reference-data/files/`. Ce répertoire est ignoré par Git : aucun binaire tiers n'entre dans l'historique Git. La seule référence anglaise est aussi distribuée gratuitement comme [asset de Release de fixtures](ARCHIVE.md), avec licence et provenance conservées. La commande explicite `pnpm prepare:references` et la CI de qualification utilisent cette archive pour l'anglais et les cinq autres URL du manifeste ; l'application ne les télécharge pas.
+Les EPUB et les sons sont placés localement sous `reference-data/files/`. Ce répertoire est ignoré par Git : aucun binaire tiers n'entre dans l'historique Git. Les références [anglaise](ARCHIVE.md) et [française](ARCHIVE-FR.md) sont aussi distribuées gratuitement comme assets de Releases de fixtures, avec licences et provenances conservées. La commande explicite `pnpm prepare:references` et la CI de qualification utilisent ces deux archives et les quatre autres URL d'origine ; l'application ne les télécharge pas.
 
 ## Arborescence locale attendue
 

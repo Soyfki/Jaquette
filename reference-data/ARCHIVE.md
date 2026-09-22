@@ -1,8 +1,10 @@
 # Référence de test canonique — EPUB anglais, corpus du 21 août 2026
 
+Depuis le 22 septembre 2026, la [référence française est également archivée](ARCHIVE-FR.md) après changement de sa source amont. Le présent document conserve l'historique anglais ; le mapping courant utilise les deux archives explicites et les quatre autres URL d'origine.
+
 Archive technique pour reproduire les tests de Jaquette. Ce n'est pas une version de l'application (qui reste 0.0.0), ni un livre publié dans Jacques. Distribution gratuite, sans modification du fichier et hors de l'historique Git.
 
-Archive publiée : [Release de fixtures](https://github.com/Soyfki/Jaquette/releases/tag/fixtures-reference-2026-08-21), asset 557500668. La sélection explicite de cette source pour `epub-en` est versionnée dans [reference-source.mjs](../scripts/reference-source.mjs). Les cinq autres références utilisent leur URL d'origine. Aucun fallback automatique n'est prévu : erreur HTTP, réseau, taille ou SHA incorrects font échouer la préparation. Un fichier local invalide reste intact. Ni cette Release ni son nom ne constituent une garantie d'immuabilité ; les attentes canoniques restent obligatoires à chaque lecture.
+Situation du 11 septembre 2026 — archive publiée : [Release de fixtures](https://github.com/Soyfki/Jaquette/releases/tag/fixtures-reference-2026-08-21), asset 557500668. La sélection explicite de cette source pour `epub-en` est versionnée dans [reference-source.mjs](../scripts/reference-source.mjs). Les cinq autres références utilisent leur URL d'origine. Aucun fallback automatique n'est prévu : erreur HTTP, réseau, taille ou SHA incorrects font échouer la préparation. Un fichier local invalide reste intact. Ni cette Release ni son nom ne constituent une garantie d'immuabilité ; les attentes canoniques restent obligatoires à chaque lecture.
 
 **The Adventures of Sherlock Holmes**, Arthur Conan Doyle, Project Gutenberg eBook #1661. Crédits de l'édition numérique : an anonymous Project Gutenberg volunteer and Jose Menendez.
 

@@ -9,6 +9,12 @@ on:
 permissions:
   contents: read
 
+# Each PR or pushed branch keeps only its latest active qualification.
+# Other PRs and workflows retain their own independent concurrency groups.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   chrome:
     runs-on: ubuntu-24.04
