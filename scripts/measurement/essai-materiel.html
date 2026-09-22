@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Jaquette — relevé matériel 0.4</title>
+<style>body{font:18px system-ui;max-width:800px;margin:40px auto;padding:20px;background:#eff2ff;color:#1b1b3a}button,input{font:inherit;padding:12px;margin:8px 0}pre{white-space:pre-wrap}label{display:block}</style>
+<h1>Relevé matériel Jaquette 0.4</h1>
+<p>Ce fichier fonctionne hors ligne. Il n’envoie rien. Il relève le navigateur et l’écran ; le son bref sert seulement à identifier la sortie, sans mesurer sa latence ni qualifier Jaquette.</p>
+<p>Développement : W18 uniquement. M1 est réservé aux phases finales 14 à 16 ; aucun Mac n’est requis pour l’étape 0.4.</p>
+<label>Poste <select id="machine"><option>W18</option><option>M1</option></select></label>
+<button id="measure">Relever écran et navigateur (5 secondes)</button>
+<button id="audio">Écouter un son bref à faible niveau</button>
+<label>Observation (sortie filaire / haut-parleurs / Bluetooth, écran, alimentation, réussite ou obstacle) <input id="observation" size="55"></label>
+<button id="save" disabled>Enregistrer le résultat</button><pre id="result" aria-live="polite"></pre>
+<script>
+let report;
+const result = document.querySelector('#result');
+document.querySelector('#measure').onclick = async () => {
+  report = {tool:'0.4.1', machine:document.querySelector('#machine').value, at:new Date().toISOString(), userAgent:navigator.userAgent, platform:navigator.platform, language:navigator.language, screen:{width:screen.width,height:screen.height,pixelRatio:devicePixelRatio}, audioProbe:'NOT_RUN', visibility:document.visibilityState, limitations:['rAF estimates are not certified display Hz or product fps','No audio latency measured']};
+  try { report.browserDetails = navigator.userAgentData ? await navigator.userAgentData.getHighEntropyValues(['fullVersionList','architecture','bitness']) : null } catch(e) { report.browserDetails = null }
+  if(!report.browserDetails) report.limitations.push('Exact browser build must come from native collector; otherwise BLOCKED, userAgent may be reduced');
+  const frames=[];let previous;const start=performance.now();
+  await new Promise(resolve => {function frame(t){if(previous)frames.push(t-previous);previous=t;if(t-start<5000)requestAnimationFrame(frame);else resolve()}requestAnimationFrame(frame)});
+  report.frameIntervalsMs=frames;report.visibilityAtEnd=document.visibilityState;
+  result.textContent=JSON.stringify(report,null,2);document.querySelector('#save').disabled=false;
+};
+document.querySelector('#audio').onclick = async () => {
+  try {const ctx=new AudioContext();await ctx.resume();const tone=ctx.createOscillator(), gain=ctx.createGain();tone.frequency.value=440;tone.connect(gain).connect(ctx.destination);gain.gain.setValueAtTime(0,ctx.currentTime);gain.gain.linearRampToValueAtTime(0.025,ctx.currentTime+0.05);gain.gain.setValueAtTime(0.025,ctx.currentTime+0.8);gain.gain.linearRampToValueAtTime(0,ctx.currentTime+1);tone.start();tone.stop(ctx.currentTime+1);tone.onended=()=>ctx.close();if(report)report.audioProbe='SIGNAL_PLAYED; human audibility required';result.textContent='Son envoyé. Décrire ce qui a été entendu et la sortie utilisée.'}catch(e){if(report)report.audioProbe='BLOCKED: '+e.name;result.textContent='Obstacle audio : '+e.name}
+};
+document.querySelector('#save').onclick = () => {report.observation=document.querySelector('#observation').value;const url=URL.createObjectURL(new Blob([JSON.stringify(report,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='essai-'+report.machine+'-'+Date.now()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+</script></html>

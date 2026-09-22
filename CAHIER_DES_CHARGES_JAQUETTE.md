@@ -47,7 +47,7 @@ L’extension **F1**, après disponibilité du lecteur et de la boutique Jacques
 
 ## 4. Périmètre de la première livraison
 
-Jaquette est gratuit et accessible sur invitation. Le lancement comprend le Web complet sur ordinateur sous Chrome, Firefox et Safari (Safari qualifié sur macOS), ainsi qu’Electron Windows/macOS, Mac Intel et Apple Silicon. Les postes cibles sont un PC Windows 10 de génération 2018, un MacBook Intel précédant le M1 et un MacBook M1 ; configurations exactes et budgets seront fixés en nouvelle 0.4.
+Jaquette est gratuit et accessible sur invitation. Selon D04-04 du 22 septembre 2026, le développement et les validations des étapes 0 à 13 se font uniquement sur W18 (PC Windows 10 de génération 2018). La cible finale comprend le Web Chrome/Firefox sur W18 et M1, Safari réel sur M1, ainsi qu'Electron Windows x64 et macOS arm64 sur M1. Les relevés et tests M1 commencent uniquement aux phases finales 14 à 16, après J3 ; aucun Mac n'est requis pour le PASS du développement ou de 0.4. Mac Intel est retiré du périmètre. Les budgets restent adoptés dans le [contrat 0.4](docs/measurement/README.md), sans qualification Mac anticipée.
 
 La première livraison doit permettre :
 
@@ -1210,7 +1210,7 @@ L’ancienne phase 0, les anciennes sous-étapes 1.1 à 1.3 et le lot 1.4.1 sont
 
 L’ancien 1.4.3 n’est plus une prochaine livraison autonome. Aucun périmètre précis n’a été retrouvé dans l’ancien plan : ses reliquats réellement identifiables seront inventoriés en 0.3/0.5, puis rattachés aux futures sous-étapes correspondantes. Aucun besoin ne lui est attribué rétroactivement ; l’ancienne sous-étape 1.4 et la phase 1 ne sont pas clôturées.
 
-La nouvelle étape 0 est distincte de l’ancienne phase 0 acquise. 0.1 et 0.2 sont validées. **0.3 — Corriger les défauts du prototype** et la **revalidation historique 1.4.2** sont **VALIDÉES / GO**, décisions distinctes du 18 septembre 2026 après campagne technique et observations humaines complètes au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`. L’intégration et les contrôles au dernier SHA sont tracés dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9). Le [rapport](docs/validation/0.3-correctifs-prototype/VALIDATION_REPORT.md) conserve les observations obligatoires et les deux conclusions. 0.4 est la prochaine sous-étape, non commencée. La version reste **0.0.0**.
+La nouvelle étape 0 est distincte de l’ancienne phase 0 acquise. 0.1 et 0.2 sont validées. **0.3 — Corriger les défauts du prototype** et la **revalidation historique 1.4.2** sont **VALIDÉES / GO**, décisions distinctes du 18 septembre 2026 après campagne technique et observations humaines complètes au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`. L’intégration et les contrôles au dernier SHA sont tracés dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9). Le [rapport](docs/validation/0.3-correctifs-prototype/VALIDATION_REPORT.md) conserve les observations obligatoires et les deux conclusions. 0.4 est en cours, BLOQUÉE / NO-GO jusqu’aux relevés et observations matériels complets. La version reste **0.0.0**.
 
 Les listes d’étapes historiques sont conservées dans le [cahier antérieur](https://github.com/Soyfki/Jaquette/blob/8a9e9a7ed692f26e3969641a4584669bfa1d93a9/CAHIER_DES_CHARGES_JAQUETTE.md) et le [plan antérieur](https://github.com/Soyfki/Jaquette/blob/8a9e9a7ed692f26e3969641a4584669bfa1d93a9/PLAN_DE_DEVELOPPEMENT_JAQUETTE.md). Elles n’imposent plus leur ordre de livraison.
 
@@ -1227,9 +1227,11 @@ Les listes d’étapes historiques sont conservées dans le [cahier antérieur](
 | Première version distribuée | Étapes 14–16 : Web complet et Electron qualifiés, pilotes | Ancien V1 Desktop rejoint le lancement Web |
 | Extension Jacques | F1 : contrat réel, métadonnées boutique, signature de publication, publication et retrait | Anciennes fonctions de publication Jacques différées |
 
-Les configurations, volumes et performances de la section 5 du plan sont des **cibles proposées**, à adopter ou ajuster en 0.4 et à mesurer ensuite. Ce ne sont ni des résultats acquis ni des promesses de performance déjà qualifiées. Les choix de la section 4 restent à prouver en 1.2. Les versions nommées « V1 — Premier doublage », « V2 — Retours éditoriaux » et « V3 — Mix final » de la section 17 gardent leur sens : ce sont des états d’un projet, pas des jalons.
+Les volumes et quatorze budgets de la section 5 sont **adoptés sans relèvement en 0.4**, selon le [contrat de mesure](docs/measurement/README.md) (D04-01 et précision mémoire D04-02). Les configurations matérielles réelles restent à compléter ; 0.4 demeure BLOQUÉE / NO-GO. Ce ne sont ni des résultats acquis ni des promesses de performance déjà qualifiées. Les choix de la section 4 restent à prouver en 1.2. Les versions nommées « V1 — Premier doublage », « V2 — Retours éditoriaux » et « V3 — Mix final » de la section 17 gardent leur sens : ce sont des états d’un projet, pas des jalons.
 
 ## 50. Risques techniques prioritaires
+
+Décision de jalon **D04-04 du 22 septembre 2026**, remplaçant D04-03 : développement W18 uniquement ; qualification Mac sur M1 uniquement aux phases finales 14 à 16 ; retrait de Mac Intel. L'absence de M1 ou d'Intel ne bloque aucun PASS/Go de 0.4. Le Go de ce lot conserve ses dix contrôles W18/dispositif, dont H-W18 encore BLOCKED pour conditions physiques inconnues ; aucune mesure Mac n'est déclarée PASS et aucun seuil n'est modifié. Voir la [décision tracée](docs/measurement/DECISIONS.md) et les jalons concernés du plan.
 
 1. Stabilité de la tokenisation EPUB.
 2. Conservation du rendu des EPUB complexes.

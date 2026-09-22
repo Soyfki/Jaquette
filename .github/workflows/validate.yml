@@ -75,6 +75,12 @@ jobs:
           git diff --exit-code -- pnpm-lock.yaml reference-data/manifest.json
           test -z "$(git ls-files reference-data/files 'EPUB tests')"
           git status --short | tee test-results/qualification/git-status.log
+      - name: Reduced measurement device and portable collectors
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          pnpm measure:prototype 2>&1 | tee test-results/qualification/measurement-prototype.log
+          pnpm package:measurement 2>&1 | tee test-results/qualification/measurement-package.log
+          bash -n scripts/measurement/RELEVER-MAC.command
       - name: Preserve reports (no reference binaries)
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
@@ -82,6 +88,7 @@ jobs:
           name: qualification-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
             test-results/
+            !test-results/measurement-prototype/**/ci-corpus/**
             playwright-report/
           if-no-files-found: error
           retention-days: 14
