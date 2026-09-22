@@ -143,7 +143,10 @@ test('all 14 adopted budgets have concrete protocols, boundaries, evidence and f
     assert.equal(b.id, `B${String(i + 1).padStart(2, '0')}`)
     for (const key of ['target', 'load', 'start', 'end', 'cache', 'instrumentation', 'statistics', 'protocol', 'evidence', 'phase', 'prerequisite']) assert.ok(b[key].length > 2, `${b.id}.${key}`)
     assert.ok(doc.includes(b.protocol)); assert.equal(b.targetState, 'ADOPTED'); assert.equal(b.observationState, 'PLANNED')
-    assert.equal(b.platforms.length, 11); assert.equal(b.longRuns, 10); assert.equal(b.interactionEvents, 100)
+    assert.equal(b.platforms.length, 7); assert.equal(b.longRuns, 10); assert.equal(b.interactionEvents, 100)
+    assert.deepEqual(b.developmentPlatforms, ['W18/Chrome', 'W18/Firefox', 'Windows-x64/native'])
+    assert.deepEqual(b.finalMacPlatforms, ['M1/Chrome', 'M1/Firefox', 'M1/Safari', 'macOS-arm64/native'])
+    assert.equal(b.macQualificationPhase, '14-16')
   }
 })
 
@@ -172,7 +175,7 @@ test('portable HTML runs offline, collects frames and downloads a result without
 test('macOS report marks empty/failed collectors BLOCKED (JXA mocked, not native qualification)', () => {
   const context = { Application: { currentApplication: () => ({ doShellScript: () => '' }) } }
   runInNewContext(readFileSync('scripts/measurement/collect-macos.js', 'utf8'), context)
-  const data = JSON.parse(context.run(['MI']))
+  const data = JSON.parse(context.run(['M1']))
   assert.equal(data.state, 'BLOCKED'); assert.equal(data.storage.capacityUsedAvailableKiB, null)
   assert.equal(data.storage.solidState, null); assert.ok(data.missing.length > 0)
 })

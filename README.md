@@ -22,7 +22,7 @@ Version : **0.0.0**, non publiée. Les [jalons actifs et leur correspondance his
 
 ## Cible de lancement décidée en septembre 2026
 
-Jaquette est un logiciel **gratuit sur invitation**, avec Web complet sur ordinateur dans Chrome, Firefox et Safari (Safari qualifié sur Mac), et Electron Windows/macOS au lancement. PC Windows 10 de génération 2018, MacBook Intel précédant le M1 et MacBook M1 sont les cibles matérielles ; les budgets sont adoptés en 0.4 et les relevés de configuration restent à compléter.
+Jaquette est un logiciel **gratuit sur invitation**. Le développement et les validations intermédiaires se font uniquement sur W18. La cible finale comprend Chrome/Firefox sur W18 et M1, Safari sur M1, et Electron Windows x64/macOS arm64 sur M1. Les relevés et tests M1 commencent uniquement aux phases finales 14 à 16, après J3 ; Mac Intel est hors périmètre. L'absence de Mac ne bloque aucun PASS/Go du développement ou de 0.4 (D04-04).
 
 Après activation initiale en ligne et préparation de l’environnement, cinq jours de travail hors ligne sont prévus. À expiration, nouvelles modifications bloquées ; consultation, sauvegarde et archivage conservés. À reconnexion, les droits sont recontrôlés avant tout envoi. En cas de révocation : travail conservé, aucun envoi et archivage sur disque accompagné jusqu’à vérification, sans destruction si l’utilisateur annule.
 
@@ -98,4 +98,4 @@ Ne versionnez jamais de secret, mot de passe, clé, jeton ou identifiant de conn
 
 ## Lot 0.4 en cours
 
-[Contrat, corpus et commandes](docs/measurement/README.md), [matrice matérielle](docs/measurement/MACHINES.md), [protocoles](docs/measurement/PROTOCOLS.md). La [décision utilisateur D04-03 du 22 septembre](docs/measurement/DECISIONS.md) reporte les trois contrôles MI/M1 à la qualification macOS, sans PASS anticipé. Le seul blocage matériel de 0.4 reste H-W18 (conditions physiques déclarées inconnues) ; livraison BLOQUÉE / NO-GO, aucune performance produit future acquise. La correction de concurrence CI est livrée séparément dans la [PR 13](https://github.com/Soyfki/Jaquette/pull/13).
+[Contrat, corpus et commandes](docs/measurement/README.md), [matrice matérielle](docs/measurement/MACHINES.md), [protocoles](docs/measurement/PROTOCOLS.md). [D04-04 du 22 septembre](docs/measurement/DECISIONS.md) fixe le développement sur W18 uniquement, reporte M1 aux phases finales 14 à 16 et retire Intel. L'absence de Mac n'est plus un critère bloquant de 0.4 ; aucun PASS Mac n'est anticipé. Le seul blocage matériel de ce lot reste H-W18 (conditions physiques déclarées inconnues). La correction de concurrence CI est livrée dans la [PR 13](https://github.com/Soyfki/Jaquette/pull/13).

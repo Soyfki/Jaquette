@@ -2,17 +2,25 @@
 
 Adaptation du [modèle](../VALIDATION_REPORT.md). Branche `codex/etape-0-4-corpus-budgets`, base `f273b202d16476e075a827fb85d692b479ba8344`. Le dernier SHA réellement testé et ses preuves seront publiés dans la PR, sans commit circulaire pour inscrire son propre SHA.
 
-[PR 12](https://github.com/Soyfki/Jaquette/pull/12), ouverte en brouillon et non fusionnée. **SHA de qualification technique : `c3a7e7bd0dfb574aea13bbf97a5e296e3ea6c8b8`**. La clôture documentaire ne modifie ni scripts, ni tests, ni configuration, ni corpus ; les preuves ci-dessous conservent cette portée, complétées par les contrôles documentaires et la CI du dernier SHA dans la PR.
+[PR 12](https://github.com/Soyfki/Jaquette/pull/12), ouverte en brouillon et non fusionnée. **SHA de qualification initiale : `c3a7e7bd0dfb574aea13bbf97a5e296e3ea6c8b8`**. Les preuves du 18 septembre ci-dessous restent historiques. La reprise D04-04 modifie aussi le contrat exécutable, ses tests et le paquet de relevé ; les résultats rejoués et le dernier SHA testé sont consignés dans la PR.
 
-## Reprise du 22 septembre 2026 — état courant
+## D04-04 du 22 septembre 2026 — état courant
+
+Nouvelle décision explicite : **développement uniquement sur W18, Mac uniquement M1, essais M1 uniquement aux phases finales 14 à 16 après J3 ; Intel retiré**. Elle remplace D04-03, qui exigeait encore Mac dès 1.3. Les critères précoces du plan, le cahier des charges, AGENTS, le contrat exécutable, la matrice et le paquet de relevé sont harmonisés. L'absence de M1 ou d'Intel ne peut pas empêcher le PASS de 0.4 ou d'une étape de développement.
+
+T05 est désormais le collecteur natif M1 réservé aux tests finaux ; H-M1 est reporté aux mêmes phases ; H-MI est hors périmètre. Aucun de ces contrôles n'est compté dans les dix obligatoires de 0.4, aucun PASS Mac n'est revendiqué. H-W18 reste le seul blocage matériel, indépendant de cette décision : observations physiques déclarées inconnues. Les derniers résultats techniques, SHA complet et nouvel artefact du paquet sont consignés dans la PR 12 après le rejeu.
+
+Le générateur et les quatorze seuils restent inchangés. Le contrat de plateformes, les tests du contrat, la sélection de poste et le formulaire changent : leurs preuves antérieures ne suffisent pas et sont rejouées. Les empreintes de paquet ci-dessous décrivent l'historique du 18 septembre ; le nouveau paquet W18/M1 a sa propre empreinte publiée dans la PR. Conclusion actuelle : BLOQUÉE / NO-GO uniquement pour H-W18, sans aucun obstacle Mac. 0.5 non commencée. Responsable : agent Codex.
+
+## Premier report du 22 septembre 2026 — historique D04-03
 
 L'utilisateur ne possède aucun Mac et a explicitement choisi le report des relevés MI/M1 à la qualification macOS : [D04-03](../../measurement/DECISIONS.md). T05/H-MI/H-M1 sont désormais hors du Go 0.4 ; leurs résultats historiques BLOCKED ne deviennent pas PASS. Les deux cibles et les contrôles natifs demeurent obligatoires avant validation macOS.
 
 Pour les conditions W18 demandées (écran/Hz, audio et son entendu, Bluetooth, alimentation/économie, activité), l'utilisateur répond « Inconnu pour tout ». Le retour est enregistré sans inventer une observation. L'identification W18 et l'inventaire technique sont acquis ; **H-W18 reste BLOCKED**.
 
-Périmètre courant : **dix obligatoires, neuf contrôles techniques à requalifier au dernier SHA, un BLOCKED H-W18** ; trois contrôles Mac reportés. Les preuves du dernier SHA et de la CI sont actualisées dans la PR 12. Le corpus, les quatorze seuils, les collecteurs et le paquet restent inchangés par cette reprise documentaire. La correction CI avec annulation des runs obsolètes est isolée dans la PR 13, puis intégrée sans modifier les exigences matérielles.
+Périmètre à cette date : **dix obligatoires, neuf contrôles techniques à requalifier au dernier SHA, un BLOCKED H-W18** ; trois contrôles Mac reportés. Les preuves du dernier SHA et de la CI sont actualisées dans la PR 12. Le corpus, les quatorze seuils, les collecteurs et le paquet restent inchangés par cette première reprise documentaire. La correction CI avec annulation des runs obsolètes est isolée dans la PR 13, puis intégrée sans modifier les exigences matérielles.
 
-Décision courante : **BLOQUÉE / NO-GO** pour 0.4, aucune fusion de la PR 12 ni début de 0.5. Responsable : agent Codex, 22 septembre 2026. La campagne et la conclusion suivantes sont l'historique du 18 septembre et conservent leur périmètre initial.
+Décision à cette date : **BLOQUÉE / NO-GO** pour 0.4, aucune fusion de la PR 12 ni début de 0.5. Responsable : agent Codex, 22 septembre 2026. La campagne et la conclusion suivantes sont l'historique du 18 septembre et conservent leur périmètre initial.
 
 ## Livraison et participants
 

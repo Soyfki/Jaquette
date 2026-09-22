@@ -47,7 +47,7 @@ L’extension **F1**, après disponibilité du lecteur et de la boutique Jacques
 
 ## 4. Périmètre de la première livraison
 
-Jaquette est gratuit et accessible sur invitation. Le lancement comprend le Web complet sur ordinateur sous Chrome, Firefox et Safari (Safari qualifié sur macOS), ainsi qu’Electron Windows/macOS, Mac Intel et Apple Silicon. Les postes cibles sont un PC Windows 10 de génération 2018, un MacBook Intel précédant le M1 et un MacBook M1 ; les budgets sont adoptés dans le [contrat 0.4](docs/measurement/README.md) ; les configurations réelles et conditions attendent les relevés complets.
+Jaquette est gratuit et accessible sur invitation. Selon D04-04 du 22 septembre 2026, le développement et les validations des étapes 0 à 13 se font uniquement sur W18 (PC Windows 10 de génération 2018). La cible finale comprend le Web Chrome/Firefox sur W18 et M1, Safari réel sur M1, ainsi qu'Electron Windows x64 et macOS arm64 sur M1. Les relevés et tests M1 commencent uniquement aux phases finales 14 à 16, après J3 ; aucun Mac n'est requis pour le PASS du développement ou de 0.4. Mac Intel est retiré du périmètre. Les budgets restent adoptés dans le [contrat 0.4](docs/measurement/README.md), sans qualification Mac anticipée.
 
 La première livraison doit permettre :
 
@@ -1231,7 +1231,7 @@ Les volumes et quatorze budgets de la section 5 sont **adoptés sans relèvement
 
 ## 50. Risques techniques prioritaires
 
-Décision de jalon **D04-03 du 22 septembre 2026**, explicitement autorisée par l'utilisateur qui ne possède pas de Mac : les relevés matériels et observations MI/M1 sont reportés de 0.4 à la qualification macOS. Les cibles Mac Intel et M1, Safari réel et Desktop natif restent obligatoires ; leurs contrôles non exécutés ne deviennent pas PASS. Le Go 0.4 porte sur dix contrôles dont H-W18, encore BLOCKED pour conditions physiques déclarées inconnues. Aucun seuil de performance n'est modifié. Voir la [décision tracée](docs/measurement/DECISIONS.md) et les jalons concernés du plan.
+Décision de jalon **D04-04 du 22 septembre 2026**, remplaçant D04-03 : développement W18 uniquement ; qualification Mac sur M1 uniquement aux phases finales 14 à 16 ; retrait de Mac Intel. L'absence de M1 ou d'Intel ne bloque aucun PASS/Go de 0.4. Le Go de ce lot conserve ses dix contrôles W18/dispositif, dont H-W18 encore BLOCKED pour conditions physiques inconnues ; aucune mesure Mac n'est déclarée PASS et aucun seuil n'est modifié. Voir la [décision tracée](docs/measurement/DECISIONS.md) et les jalons concernés du plan.
 
 1. Stabilité de la tokenisation EPUB.
 2. Conservation du rendu des EPUB complexes.

@@ -4,12 +4,12 @@ Adaptation du [modèle](../BUG_REPORT.md). Les résultats finaux associés à un
 
 ## B04-MAC — Relevés natifs inaccessibles
 
-- Contrôles : T05, H-MI, H-M1 ; historiquement BLOCKED le 18 septembre, reportés hors Go 0.4 par [D04-03](../../measurement/DECISIONS.md) le 22 septembre, sans PASS.
-- Contexte : session sur Windows ; l'utilisateur confirme le 22 septembre ne pas posséder de Mac et autorise le report à la qualification macOS.
-- Attendu : commandes exécutées sur les vrais postes Intel et M1, valeurs et conditions observées.
+- Contrôles : T05/H-MI/H-M1 historiquement BLOCKED le 18 septembre. D04-04 remplace D04-03 : T05 concerne M1 uniquement ; T05/H-M1 sont réservés aux phases finales 14 à 16 ; H-MI est retiré, sans PASS fictif.
+- Contexte : décision utilisateur du 22 septembre, développement uniquement sur W18 ; Mac Intel hors périmètre, M1 uniquement aux tests finaux.
+- Attendu courant : aucun Mac requis pour 0.4 ; collecteur natif, relevé et observations M1 exigés aux phases finales uniquement.
 - Observation : aucune mesure Mac disponible ; aucun runner cloud ou WebKit ne peut la remplacer.
 - Reprise : lancer le paquet livré, transmettre les résultats et le formulaire. Aucune installation ou manipulation Git requise.
-- Impact actuel : ne bloque plus 0.4 ; reste un prérequis obligatoire de la qualification macOS. Aucune valeur supposée ni cible supprimée. H-W18 reste le blocage matériel de 0.4, l'utilisateur ayant déclaré les conditions inconnues.
+- Impact actuel : absence de Mac sans effet bloquant sur le PASS/Go 0.4. M1 reste une cible finale ; Intel est retiré par décision explicite. H-W18 reste le seul blocage matériel du lot, ses conditions étant déclarées inconnues.
 
 Les pièces à partager sont limitées aux inventaires à champs autorisés et aux données synthétiques. Aucun manuscrit, secret ou fichier personnel n'est inclus.
 
@@ -27,4 +27,4 @@ SHA `e944ec2726cd37b5a340fa6856407c6bd2dcc292`, `pnpm measure:prototype` : FAIL 
 
 ## Revue ciblée des collecteurs
 
-Revue en lecture seule par un sous-agent : ajout des détails de version Chromium lorsque disponibles (UA réduite insuffisante), refus des sorties macOS vides/malformées, harmonisation de la conclusion du plan. Ce contrôle statique ne remplace pas l'exécution sur les deux Mac, toujours BLOCKED.
+Revue historique en lecture seule par un sous-agent : ajout des détails de version Chromium lorsque disponibles (UA réduite insuffisante), refus des sorties macOS vides/malformées, harmonisation de la conclusion du plan. Elle ne prouve aucune exécution Mac. Depuis D04-04, seul M1 sera testé aux phases finales ; aucune exécution Mac n'est exigible pour 0.4.

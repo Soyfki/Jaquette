@@ -1,6 +1,6 @@
 # Protocoles des quatorze budgets
 
-La source structurée et exhaustive est le [contrat](../../scripts/measurement/contract.mjs). Les seuils sont adoptés ; aucune mesure produit future n'est déclarée PASS. Les plateformes sont toutes les cellules de [MACHINES.md](MACHINES.md), aux versions courante et précédente séparément ; les phases/prérequis figurent par budget dans le contrat. Le [cadre commun](README.md) fixe unités, répétitions et statistiques.
+La source structurée et exhaustive est le [contrat](../../scripts/measurement/contract.mjs). Les seuils sont adoptés ; aucune mesure produit future n'est déclarée PASS. Selon D04-04, seules les cellules W18 de [MACHINES.md](MACHINES.md) s'appliquent aux étapes de développement 0 à 13. Les mêmes protocoles sont repris sur M1 uniquement aux phases finales 14 à 16, après J3 ; Intel est hors périmètre. Les versions courante et précédente sont mesurées séparément. Une phase précoce indiquée par budget concerne W18, jamais un prérequis Mac anticipé. Le [cadre commun](README.md) fixe unités, répétitions et statistiques.
 
 ## Préparer chaque campagne
 
@@ -90,4 +90,4 @@ Responsable technique : passerelle Linux isolée `tc netem` pour délai/perte et
 
 ## Sources techniques primaires
 
-Les définitions de compteurs et les outils sont fondés sur [Microsoft PrivateBytes](https://learn.microsoft.com/en-us/previous-versions/aa394323(v=vs.85)), [Apple VM tools](https://developer.apple.com/library/archive/documentation/Performance/Conceptual/ManagingMemory/Articles/VMPages.html), [Apple footprint](https://developer.apple.com/videos/play/wwdc2022/10106/) et [WebKit memory inspection](https://docs.webkit.org/Infrastructure/MemoryInspection.html). Les unités de sortie et permissions sont à contrôler sur la version OS effectivement relevée ; aucun outil cloud n'atteste les trois postes réels.
+Les définitions de compteurs et les outils sont fondés sur [Microsoft PrivateBytes](https://learn.microsoft.com/en-us/previous-versions/aa394323(v=vs.85)), [Apple VM tools](https://developer.apple.com/library/archive/documentation/Performance/Conceptual/ManagingMemory/Articles/VMPages.html), [Apple footprint](https://developer.apple.com/videos/play/wwdc2022/10106/) et [WebKit memory inspection](https://docs.webkit.org/Infrastructure/MemoryInspection.html). Les unités de sortie et permissions sont à contrôler sur la version OS effectivement relevée ; aucun outil cloud n'atteste les postes réels W18 ou M1. Les outils macOS sont documentés pour les phases finales uniquement.

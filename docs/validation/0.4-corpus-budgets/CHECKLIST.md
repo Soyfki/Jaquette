@@ -1,6 +1,6 @@
 # Checklist de validation — 0.4 Fixer corpus et budgets
 
-Adaptation du [modèle](../CHECKLIST.md), contrôles fixés avant exécution le 18 septembre 2026. Périmètre révisé le 22 septembre par [décision utilisateur D04-03](../../measurement/DECISIONS.md) : dix contrôles obligatoires pour 0.4 ; trois contrôles Mac reportés explicitement. Les résultats, commandes, horaires et SHA complets sont joints à la PR ; aucun contrôle non exécuté ne devient PASS.
+Adaptation du [modèle](../CHECKLIST.md), contrôles fixés avant exécution le 18 septembre 2026. Périmètre courant fixé avant rejeu par [D04-04 du 22 septembre](../../measurement/DECISIONS.md), remplaçant D04-03 : dix contrôles obligatoires W18/dispositif pour 0.4. T05 et H-M1 sont réservés aux phases finales 14 à 16 ; H-MI est retiré. L'absence de M1 ou d'Intel ne peut pas donner FAIL/BLOCKED pour ce lot. Les résultats, commandes, horaires et SHA complets sont joints à la PR ; aucun test Mac non exécuté ne devient PASS.
 
 ## 1. Livraison testée
 
@@ -28,9 +28,9 @@ Clone neuf `.work-0-4/repo`, installation frozen Node 24.19.0 / pnpm 11.19.0 ; C
 |---|---|---|
 | H-W18 | lancer le paquet Windows, compléter le formulaire | identification du poste cible, relevé complet et conditions matérielles |
 
-### Contrôles reportés à la qualification macOS — D04-03
+### M1 réservé aux phases finales ; Intel hors périmètre — D04-04
 
-T05 (exécution native des collecteurs), H-MI et H-M1 restent obligatoires avant validation macOS. Ils ne comptent plus dans le Go 0.4 ; aucun relevé réel ni PASS Mac n'est revendiqué. Leurs procédures, résultats attendus et formulaire sont conservés dans la [décision](../../measurement/DECISIONS.md) et la [matrice](../../measurement/MACHINES.md).
+T05 concerne désormais uniquement l'exécution native du collecteur sur M1 ; H-M1 concerne son relevé et ses conditions physiques. Ils ne sont exigibles qu'en 14 à 16, après J3. H-MI est retiré du périmètre actif. Aucun Mac, Safari réel ou installateur Mac n'est requis pour le PASS de 0.4. Procédures finales dans la [décision](../../measurement/DECISIONS.md), la [matrice](../../measurement/MACHINES.md) et le formulaire ; historique conservé sans PASS anticipé.
 
 ## 5. Régressions
 
@@ -41,10 +41,10 @@ T05 (exécution native des collecteurs), H-MI et H-M1 restent obligatoires avant
 
 ## 6. Problèmes et dettes
 
-Une observation obligatoire manquante ne peut être acceptée comme dette. D04-03 est un report de jalon explicitement autorisé pour les seuls Mac ; H-W18 reste obligatoire. Aucune qualification de production des étapes 1 à 16 ne fait partie de cette campagne.
+Une observation obligatoire manquante ne peut être acceptée comme dette. D04-04 change explicitement les cibles et le calendrier Mac ; H-W18 reste obligatoire. Aucune qualification de production des étapes 1 à 16 ne fait partie de cette campagne.
 
 ## 7. Synthèse
 
 Voir [rapport](VALIDATION_REPORT.md). Règle : un obligatoire BLOCKED implique BLOQUÉE / NO-GO, sinon FAIL implique À CORRIGER / NO-GO, sinon tous PASS autorisent VALIDÉE / GO. Aucune fusion avant Go.
 
-Historique du 18 septembre au SHA `c3a7e7bd0dfb574aea13bbf97a5e296e3ea6c8b8` : 9 PASS et 4 BLOCKED sur treize contrôles. Après D04-03 : dix obligatoires, **9 PASS techniques de référence, 0 FAIL ouvert, 1 BLOCKED (H-W18)** ; trois contrôles Mac reportés, sans PASS. Les contrôles affectés et la CI sont rejoués au dernier SHA et consignés dans la PR. Responsable : agent Codex ; décision BLOQUÉE / NO-GO tant que H-W18 manque.
+Historique du 18 septembre au SHA `c3a7e7bd0dfb574aea13bbf97a5e296e3ea6c8b8` : 9 PASS et 4 BLOCKED sur treize contrôles. Périmètre D04-04 : dix obligatoires, **9 PASS techniques de référence, 0 FAIL ouvert, 1 BLOCKED (H-W18)** ; T05/H-M1 réservés aux phases finales, H-MI retiré. Les contrôles affectés (contrat, page/formulaire/paquet, liens et cohérence du plan) et la CI sont rejoués au dernier SHA et consignés dans la PR. Responsable : agent Codex ; aucun blocage Mac du Go 0.4.

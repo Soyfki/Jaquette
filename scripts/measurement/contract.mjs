@@ -4,7 +4,12 @@ export const common = {
   units: { ms: 'millisecond', Mo: 1000000, Go: 1000000000, To: 1000000000000, MiB: 1048576 },
   percentile: 'nearest rank: sorted[ceil(0.95*n)-1], no interpolation',
   longRuns: 10, interactionEvents: 100, warmupEvents: 10,
-  platforms: ['W18/Chrome', 'W18/Firefox', 'MI/Chrome', 'MI/Firefox', 'MI/Safari', 'M1/Chrome', 'M1/Firefox', 'M1/Safari', 'Windows-x64/native', 'macOS-x64/native', 'macOS-arm64/native'],
+  scopeDecision: 'D04-04; 2026-09-22',
+  platforms: ['W18/Chrome', 'W18/Firefox', 'M1/Chrome', 'M1/Firefox', 'M1/Safari', 'Windows-x64/native', 'macOS-arm64/native'],
+  developmentPlatforms: ['W18/Chrome', 'W18/Firefox', 'Windows-x64/native'],
+  finalMacPlatforms: ['M1/Chrome', 'M1/Firefox', 'M1/Safari', 'macOS-arm64/native'],
+  macQualificationPhase: '14-16',
+  phaseScope: 'Phases 0-13 use W18 only. Mac M1 is tested only in final phases 14-16 after J3; its absence cannot block development or 0.4. Intel is out of scope.',
   conditions: 'Each selected current/previous browser separately; dev/distributed, empty/warm cache, with/without AI in separate series. No cross-machine pooling.',
 }
 

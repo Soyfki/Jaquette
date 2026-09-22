@@ -23,7 +23,7 @@ Le cahier des charges complet reste la source de référence détaillée. `AGENT
 - Le socle de qualification 0.2 fixe Node 24.19.0, pnpm 11.19.0, installation frozen-lockfile, six références canoniques vérifiées et CI Chrome sur PR/main. Voir le [guide](docs/REPRODUCIBILITY.md). Ce socle ne qualifie pas les fonctions métier simulées ni toute la matrice produit.
 - Le recadrage REC-01 est conservé et complété par les règles d’échanges connectés de septembre.
 - La version de l’application reste **0.0.0**. Une simulation n’est ni une capacité réelle ni une permission.
-- Les propositions de stockage (section 4 du plan) attendent les preuves et la décision en nouvelle 1.2. Les quatorze budgets sont adoptés sans relèvement dans le [contrat 0.4](docs/measurement/README.md), distincts des mesures futures. Par [décision utilisateur D04-03 du 22 septembre 2026](docs/measurement/DECISIONS.md), les relevés MI/M1 sont reportés à la qualification macOS et sortent du Go 0.4, sans PASS anticipé ni suppression des cibles. H-W18 reste obligatoire et BLOCKED, ses conditions physiques étant déclarées inconnues. Aucun Go macOS sans les relevés natifs reportés. Les données synthétiques ne définissent aucun schéma .jacq/.chpt.
+- Les propositions de stockage (section 4 du plan) attendent les preuves et la décision en nouvelle 1.2. Les quatorze budgets sont adoptés sans relèvement dans le [contrat 0.4](docs/measurement/README.md), distincts des mesures futures. [D04-04 du 22 septembre 2026](docs/measurement/DECISIONS.md) remplace D04-03 : étapes 0 à 13 uniquement sur W18 ; relevés et tests Mac uniquement sur M1 aux phases finales 14 à 16, après J3 ; Mac Intel hors périmètre. L'absence de Mac n'empêche aucun PASS/Go du développement ou de 0.4. H-W18 reste obligatoire et BLOCKED pour ses conditions physiques inconnues. Aucun PASS Mac anticipé ; les données synthétiques ne définissent aucun schéma .jacq/.chpt.
 
 ### Règle de travail pour les futurs contributeurs
 
@@ -964,7 +964,7 @@ La page du livre doit visuellement se distinguer de l’interface sombre de Jaqu
 
 # 33. Périmètre de lancement et jalons
 
-Le lancement comprend **Web complet sur ordinateur : Chrome, Firefox, Safari (qualifié sur macOS)** et **Electron Windows/macOS**. Les cibles matérielles sont un PC Windows 10 de génération 2018, un MacBook Intel précédant le M1 et un MacBook M1. Les budgets sont adoptés en 0.4 ; les configurations exactes attendent les relevés complets ; aucune qualification multi-plateforme n’est acquise par les campagnes historiques Chrome.
+Le lancement comprend **Web complet sur ordinateur : Chrome/Firefox sur W18 et M1, Safari sur M1** et **Electron Windows x64/macOS arm64 sur M1**. Le développement et les validations intermédiaires des étapes 0 à 13 utilisent W18 uniquement. Les relevés et tests M1 sont réservés aux phases finales 14 à 16, après J3 ; Mac Intel est hors périmètre (D04-04). Aucune disponibilité de Mac n'est requise pour le PASS des étapes de développement. Les budgets restent adoptés en 0.4 ; les résultats W18 ou CI ne valent pas qualification M1.
 
 La production locale, les comptes/invitations, les cinq jours offline, les bibliothèques locales et banques privées, les échanges connectés, la révision et le MCP sont inclus au lancement. Export et contrôle .jacko préparent Jacques ; publication réelle, boutique et dépublication restent en **F1**, avec droits, tâche automatique et signature de publication conservés.
 

@@ -54,6 +54,6 @@ Le scanner de secrets couvre désormais .yaml/.yml, donc le workflow. Il recherc
 
 ## Limites de qualification
 
-Google Chrome, viewports **1440 × 1000** et **768 × 1024**, `reuseExistingServer=false` et **serveur Vite de développement** sont conservés. Le build est compilé séparément ; il n'est pas le serveur des E2E. Firefox, Safari réel sur Mac, Electron, les performances produit et les machines W18/MI/M1 seront qualifiés aux jalons du [plan](../PLAN_DE_DEVELOPPEMENT_JAQUETTE.md), sans prétendre que cette CI Chrome démontre toute la matrice.
+Google Chrome, viewports **1440 × 1000** et **768 × 1024**, `reuseExistingServer=false` et **serveur Vite de développement** sont conservés. Le build est compilé séparément ; il n'est pas le serveur des E2E. D04-04 fixe W18 comme seul poste de développement et réserve M1 (dont Safari réel et Electron macOS arm64) aux phases finales 14 à 16 du [plan](../PLAN_DE_DEVELOPPEMENT_JAQUETTE.md). Mac Intel est hors périmètre ; son absence ou celle de M1 ne bloque pas 0.4. Cette CI technique ne démontre ni les performances produit ni la matrice finale W18/M1.
 
 La [campagne 0.2](validation/0.2-base-reproductible/README.md) reste distincte de la [qualification 0.3 et revalidation des quatre rôles](validation/0.3-correctifs-prototype/VALIDATION_REPORT.md), validées le 18 septembre 2026 dans la PR 9. Leurs SHA et preuves restent identifiés séparément.
