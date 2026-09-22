@@ -1,6 +1,6 @@
 # Checklist de validation — 0.4 Fixer corpus et budgets
 
-Adaptation du [modèle](../CHECKLIST.md), contrôles fixés avant exécution le 18 septembre 2026. Tous sont obligatoires. Les résultats, commandes, horaires et SHA complets seront joints à la PR ; un état non exécuté reste BLOCKED.
+Adaptation du [modèle](../CHECKLIST.md), contrôles fixés avant exécution le 18 septembre 2026. Périmètre révisé le 22 septembre par [décision utilisateur D04-03](../../measurement/DECISIONS.md) : dix contrôles obligatoires pour 0.4 ; trois contrôles Mac reportés explicitement. Les résultats, commandes, horaires et SHA complets sont joints à la PR ; aucun contrôle non exécuté ne devient PASS.
 
 ## 1. Livraison testée
 
@@ -18,7 +18,6 @@ Clone neuf `.work-0-4/repo`, installation frozen Node 24.19.0 / pnpm 11.19.0 ; C
 | T02 | `pnpm test:measurement` | régénération identique ; corpus absent/altéré/incomplet et paramètres invalides refusés ; statistiques vérifiées | TAP |
 | T03 | génération CI, nominale et forte logique ; vérification | comptages exacts, EPUB <=10 Mo, inventaire exhaustif, allocation logique distincte | manifests, logs |
 | T04 | collecteur Windows sur poste accessible | inventaire réel autorisé, aucun numéro de série/adresse réseau/nom utilisateur | JSON et revue |
-| T05 | collecteur macOS sur MI et M1 | commandes exécutables, inventaires réels, aucune donnée identifiante superflue | deux résultats natifs ; BLOCKED si postes absents |
 | T06 | `pnpm measure:prototype` | parcours réduit build servi, 10 navigations et 100 interactions, statistiques, DOM, console et capture ; aucun PASS produit déduit | rapport, capture |
 | T07 | contrat des 14 budgets et revue | valeurs figées, bornes précises, cache, stats, instrumentation, preuve, phase et prérequis | contrat et protocoles |
 | T08 | CI au SHA final | socle 0.2 et tests du dispositif à success | run et artefact |
@@ -28,8 +27,10 @@ Clone neuf `.work-0-4/repo`, installation frozen Node 24.19.0 / pnpm 11.19.0 ; C
 | ID | Procédure | Attendu |
 |---|---|---|
 | H-W18 | lancer le paquet Windows, compléter le formulaire | identification du poste cible, relevé complet et conditions matérielles |
-| H-MI | lancer le paquet macOS sur Intel, compléter le formulaire | relevé complet Intel natif et conditions |
-| H-M1 | lancer le paquet macOS sur M1, compléter le formulaire | relevé complet Apple Silicon natif et conditions |
+
+### Contrôles reportés à la qualification macOS — D04-03
+
+T05 (exécution native des collecteurs), H-MI et H-M1 restent obligatoires avant validation macOS. Ils ne comptent plus dans le Go 0.4 ; aucun relevé réel ni PASS Mac n'est revendiqué. Leurs procédures, résultats attendus et formulaire sont conservés dans la [décision](../../measurement/DECISIONS.md) et la [matrice](../../measurement/MACHINES.md).
 
 ## 5. Régressions
 
@@ -40,10 +41,10 @@ Clone neuf `.work-0-4/repo`, installation frozen Node 24.19.0 / pnpm 11.19.0 ; C
 
 ## 6. Problèmes et dettes
 
-Un poste inaccessible ou une observation matérielle manquante ne peut être accepté comme dette. Aucune qualification de production des étapes 1 à 16 ne fait partie de cette campagne.
+Une observation obligatoire manquante ne peut être acceptée comme dette. D04-03 est un report de jalon explicitement autorisé pour les seuls Mac ; H-W18 reste obligatoire. Aucune qualification de production des étapes 1 à 16 ne fait partie de cette campagne.
 
 ## 7. Synthèse
 
 Voir [rapport](VALIDATION_REPORT.md). Règle : un obligatoire BLOCKED implique BLOQUÉE / NO-GO, sinon FAIL implique À CORRIGER / NO-GO, sinon tous PASS autorisent VALIDÉE / GO. Aucune fusion avant Go.
 
-Campagne technique du 18 septembre au SHA `c3a7e7bd0dfb574aea13bbf97a5e296e3ea6c8b8` : T01/T02/T03/T04/T06/T07/T08/R01/R02 PASS ; T05/H-W18/H-MI/H-M1 BLOCKED. **9 PASS, 0 FAIL restant, 4 BLOCKED**. Commandes, résultats, reprises, preuves et limites dans le rapport. Responsable : agent Codex ; décision BLOQUÉE / NO-GO, sans dette acceptée.
+Historique du 18 septembre au SHA `c3a7e7bd0dfb574aea13bbf97a5e296e3ea6c8b8` : 9 PASS et 4 BLOCKED sur treize contrôles. Après D04-03 : dix obligatoires, **9 PASS techniques de référence, 0 FAIL ouvert, 1 BLOCKED (H-W18)** ; trois contrôles Mac reportés, sans PASS. Les contrôles affectés et la CI sont rejoués au dernier SHA et consignés dans la PR. Responsable : agent Codex ; décision BLOQUÉE / NO-GO tant que H-W18 manque.

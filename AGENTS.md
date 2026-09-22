@@ -23,7 +23,7 @@ Le cahier des charges complet reste la source de référence détaillée. `AGENT
 - Le socle de qualification 0.2 fixe Node 24.19.0, pnpm 11.19.0, installation frozen-lockfile, six références canoniques vérifiées et CI Chrome sur PR/main. Voir le [guide](docs/REPRODUCIBILITY.md). Ce socle ne qualifie pas les fonctions métier simulées ni toute la matrice produit.
 - Le recadrage REC-01 est conservé et complété par les règles d’échanges connectés de septembre.
 - La version de l’application reste **0.0.0**. Une simulation n’est ni une capacité réelle ni une permission.
-- Les propositions de stockage (section 4 du plan) attendent les preuves et la décision en nouvelle 1.2. Les quatorze budgets sont adoptés sans relèvement dans le [contrat 0.4](docs/measurement/README.md), distincts des mesures futures ; aucun Go matériel tant que W18/MI/M1 et leurs conditions ne sont pas relevés. Les données synthétiques ne définissent aucun schéma .jacq/.chpt.
+- Les propositions de stockage (section 4 du plan) attendent les preuves et la décision en nouvelle 1.2. Les quatorze budgets sont adoptés sans relèvement dans le [contrat 0.4](docs/measurement/README.md), distincts des mesures futures. Par [décision utilisateur D04-03 du 22 septembre 2026](docs/measurement/DECISIONS.md), les relevés MI/M1 sont reportés à la qualification macOS et sortent du Go 0.4, sans PASS anticipé ni suppression des cibles. H-W18 reste obligatoire et BLOCKED, ses conditions physiques étant déclarées inconnues. Aucun Go macOS sans les relevés natifs reportés. Les données synthétiques ne définissent aucun schéma .jacq/.chpt.
 
 ### Règle de travail pour les futurs contributeurs
 

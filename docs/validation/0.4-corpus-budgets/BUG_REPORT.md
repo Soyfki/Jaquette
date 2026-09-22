@@ -4,12 +4,12 @@ Adaptation du [modèle](../BUG_REPORT.md). Les résultats finaux associés à un
 
 ## B04-MAC — Relevés natifs inaccessibles
 
-- Contrôles : T05, H-MI, H-M1 ; obligatoire, BLOCKED.
-- Contexte : session sur Windows, aucun accès distant aux deux Mac fourni.
+- Contrôles : T05, H-MI, H-M1 ; historiquement BLOCKED le 18 septembre, reportés hors Go 0.4 par [D04-03](../../measurement/DECISIONS.md) le 22 septembre, sans PASS.
+- Contexte : session sur Windows ; l'utilisateur confirme le 22 septembre ne pas posséder de Mac et autorise le report à la qualification macOS.
 - Attendu : commandes exécutées sur les vrais postes Intel et M1, valeurs et conditions observées.
 - Observation : aucune mesure Mac disponible ; aucun runner cloud ou WebKit ne peut la remplacer.
 - Reprise : lancer le paquet livré, transmettre les résultats et le formulaire. Aucune installation ou manipulation Git requise.
-- Impact : NO-GO de 0.4 ; les travaux indépendants continuent. Aucune valeur supposée, aucune dette admissible.
+- Impact actuel : ne bloque plus 0.4 ; reste un prérequis obligatoire de la qualification macOS. Aucune valeur supposée ni cible supprimée. H-W18 reste le blocage matériel de 0.4, l'utilisateur ayant déclaré les conditions inconnues.
 
 Les pièces à partager sont limitées aux inventaires à champs autorisés et aux données synthétiques. Aucun manuscrit, secret ou fichier personnel n'est inclus.
 

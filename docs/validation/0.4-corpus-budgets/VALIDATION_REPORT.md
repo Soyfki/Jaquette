@@ -4,6 +4,16 @@ Adaptation du [modèle](../VALIDATION_REPORT.md). Branche `codex/etape-0-4-corpu
 
 [PR 12](https://github.com/Soyfki/Jaquette/pull/12), ouverte en brouillon et non fusionnée. **SHA de qualification technique : `c3a7e7bd0dfb574aea13bbf97a5e296e3ea6c8b8`**. La clôture documentaire ne modifie ni scripts, ni tests, ni configuration, ni corpus ; les preuves ci-dessous conservent cette portée, complétées par les contrôles documentaires et la CI du dernier SHA dans la PR.
 
+## Reprise du 22 septembre 2026 — état courant
+
+L'utilisateur ne possède aucun Mac et a explicitement choisi le report des relevés MI/M1 à la qualification macOS : [D04-03](../../measurement/DECISIONS.md). T05/H-MI/H-M1 sont désormais hors du Go 0.4 ; leurs résultats historiques BLOCKED ne deviennent pas PASS. Les deux cibles et les contrôles natifs demeurent obligatoires avant validation macOS.
+
+Pour les conditions W18 demandées (écran/Hz, audio et son entendu, Bluetooth, alimentation/économie, activité), l'utilisateur répond « Inconnu pour tout ». Le retour est enregistré sans inventer une observation. L'identification W18 et l'inventaire technique sont acquis ; **H-W18 reste BLOCKED**.
+
+Périmètre courant : **dix obligatoires, neuf contrôles techniques à requalifier au dernier SHA, un BLOCKED H-W18** ; trois contrôles Mac reportés. Les preuves du dernier SHA et de la CI sont actualisées dans la PR 12. Le corpus, les quatorze seuils, les collecteurs et le paquet restent inchangés par cette reprise documentaire. La correction CI avec annulation des runs obsolètes est isolée dans la PR 13, puis intégrée sans modifier les exigences matérielles.
+
+Décision courante : **BLOQUÉE / NO-GO** pour 0.4, aucune fusion de la PR 12 ni début de 0.5. Responsable : agent Codex, 22 septembre 2026. La campagne et la conclusion suivantes sont l'historique du 18 septembre et conservent leur périmètre initial.
+
 ## Livraison et participants
 
 Contrat de mesure, générateur de charge, vérificateurs et collecteurs. Version 0.0.0 ; aucune dépendance métier ajoutée. Développeur et responsable de validation : agent Codex ; observations matérielles : utilisateur. Campagne du 18 septembre 2026. La [checklist](CHECKLIST.md) fixe les contrôles avant exécution.
@@ -33,7 +43,7 @@ Preuves locales : `.work-0-4/evidence/final-c3a7e7bd0dfb574aea13bbf97a5e296e3ea6
 
 La présence d'un protocole n'est pas une performance observée. Les budgets du futur produit sont planifiés avec prérequis, hors campagne 0.4. Aucun essai de huit heures, sortie audio réelle, import/sauvegarde ou E/S sur 1 To n'est revendiqué.
 
-## Contrôles humains et état restant
+## Contrôles humains — historique du 18 septembre
 
 H-W18 : identité du poste confirmée par l'utilisateur et relevé technique acquis ; observations de sortie audio, écran actif/Hz, secteur/économie, maintenance connue et activité restent BLOCKED. H-MI et H-M1 : BLOCKED jusqu'aux relevés et observations. T05 : BLOCKED sans exécution macOS native. Aucune dette acceptée. Les trois cibles sont conservées. Le [formulaire prêt](../../../scripts/measurement/FORMULAIRE.md) limite la reprise à ces observations et aux collecteurs des postes inaccessibles ; aucune installation ni manipulation Git demandée.
 
@@ -41,7 +51,7 @@ H-W18 : identité du poste confirmée par l'utilisateur et relevé technique acq
 
 Tous les obligatoires PASS → VALIDÉE ; un FAIL sans BLOCKED → À CORRIGER ; un BLOCKED → BLOQUÉE et jamais VALIDÉE.
 
-## Conclusion
+## Conclusion historique du 18 septembre
 
 **BLOQUÉE / NO-GO** : relevés et observations matériels obligatoires manquants. PR à conserver en brouillon et non fusionnée. 0.4 non acquise ; 0.5 non commencée. L'ancien 1.4.2 reste acquis depuis 0.3, sans clôture de l'ancienne phase 1.
 

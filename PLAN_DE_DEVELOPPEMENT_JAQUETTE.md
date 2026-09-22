@@ -13,7 +13,7 @@ Les réponses de cadrage de septembre 2026 remplacent l’ancien calendrier « W
 | Sujet | Cible à livrer |
 |---|---|
 | Plateformes | Application Electron Windows/macOS et application Web complète sur ordinateur dans Chrome, Firefox et Safari. Safari est qualifié sur macOS. |
-| Matériel | PC Windows 10 de génération 2018, MacBook Intel précédant le M1 et MacBook M1. Les configurations exactes sont fixées en 0.4. |
+| Matériel | PC Windows 10 de génération 2018, MacBook Intel précédant le M1 et MacBook M1. W18 est relevé en 0.4 ; les relevés MI/M1 sont reportés à la qualification macOS par D04-03, sans retirer ces cibles. |
 | Première utilisation | Invitation, première authentification en ligne, paramétrage de l’espace et récupération de l’environnement nécessaires avant travail hors ligne. |
 | Autonomie | Cinq jours sans reconnexion. À expiration : nouvelles modifications bloquées ; consultation, sauvegarde et archivage du travail existant possibles. Une simple présence de réseau ne renouvelle pas les droits. |
 | Révocation | À la prochaine connexion, droits revérifiés avant tout envoi. Travail du contexte révoqué conservé et préparé pour archivage sur disque, sans possibilité de soumission. Dans le navigateur, l’enregistrement explicite de la copie est accompagné jusqu’à vérification ; aucun original n’est supprimé si l’utilisateur annule. |
@@ -102,6 +102,8 @@ Les quatorze seuils sont **adoptés sans relèvement le 18 septembre 2026** (D04
 
 ### Postes et environnements
 
+**D04-03, décision utilisateur du 22 septembre 2026 :** l'utilisateur ne possède pas de Mac et reporte explicitement les relevés MI/M1 à la qualification macOS. T05/H-MI/H-M1 sortent du Go de 0.4, sans PASS ni suppression de cible. Les relevés natifs restent requis avant toute validation macOS, dès 1.3 et pour 14.2/15.1. H-W18 reste obligatoire ; les conditions physiques sont déclarées inconnues et empêchent encore le Go 0.4. Voir la [décision et le retour humain](docs/measurement/DECISIONS.md).
+
 | Repère | Configuration de référence proposée |
 |---|---|
 | W18 | PC 2018, Windows 10 64 bits, processeur quatre cœurs de génération comparable, 8 Go RAM, SSD, circuit graphique intégré. Relever les références exactes. |
@@ -162,7 +164,7 @@ En 0.4, choisir une métrique mémoire reproductible par OS et expliciter son p�
 | 0.1 Harmoniser les sources | Reporter les décisions de ce plan dans le cahier des charges, puis AGENTS.md, README et index. Remplacer les anciens jalons contradictoires, préserver l’historique 1.4.2 et définir le devenir du lot 1.4.3. | Aucun document actif n’exige Chrome seul, une V1 sans IA/collaboration ou la publication Jacques avant lancement. La version reste 0.0.0 et 1.4.2 n’est pas déclaré acquis. |
 | 0.2 Reproduire la base | Réinstaller depuis le lockfile dans un environnement propre ; remplacer les dépendances transférées cassées sans changer arbitrairement leurs versions. Préparer une commande de validation et une CI minimale. | Typecheck, lint, unitaires, build, contrôles documentaires et E2E exécutés sur le SHA consigné ; résultats actuels joints. Une fixture obligatoire absente fait échouer sa campagne au lieu de produire un faux succès. |
 | 0.3 Corriger les défauts du prototype | Rendre cohérents « En attente Chef » et les validations affichées ; corriger le focus de Fondations ; reproduire puis corriger si nécessaire la mise à jour d’état de fin de simulation. Références : ProjectPage.tsx, Shell.tsx, App.tsx. | Un projet soumis affiche toutes les validations attendues ; navigation clavier focalise son titre ; fin de simulation répétée sans avertissement React ni minuterie restante. Les variantes interdites restent absentes du DOM. |
-| 0.4 Fixer corpus et budgets | Relever les trois machines, OS/navigateurs, tailles et données ; adopter ou ajuster avant implémentation les cibles de la section 5. Séparer corpus de référence et fichiers personnels. | Rapport de référence reproductible, chaque budget associé à un script ou protocole ; les données de charge sont générables et ne contiennent aucun manuscrit confidentiel. |
+| 0.4 Fixer corpus et budgets | Relever W18 et préparer les collecteurs MI/M1 ; relevés Mac reportés à la qualification macOS (D04-03). Fixer OS/navigateurs, tailles et données ; adopter ou ajuster avant implémentation les cibles de la section 5. Séparer corpus de référence et fichiers personnels. | Dix contrôles obligatoires dont H-W18 ; rapport reproductible, chaque budget associé à un script ou protocole ; charges générables sans manuscrit confidentiel. Les trois contrôles Mac sont reportés, jamais déclarés PASS. |
 | 0.5 Organiser les lots de développement | Créer une matrice exigence → sous-étape → test ; conserver la DA ; découper progressivement la grande page projet et ses contrôleurs sans nouvelle bibliothèque imposée. | Un contributeur peut identifier prochaine étape, prérequis et preuve requise ; les acquis de navigation/rôles passent après le découpage. La revalidation humaine de 1.4.2 est consignée séparément des preuves techniques. |
 
 **Porte de sortie :** aucune confusion entre démonstration et fonction métier réelle. Les maquettes restantes ne bloquent pas les expériences techniques indépendantes.
@@ -414,7 +416,7 @@ La signature d’application est distincte de la signature .jacko. Apple documen
 
 | Sous-étape | Travail et livrable | Test d’acceptation |
 |---|---|---|
-| 15.1 Mesurer toute la matrice | Rejouer la section 5 sur builds distribués et moteurs réels. Playwright Chromium/Firefox/WebKit complète mais ne remplace pas Safari réel. | Résultats par poste/navigateur et cache ; aucune cellule obligatoire omise ; les cibles adoptées en 0.4 sont tenues ou la release reste non qualifiée. |
+| 15.1 Mesurer toute la matrice | Rejouer la section 5 sur builds distribués et moteurs réels, avec les relevés natifs MI/M1 reportés par D04-03 obligatoirement acquis. Playwright Chromium/Firefox/WebKit complète mais ne remplace pas Safari réel. | Résultats par poste/navigateur et cache ; aucune cellule obligatoire omise ; les cibles adoptées en 0.4 sont tenues ou la release reste non qualifiée. |
 | 15.2 Éprouver la charge combinée | Lecture, navigation, indexation, sauvegarde et export ; priorités et concurrence bornées. | Interface/audio restent dans budgets ; une opération longue est annulable ; aucun décodage de toute la banque ou de tout le projet en RAM. |
 | 15.3 Démontrer la durabilité | Cent interruptions, disque plein, quota navigateur, permissions retirées, plusieurs onglets, projets sur stockage externe qualifié. | Zéro corruption silencieuse ; zéro perte d’état annoncé sauvegardé ; restauration éprouvée ; manipulations du cache ou des sources ne suppriment pas une copie indépendante. |
 | 15.4 Tester les cinq jours | Horloges contrôlées pour limites, complétées par un essai réel de cinq jours sur les cibles ; reconnexion autorisée puis révoquée. | Fermetures/redémarrages ne prolongent pas le délai ; expiration conserve lecture/sauvegarde ; reconnexion révoquée archive et empêche tous les envois en attente. |

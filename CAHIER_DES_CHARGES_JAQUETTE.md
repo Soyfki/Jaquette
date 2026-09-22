@@ -1231,6 +1231,8 @@ Les volumes et quatorze budgets de la section 5 sont **adoptés sans relèvement
 
 ## 50. Risques techniques prioritaires
 
+Décision de jalon **D04-03 du 22 septembre 2026**, explicitement autorisée par l'utilisateur qui ne possède pas de Mac : les relevés matériels et observations MI/M1 sont reportés de 0.4 à la qualification macOS. Les cibles Mac Intel et M1, Safari réel et Desktop natif restent obligatoires ; leurs contrôles non exécutés ne deviennent pas PASS. Le Go 0.4 porte sur dix contrôles dont H-W18, encore BLOCKED pour conditions physiques déclarées inconnues. Aucun seuil de performance n'est modifié. Voir la [décision tracée](docs/measurement/DECISIONS.md) et les jalons concernés du plan.
+
 1. Stabilité de la tokenisation EPUB.
 2. Conservation du rendu des EPUB complexes.
 3. Synchronisation fiable texte ↔ audio.

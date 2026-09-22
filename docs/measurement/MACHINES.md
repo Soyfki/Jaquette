@@ -5,8 +5,10 @@ Les configurations 8 Go/SSD du plan sont des propositions initiales. Seul le rel
 | Poste | Affectation | Configuration réelle | État du relevé |
 |---|---|---|---|
 | W18 | PC courant confirmé par l'utilisateur le 18 septembre 2026 | i5-4690K, 4 cœurs/4 threads, x64 ; 16 Gio installés ; MSI MS-7917 ; GTX 1060 6GB ; Windows 10 Famille 22H2 19045.6466 | Collecté réellement ; conditions audio/écran/alimentation à compléter |
-| MI | MacBook Intel avant M1 | CPU, cœurs, RAM, stockage, GPU, OS et navigateurs inconnus | BLOCKED : poste inaccessible |
-| M1 | MacBook M1 | CPU, cœurs, RAM, stockage, GPU, OS et navigateurs inconnus | BLOCKED : poste inaccessible |
+| MI | MacBook Intel avant M1 | CPU, cœurs, RAM, stockage, GPU, OS et navigateurs inconnus | Relevé reporté à la qualification macOS (D04-03) ; non exécuté, aucun PASS |
+| M1 | MacBook M1 | CPU, cœurs, RAM, stockage, GPU, OS et navigateurs inconnus | Relevé reporté à la qualification macOS (D04-03) ; non exécuté, aucun PASS |
+
+Le 22 septembre 2026, l'utilisateur confirme ne pas posséder de Mac et autorise le report : [D04-03](DECISIONS.md). Les cibles restent inchangées. Pour W18, sa réponse aux conditions écran/Hz, audio, Bluetooth, alimentation/économie et activité est « Inconnu pour tout ». H-W18 reste BLOCKED ; les valeurs détectées ci-dessous ne sont pas transformées en observations physiques confirmées.
 
 Relevé W18 **18 septembre 2026 à 12:34:30 UTC**, collecteur du SHA `d039e96211aca079dad25d4d9756822641a0a0c3`, PowerShell Windows 5.1 hors sandbox après obstacle CIM explicite. RAM : quatre modules de 4 294 967 296 octets, total installé 17 179 869 184 octets (16 Gio) ; mémoire physique exposée à l'OS 17 125 875 712 octets. CPU annoncé 3,50 GHz, quatre cœurs/logiques. Cette machine identifiée W18 par l'utilisateur n'est donc pas remplacée par l'hypothèse 8 Go/graphique intégré du plan.
 

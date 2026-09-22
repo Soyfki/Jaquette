@@ -98,4 +98,4 @@ Ne versionnez jamais de secret, mot de passe, clé, jeton ou identifiant de conn
 
 ## Lot 0.4 en cours
 
-[Contrat, corpus et commandes](docs/measurement/README.md), [matrice matérielle](docs/measurement/MACHINES.md), [protocoles](docs/measurement/PROTOCOLS.md). Livraison préparée mais BLOQUÉE / NO-GO tant que les relevés obligatoires manquent ; aucune performance produit future acquise.
+[Contrat, corpus et commandes](docs/measurement/README.md), [matrice matérielle](docs/measurement/MACHINES.md), [protocoles](docs/measurement/PROTOCOLS.md). La [décision utilisateur D04-03 du 22 septembre](docs/measurement/DECISIONS.md) reporte les trois contrôles MI/M1 à la qualification macOS, sans PASS anticipé. Le seul blocage matériel de 0.4 reste H-W18 (conditions physiques déclarées inconnues) ; livraison BLOQUÉE / NO-GO, aucune performance produit future acquise. La correction de concurrence CI est livrée séparément dans la [PR 13](https://github.com/Soyfki/Jaquette/pull/13).

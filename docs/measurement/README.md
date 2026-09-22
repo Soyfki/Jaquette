@@ -2,7 +2,7 @@
 
 Décision **D04-01 du 18 septembre 2026**, prise avant implémentation des capacités concernées : les quatorze seuils de la section 5 du [plan](../../PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) sont **adoptés sans relèvement**. Le [contrat exécutable](../../scripts/measurement/contract.mjs) fixe valeurs, unités, charge, plateformes, bornes, cache, instrumentation, statistiques, preuves, phases et prérequis. Les [protocoles](PROTOCOLS.md) définissent comment les exécuter. **Cible adoptée ≠ mesure observée** : chaque budget produit reste PLANNED, hors campagne 0.4. Un prérequis absent dans sa future campagne donnera BLOCKED, jamais PASS.
 
-Le [rapport 0.4](../validation/0.4-corpus-budgets/VALIDATION_REPORT.md) reste **BLOQUÉ / NO-GO** tant que les trois relevés et observations matériels ne sont pas complets. Aucune étape suivante n'est commencée, aucun conteneur .jacq/.chpt, stockage ou backend n'est adopté. Les données de scénario ne définissent pas un schéma métier.
+Le [rapport 0.4](../validation/0.4-corpus-budgets/VALIDATION_REPORT.md) reste **BLOQUÉ / NO-GO** pour H-W18, dont les conditions physiques sont déclarées inconnues. La [décision utilisateur D04-03 du 22 septembre 2026](DECISIONS.md) reporte les relevés et observations MI/M1 à la qualification macOS : ces cibles restent obligatoires, sans PASS anticipé, mais ne bloquent plus 0.4. Aucune étape suivante n'est commencée, aucun conteneur .jacq/.chpt, stockage ou backend n'est adopté. Les données de scénario ne définissent pas un schéma métier.
 
 ## Unités et statistiques figées
 
@@ -75,7 +75,7 @@ Scénario de lecture futur : trois SFX au mot 1 ; un quatrième au mot 2 doit in
 
 `pnpm package:measurement` produit `test-results/jaquette-releve-0.4.zip` et le dossier décompressé, avec collecteurs natifs, page locale et [formulaire](../../scripts/measurement/FORMULAIRE.md). Aucune installation pour l'utilisateur. La [matrice](MACHINES.md) sépare configuration observée, compatibilité, maintenance et versions disponibles. Les erreurs de collecte restent visibles.
 
-Les tests du dispositif exigent Chrome installé par le socle 0.2 : ils exercent aussi le téléchargement du résultat de la page HTML en mode offline, sans lancer de son. Le test JXA à réponses simulées vérifie seulement les erreurs de collecte ; l'exécution native sur les Mac demeure obligatoire.
+Les tests du dispositif exigent Chrome installé par le socle 0.2 : ils exercent aussi le téléchargement du résultat de la page HTML en mode offline, sans lancer de son. Le test JXA à réponses simulées vérifie seulement les erreurs de collecte ; l'exécution native sur les Mac demeure obligatoire à la qualification macOS selon D04-03.
 
 `pnpm measure:prototype` build puis exécute le parcours réduit avec Chrome réel headless sur le build servi localement : corpus CI vérifié, dix navigations, dix échauffements puis cent changements de rôle, DOM/console, statistiques, capture et trace. L'arbre doit être propre et le SHA identifié. La mesure click→deuxième rAF exclut entrée OS et affichage physique : elle valide la chaîne de collecte/statistiques, **pas B04**. La navigation n'est ni B01 à froid/offline, ni l'ouverture d'un vrai projet. La CI Linux prouve la reproductibilité de cet outillage, pas la qualification W18/MI/M1 ni Safari.
 
