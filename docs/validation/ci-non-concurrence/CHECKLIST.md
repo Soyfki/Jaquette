@@ -13,3 +13,5 @@ Correctif demandé le 22 septembre 2026, indépendant des relevés matériels du
 Les exécutions terminées restent dans l'historique avec leurs preuves. La non-concurrence concerne les runs actifs/en attente du même groupe. Aucun ajout de permission d'écriture Actions, aucune suppression d'artefact historique. Le contrat suit la [documentation GitHub](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency).
 
 Les résultats et SHA réellement testés seront consignés dans la PR pour éviter un commit circulaire. Un résultat absent reste BLOCKED ; FAIL ou BLOCKED interdit le Go du correctif. CI05 est le contrôle obligatoire après fusion. Les critères matériels 0.4 restent distincts.
+
+Extension avant le rejeu du 22 septembre : après l'échec d'acquisition constaté, CI03 exige également les sept scénarios de téléchargement français et l'acquisition réelle de l'archive canonique française. Les six attentes de manifeste et la vérification des fichiers présents restent strictes.

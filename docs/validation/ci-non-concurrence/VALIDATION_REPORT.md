@@ -14,4 +14,6 @@ La [checklist](CHECKLIST.md) a été fixée avant lancement GitHub. CI01 à CI04
 
 Les permissions restent `contents: read`. Les anciens résultats terminés restent consultables jusqu'à leur expiration normale ; l'annulation ne transforme pas un ancien run en PASS. Aucune qualification de W18/MI/M1 ni acquisition du lot 0.4 n'est déduite de ce correctif.
 
+La campagne a également révélé une source française Gutenberg régénérée. Le périmètre final inclut donc la réparation d'acquisition de ces octets canoniques : [archive FR](../../../reference-data/ARCHIVE-FR.md), mapping explicite et sept cas de téléchargement supplémentaires. Le manifeste, la version et les dépendances restent inchangés. Le premier FAIL et la correction sont tracés dans le rapport de défaut ; le SHA final doit repasser toute la CI.
+
 Règle de décision : tous les contrôles avant fusion PASS autorisent GO ; un FAIL donne À CORRIGER, un BLOCKED donne BLOQUÉE. CI05 reste obligatoire après la fusion. Les défauts et reprises sont conservés dans le [rapport de défaut](BUG_REPORT.md) et la PR.
