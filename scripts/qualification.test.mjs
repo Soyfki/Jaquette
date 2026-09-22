@@ -123,18 +123,23 @@ test('size is verified independently even when expected SHA matches', () => {
   assert.throws(() => verifyBytes({ ...asset, sizeBytes: asset.sizeBytes + 1 }, bytes), /taille/)
 })
 
-test('explicit English archive changes only acquisition, retaining all six canonical expectations', () => {
+test('explicit French and English archives retain all six canonical expectations', () => {
+  const french = manifest.assets.find((asset) => asset.id === 'epub-fr-primary')
+  const english = manifest.assets.find((asset) => asset.id === 'epub-en')
+  const archives = {
+    'epub-fr-primary': `https://github.com/Soyfki/Jaquette/releases/download/fixtures-fr-reference-2026-08-21/epub-fr-primary-${french.sha256}.epub`,
+    'epub-en': `https://github.com/Soyfki/Jaquette/releases/download/fixtures-reference-2026-08-21/epub-en-${english.sha256}.epub`,
+  }
   for (const asset of manifest.assets) {
-    assert.equal(referenceDownloadUrl(asset), asset.id === 'epub-en'
-      ? `https://github.com/Soyfki/Jaquette/releases/download/fixtures-reference-2026-08-21/epub-en-${asset.sha256}.epub`
-      : asset.downloadUrl)
+    assert.equal(referenceDownloadUrl(asset), archives[asset.id] ?? asset.downloadUrl)
   }
 })
 
+for (const assetId of ['epub-en', 'epub-fr-primary']) {
 for (const scenario of ['canonical', 'HTTP 404', 'altered byte', 'truncated', 'oversized', 'network error', 'invalid existing file']) {
-  test(`English archive acquisition: ${scenario}, with no fallback or overwrite`, (t) => {
+  test(`${assetId} archive acquisition: ${scenario}, with no fallback or overwrite`, (t) => {
     const directory = isolatedCorpus(t)
-    const asset = manifest.assets.find((item) => item.id === 'epub-en')
+    const asset = manifest.assets.find((item) => item.id === assetId)
     const destination = join(directory, manifest.localDirectory, asset.file)
     const bytes = readFileSync(destination)
     rmSync(destination)
@@ -169,6 +174,8 @@ for (const scenario of ['canonical', 'HTTP 404', 'altered byte', 'truncated', 'o
       else assert.equal(existsSync(destination), false, 'Rejected bytes must never be installed')
     }
   })
+}
+
 }
 
 for (const extension of ['yaml', 'yml']) {

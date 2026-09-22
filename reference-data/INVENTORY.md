@@ -4,6 +4,8 @@ Validation effectuée les **21 et 23 août 2026**. Les tailles et empreintes por
 
 ## EPUB
 
+Le 22 septembre 2026, les octets canoniques français sont également conservés dans une [archive de fixtures française](ARCHIVE-FR.md), après régénération de l'URL Gutenberg. La copie distribuée garde ses crédits et sa licence intégrale ; le manifeste et les validations ci-dessous sont inchangés.
+
 | Langue | Fichier local | Œuvre et source | Droits et conditions | Taille (octets) | SHA-256 |
 |---|---|---|---|---:|---|
 | Français, référence principale | `fr-le-tour-du-monde-en-quatre-vingts-jours.epub` | *Le Tour du monde en quatre-vingts jours*, Jules Verne — édition source J. Hetzel, 1873 ; illustrateurs de l’édition source Alphonse de Neuville et Léon Benett ; édition numérique produite par Claudine Corbasson, Hans Pieterse et l’Online Distributed Proofreading Team à partir d’images Internet Archive/Canadian Libraries — [fiche Project Gutenberg nº 46541](https://www.gutenberg.org/ebooks/46541), [téléchargement EPUB sans images](https://www.gutenberg.org/ebooks/46541.epub.noimages) | Texte original en français, sans traducteur. Domaine public en France selon la vérification territoriale ci-dessous. La [licence Project Gutenberg](https://www.gutenberg.org/policy/license) et ses conditions de marque restent applicables à l’eBook ; elles ne limitent pas l’usage à des fins privées, non commerciales ou non professionnelles. | 272410 | `d95001b2c83001fa0ab67b0d111194976890410307c6897b3d7c7450d4c1eed0` |
