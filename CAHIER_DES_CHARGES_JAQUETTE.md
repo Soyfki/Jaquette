@@ -1,5 +1,9 @@
 # Jaquette — Cahier des charges complet
 
+## Mesures : décision D71-01 du 6 octobre 2026
+
+[Budgets et portes JQ-02/T-71](docs/measurement/T-71-BUDGETS-ET-GATES.md) : seuils adoptés conservés, B06 recherche/T-90, B12 indexation/T-88+T-89, B13 export/T-105. Preuve technique automatisée courante distincte de l'écoute physique obligatoire au premier atelier JQ-29, avec transitions/boucles/niveaux/spatialisation/décrochages et inconnues explicites. H-W18 historique demeure BLOCKED/inconnu et 0.4 NO_GO. Campagnes humaines regroupées ne suppriment pas la validation AT ; W18 intermédiaire, M1 final H, Intel hors cible active. Cette évolution sur les portes/calendrier ne livre aucune capacité et ne présume aucune fusion PR12/PR14.
+
 Version de cadrage : **11 septembre 2026 — lancement Web complet et Electron, collaboration et MCP inclus ; publication Jacques en extension F1**.
 
 Le [plan du 11 septembre 2026](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) remplace l’ancien calendrier sur ses seuls sujets. Les règles métier ci-dessous restent normatives ; les propositions techniques ne deviennent des décisions qu’après les preuves prévues.

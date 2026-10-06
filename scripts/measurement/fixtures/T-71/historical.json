@@ -1,0 +1,10 @@
+{
+  "fixture": true,
+  "purpose": "Regression oracle reflecting dated facts, never a new execution report",
+  "source": "https://github.com/Soyfki/Jaquette/blob/0c99b21f2d29d7152f6ad71adcfd6f040e96e5bb/docs/validation/0.4-corpus-budgets/VALIDATION_REPORT.md",
+  "date": "2026-09-22",
+  "control": "H-W18",
+  "state": "BLOCKED",
+  "conclusion04": "NO_GO",
+  "unknowns": { "screenHz": null, "audioOutput": null, "audibility": null, "bluetooth": null, "power": null, "backgroundActivity": null }
+}
