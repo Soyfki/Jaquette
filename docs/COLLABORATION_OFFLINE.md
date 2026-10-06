@@ -4,7 +4,19 @@
 >
 > Cette synthèse facilite la lecture et les tests. Elle ne remplace pas les trois sources de vérité : [`AGENTS.md`](../AGENTS.md), le [cahier des charges](../CAHIER_DES_CHARGES_JAQUETTE.md) et le [plan de développement](../PLAN_DE_DEVELOPPEMENT_JAQUETTE.md).
 
-## Cadrage de lancement — 11 septembre 2026
+## Cadrage courant — 6 octobre 2026
+
+La V1 fonctionne à tour de rôle : prise en main et passage de relais explicites, version reçue et état local non transmis visibles. L'offline ne garantit pas une exclusion globale instantanée. Deux copies divergentes restent des candidates distinctes sans écrasement. Pas de coédition live, CRDT, présence/curseurs distants ni merge détaillé des annotations. L'unanimité des Réviseurs affectés reste requise ; Réviseur et Chef ne montent jamais l'audio, y compris par commandes directes ou MCP. Les informations communes divergentes sont arbitrées explicitement et journalisées.
+
+La bibliothèque intégrée porte provenance et licences. L'utilisateur peut importer explicitement fichiers et dossiers personnels, privés par défaut. Indexer conserve la hiérarchie sans copier toute la banque ; un son utilisé est intégré au projet. Partager vers équipe ou bibliothèque commune est volontaire : périmètre, autorisation, droits d'usage et confirmation explicites. Importer ne publie ni ne mutualise. Recherche, cache, MCP et diagnostics respectent le cloisonnement ; retirer un partage ne détruit pas les médias déjà utilisés dans un projet autorisé.
+
+Manuel complet sans API ; BYOK individuel facultatif. Cloud central administratif seulement, pas de livres/sons/commentaires/clés centralisés. Tout transport privé conforme et coût commun minimal sont éprouvés en T-107/T-115 ; changement de contrat/dépense requiert décision utilisateur distincte. Route sûre Web ou limitation explicitement validée en T-118, alternatives conditionnelles.
+
+Atelier D Noémie .jacq sur Web/Windows, export .jacko au test suivant E et requis V1 ; au moins dix novices à H. W18 intermédiaire/M1 final, Mac Intel hors cible active. H-W18 historique BLOCKED ; écoute physique T-103 obligatoire.
+
+### Repères conservés du 11 septembre 2026
+
+Le calendrier 0–16 et ses choix proposés ci-dessous gardent une portée historique. Le plan A–H et les responsabilités AT courantes remplacent leurs rattachements.
 
 Jaquette gratuit sur invitation est attendu au lancement en Web complet Chrome/Firefox/Safari sur ordinateur (Safari qualifié sur Mac) et Electron Windows/macOS. Activation initiale en ligne et préparation de l’environnement précèdent cinq jours de travail offline. Après expiration, nouvelles modifications bloquées ; consultation, sauvegarde et archivage conservés.
 

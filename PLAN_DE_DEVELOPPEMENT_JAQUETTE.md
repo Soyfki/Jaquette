@@ -1,4 +1,76 @@
-# Jaquette — Plan de développement jusqu’à la mise en production
+# Jaquette — Plan actif du 6 octobre 2026
+
+Décisions du **6 octobre 2026**, [epic T-69](https://tickets.soyfki.com/tickets/T-69) et [T-70/JQ-01](https://tickets.soyfki.com/tickets/T-70). Les jalons A–H remplacent le calendrier de septembre pour les travaux futurs ; les autres invariants restent actifs. La [matrice D70](docs/validation/T-70/README.md) relie décisions, exigences, lots et oracles. Rédiger une exigence ne livre pas sa capacité.
+
+## Décisions et point de reprise courants
+
+Base intégrée de reprise : [main 4b183900a4a677c51c1d8150f7459f150c1ad033](https://github.com/Soyfki/Jaquette/commit/4b183900a4a677c51c1d8150f7459f150c1ad033). [PR12](https://github.com/Soyfki/Jaquette/pull/12) reste draft/non fusionnée, tête auditée 0c99b21f2d29d7152f6ad71adcfd6f040e96e5bb ; documents/outillage, aucun changement src. **H-W18 historique reste BLOCKED/inconnu et 0.4 BLOQUÉE/NO-GO**. La CI historique de PR12 n'établit ni écoute physique ni fonctionnalité métier. Les budgets adoptés ne sont pas des mesures obtenues ; leur reprise et la porte technique sont réservées à JQ-02/T-71. Aucun rapport historique rempli n'est réécrit.
+
+Conserver la racine PC modifiée, les copies .work-* et EPUB personnels ; travailler dans un clone isolé depuis la base explicite. Aucun changement produit, API, schéma, migration, dépendance ou implémentation JQ-02 dans JQ-01. Le prototype reste simulé ; T-70 harmonise les documents, sans nouveau résultat produit. Les rapports de septembre gardent leurs SHA et leur portée.
+
+Gratuit sur invitation, aucune inscription ouverte/paywall ; premier test Noémie seule, V1 pour au moins dix novices de métiers variés. Importer un vrai EPUB2/3 reflowable sans sons, puis sonoriser manuellement sans API. Web et Desktop Windows dès le premier atelier, noyau commun ; cibles finales Windows x64/M1 arm64 et Web Chrome/Firefox/Safari réel sur Mac. W18 intermédiaire, M1 final H ; Mac Intel retiré de la cible active par D04-04.
+
+Dans ce mandat, « doublage » signifie habillage par **SFX, Ambiance et Musique**. Aucune narration, voix de personnage, TTS, clonage vocal ou génération sonore. Des brouhahas/murmures indistincts issus de médias existants sont permis en SFX/Ambiance. Aucune extension de génération n'est automatiquement autorisée.
+
+La bibliothèque intégrée porte provenance et licences. L'utilisateur peut importer explicitement fichiers et dossiers personnels, privés par défaut. Indexer conserve la hiérarchie sans copier toute la banque ; un son utilisé est intégré au projet. Partager vers équipe ou bibliothèque commune est volontaire : périmètre, autorisation, droits d'usage et confirmation explicites. Importer ne publie ni ne mutualise. Recherche, cache, MCP et diagnostics respectent le cloisonnement ; retirer un partage ne détruit pas les médias déjà utilisés dans un projet autorisé.
+
+La V1 fonctionne à tour de rôle : prise en main et passage de relais explicites, version reçue et état local non transmis visibles. L'offline ne garantit pas une exclusion globale instantanée. Deux copies divergentes restent des candidates distinctes sans écrasement. Pas de coédition live, CRDT, présence/curseurs distants ni merge détaillé des annotations. L'unanimité des Réviseurs affectés reste requise ; Réviseur et Chef ne montent jamais l'audio, y compris par commandes directes ou MCP. Les informations communes divergentes sont arbitrées explicitement et journalisées.
+
+Cinq jours offline après activation autorisée ; réseau seul ne renouvelle pas ; expiration conserve lecture/sauvegarde/archive, révocation n'efface pas le travail et bloque l'envoi. Cloud central administratif seulement ; livres/sons/commentaires/clés locaux ou infrastructure privée autorisée, aucun upload central implicite. Texte non éditable, FR/EN/arabe/RTL et ancres persistantes ; un chapitre par annotation ; trois SFX max, quatrième coupe le plus ancien ; musique unique sauf crossfade. Médias utilisés autonomes, audio non destructif ; E/S physiques chapitre seul et durable récupérable. Undo/redo 50 commandes distinct des versions nommées durables.
+
+Conserver la DA jusque polices, couleurs et formes. Rendre sélection, placement, préécoute, undo et sauvegarde compréhensibles et satisfaisants : interactions courtes, bornées et annulables, clavier, reduced motion, absence de flash et accessibilité. L'animation ne modifie ni ancres ni horloge audio. Aucun succès de sauvegarde avant confirmation durable récupérable.
+
+Tests gratuits avec mocks et fixtures licenciées ; aucun secret réel, compte, service payant ou achat implicite. Chaque utilisateur apporte son accès API personnel et paie ses usages ; aucune clé Noémie collective. Le parcours manuel reste complet sans API. Les coûts communs d'identité, invitations, hébergement et exploitation sont chiffrés au minimum pour au moins dix utilisateurs, séparément de BYOK, sans plafond mensuel inventé. Toute adoption de service, évolution du contrat de confidentialité ou dépense demande une décision utilisateur distincte regroupée, avant engagement.
+
+JQ-68/T-118 qualifie les routes BYOK et leur modèle de menace. Le Web exige une route sûre réellement qualifiée ou une limitation explicitement acceptée par l'utilisateur. JQ-43/T-121 exige les routes retenues, pas JQ-61/T-135 ET JQ-62/T-136 ; les alternatives non retenues restent conditionnelles, sans faux DONE. JQ-49/T-119 réalise le BYOK direct Electron si cette route est retenue. Aucun proxy, hébergeur, fournisseur ou chiffrement navigateur n'est adopté par ce document. Un chiffrement local accessible au même code ne protège pas d'un script compromis.
+
+Au pilote gratuit, suggestions OFF si une API payante est nécessaire. Suggestions disponibles V1 et facultatives ON/OFF ; OFF zéro appel/exposition, ON sans consentement distant implicite. Brouillon séparé, rejet/timeout/résultat tardif master intact ; acceptation autorisée avec undo/audit. Aucun secret dans renderer, formats, bundle, logs, prompts, MCP ou échanges.
+
+## Jalons et responsabilités A–H
+
+| Jalon | Résultat et preuve attendue | Lots responsables |
+|---|---|---|
+| A — Reprise | Sources concordantes, flux AT ; budgets/portes réconciliés séparément | JQ-01/T-70 ; JQ-02/T-71 |
+| B — Fondations | Contrats du noyau, expériences de stockage physique, Web/Electron Windows offline | T-72 à T-76 |
+| C — Preuve verticale courte | EPUB réel, ancres, sélection, un son, sauvegarde et réouverture exacte ; ne vaut pas atelier complet | T-77 à T-86, JQ-17/T-86 |
+| D — Premier atelier Noémie | Web et Desktop Windows ; bibliothèque intégrée/personnelle, trois familles, réglages, écoute, undo ; .jacq autonome rouvert offline après retrait des sources | T-87 à T-103 ; JQ-29/T-103 |
+| E — Test suivant .jacko | Qualité, presets, export et contrôle en lecture seule, intégrité et signature de test | T-104 à T-106 ; T-122/T-123 |
+| F — Invitations/collaboration | Comptes réels, rôles, cinq jours, échanges privés, tour de rôle, candidates et révision unanime | T-107 à T-117 ; T-124/T-125 |
+| G — Suggestions facultatives | Routes BYOK qualifiées, MCP cloisonné, OFF/ON, consentement et brouillon avec undo | T-118 à T-121 ; T-135/T-136 seulement si retenus |
+| H — V1 distribuée | Windows et M1, Web complet Chrome/Firefox/Safari réel sur Mac, licences, récupération, qualification et au moins dix novices | T-126 à T-134 |
+| F1 — Jacques | Lecteur/boutique, publication/retrait et authenticité de publication réelle ; hors V1 | Annexe JQ-48, sans carte AT créée ici |
+
+D est le premier atelier **complet** Noémie .jacq : trois familles, bibliothèque et réglages/écoute/undo, fermeture/réouverture offline après retrait des sources sur Web/Desktop Windows. C est seulement la preuve verticale courte. .jacko est reporté au test suivant E, demeure requis V1. Intégrité, signature de test et authenticité réelle de publication F1 sont distinctes.
+
+Le graphe AT vivant fixe les prérequis ; les numéros/tranches ne donnent pas un mandat. Corrections futures signalées sur T-74/T-120 : ne pas modifier ces cartes dans T-70. Aucun autre claim ou lot acquis. JQ-05 recherche mesure puis GO/NO-GO ; rapport de faisabilité ne vaut pas fonctionnalité livrée.
+
+## Exécution AT et preuves
+
+Flux courant : whoami → protocole vivant atk://protocol complet → lecture du ticket précis → claim_ticket frais → heartbeat à l'intervalle fourni → travail de l'étape → preuves → une issue autorisée. Un claim visible dans whoami ne donne pas sa propriété ; ne jamais adopter ou renouveler le claim d'une autre conversation. Une conversation par ticket, une capacité/PR cohérente ; seuls les claims acquis ici sont mutés. Respecter dépôt, base et branche AT ; clone isolé si l'origine est modifiée, jamais checkout/reset/stash/clean destructif de l'origine.
+
+Spécification : plan en commentaire AT ou docs/plans/T-<n>.md, puis rapport. Développement : suivre le plan, tests requis par l'étape, commit, branche publiée et **PR draft**, preuves et critères réellement vérifiés. Revue agent : contrôle distinct de l'auteur, sans push ; rapport et verdict. Validation humaine AT conservée ; la fusion éventuelle appartient à l'humain. **Aucun agent ne fusionne, ne pousse la base, ni ne déploie.** La CI est relue à la tête courante de la PR, sans succès hérité d'un ancien SHA. Préserver les autres tickets/claims, notamment T-2.
+
+Un seul propriétaire à la fois pour scheduler/routage/ProjectPage ; traitements dans des modules dédiés sur les contrats JQ-22/T-92. Ne pas lancer deux lots qui modifient le même cœur simultanément.
+
+Suivre [le protocole de validation](docs/validation/README.md). Résultat observable avant statut PASS/FAIL/BLOCKED. Preuve au SHA/build exact : commande copiables, exit code, début/fin/durée, environnement et provenance. Preuves réutilisées signalées/justifiées. Les scripts actuels : pnpm typecheck, lint, test, test:tooling, test:e2e, validate:all ; contrôles ciblés check:links et git diff --check. validate:all recouvre la suite, ce chevauchement est explicite. test:measurement absent de main, ne pas prétendre son exécution ni reprendre PR12 sans mandat.
+
+JQ-01 : campagne produit none, contrôles DOC-01 à DOC-06 dans [D70](docs/validation/T-70/README.md), suite complète AT et validation humaine AT conservée. Résultats sous test-results/tickets/T-70, publiés comme preuves au SHA final si ignorés ; aucun .gitignore modifié pour les forcer.
+
+## Campagnes humaines et portes
+
+| Campagne | Moment | Observations obligatoires |
+|---|---|---|
+| Atelier Noémie | D/T-103 après technique | Import, découverte, placement des trois familles, réglages/écoute/undo, autonomie .jacq et réouverture, erreurs récupérables |
+| Écoute/presets/suggestions | E/G | Transitions, spatialisation, compression, pertinence et consentement/brouillon |
+| Pilotes V1/collaboration/M1 | H | Au moins dix novices variés, rôles/révision, installation/récupération, accessibilité et M1 réel |
+
+Preuve technique automatisée séparée d'écoute physique T-103. H-W18 historique reste BLOCKED/inconnu ; aucune qualification rétroactive PR12/0.4. JQ-02 formalise budgets/porte technique ; aucun seuil remplacé ici. Observation obligatoire absente = BLOCKED ; headless/capture/émulation ne valent pas écoute ou Safari/Electron M1 réels. Trois campagnes regroupées ne suppriment aucune validation humaine AT.
+
+## Historique du calendrier de septembre — conservé sans mandat courant
+
+Le calendrier et ses choix proposés ci-dessous gardent leur provenance datée. Ses « prochaine étape », étapes 0–16, MI/Mac Intel et anciennes règles de fusion décrivent cet historique. Pour tout nouveau lot, A–H, les décisions ci-dessus et le protocole AT courant prévalent. Aucun acquis n'est transféré par renumérotation ; budgets détaillés/contrat exécutable restent JQ-02.
+
+### Plan conservé du 11 septembre 2026
 
 Date de cadrage : **11 septembre 2026**.
 
@@ -53,7 +125,7 @@ La version locale complète de ce plan reçue pour 0.1 le 11 septembre a été c
 
 Chaque sous-étape ci-dessous constitue un lot démontrable. Son dossier de preuve contient : identifiant, commit exact, environnement, jeux de données, commande ou scénario, résultat observé et preuve adaptée.
 
-Conserver le [protocole de validation](docs/validation/README.md) : PASS, FAIL ou BLOCKED ; un test empêché n’est jamais réussi. L’humain fournit les observations des essais humains requis ; l’agent développeur assume aussi le rôle de responsable de validation, applique la matrice Go/No-Go et fusionne après Go conforme aux protections GitHub. Ce cumul ne dispense d’aucun essai humain obligatoire. Pour le lot documentaire 0.1, aucun essai humain supplémentaire n’est obligatoire.
+Conserver le [protocole de validation](docs/validation/README.md) : PASS, FAIL ou BLOCKED ; un test empêché n’est jamais réussi. L’humain fournit les observations des essais humains requis ; le mandat historique cumulait développement et décision technique ; depuis le 6 octobre, revue distincte et validation humaine AT sont requises, et seule la personne autorisée peut fusionner. Ce cumul ne dispense d’aucun essai humain obligatoire. Pour le lot documentaire 0.1, aucun essai humain supplémentaire n’est obligatoire.
 
 Une étape dépendante commence seulement lorsque ses prérequis nommés passent. Les travaux indépendants peuvent avancer en parallèle. Toute extension du modèle ajoute immédiatement son test de sauvegarde/réouverture ; la recette complète n’est pas repoussée à la fin.
 

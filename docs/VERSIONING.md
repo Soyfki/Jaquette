@@ -4,7 +4,11 @@
 
 Cette convention fournit un repère minimal pour versionner l’application Jaquette. Elle ne définit pas les règles métier et ne préjuge pas du futur schéma de version des formats `.jacq` et `.jacko`.
 
-## État actuel
+## État courant
+
+Cadrage du 6 octobre : premier atelier D .jacq, .jacko au test suivant E/requis V1 ; au moins dix novices. Application **0.0.0** inchangée. Base intégrée de reprise : [main 4b183900a4a677c51c1d8150f7459f150c1ad033](https://github.com/Soyfki/Jaquette/commit/4b183900a4a677c51c1d8150f7459f150c1ad033). [PR12](https://github.com/Soyfki/Jaquette/pull/12) reste draft/non fusionnée, tête auditée 0c99b21f2d29d7152f6ad71adcfd6f040e96e5bb ; documents/outillage, aucun changement src. **H-W18 historique reste BLOCKED/inconnu et 0.4 BLOQUÉE/NO-GO**. La CI historique de PR12 n'établit ni écoute physique ni fonctionnalité métier. Les budgets adoptés ne sont pas des mesures obtenues ; leur reprise et la porte technique sont réservées à JQ-02/T-71. Aucun rapport historique rempli n'est réécrit.
+
+### État historique de septembre
 
 - Version de l’application : **0.0.0**, non publiée.
 - Acquis historiques : ancienne phase 0, anciennes sous-étapes 1.1 à 1.3 et lot 1.4.1.
@@ -26,9 +30,27 @@ Jaquette utilisera [Semantic Versioning 2.0.0](https://semver.org/) sous la form
 
 Avant une première version stable, la série `0.y.z` signale un produit en développement. La première version applicative ne sera attribuée que lorsqu’un livrable exécutable correspondant aura été défini et publié ; cette décision n’a été prise ni dans l’ancienne sous-étape documentaire 0.1 ni dans la nouvelle 0.1 de septembre.
 
-## Jalons produit actifs et correspondance historique
+## Jalons courants A–H
 
-Le [plan du 11 septembre 2026](../PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) porte seul le calendrier actif. Les anciens libellés V0.x/V1/V2 sont historiques ; aucune équivalence ci-dessous ne transfère automatiquement un acquis.
+| Jalon | Résultat et preuve attendue | Lots responsables |
+|---|---|---|
+| A — Reprise | Sources concordantes, flux AT ; budgets/portes réconciliés séparément | JQ-01/T-70 ; JQ-02/T-71 |
+| B — Fondations | Contrats du noyau, expériences de stockage physique, Web/Electron Windows offline | T-72 à T-76 |
+| C — Preuve verticale courte | EPUB réel, ancres, sélection, un son, sauvegarde et réouverture exacte ; ne vaut pas atelier complet | T-77 à T-86, JQ-17/T-86 |
+| D — Premier atelier Noémie | Web et Desktop Windows ; bibliothèque intégrée/personnelle, trois familles, réglages, écoute, undo ; .jacq autonome rouvert offline après retrait des sources | T-87 à T-103 ; JQ-29/T-103 |
+| E — Test suivant .jacko | Qualité, presets, export et contrôle en lecture seule, intégrité et signature de test | T-104 à T-106 ; T-122/T-123 |
+| F — Invitations/collaboration | Comptes réels, rôles, cinq jours, échanges privés, tour de rôle, candidates et révision unanime | T-107 à T-117 ; T-124/T-125 |
+| G — Suggestions facultatives | Routes BYOK qualifiées, MCP cloisonné, OFF/ON, consentement et brouillon avec undo | T-118 à T-121 ; T-135/T-136 seulement si retenus |
+| H — V1 distribuée | Windows et M1, Web complet Chrome/Firefox/Safari réel sur Mac, licences, récupération, qualification et au moins dix novices | T-126 à T-134 |
+| F1 — Jacques | Lecteur/boutique, publication/retrait et authenticité de publication réelle ; hors V1 | Annexe JQ-48, sans carte AT créée ici |
+
+Application/SemVer, formats, versions nommées durables et jalons sont distincts. Aucun acquis par correspondance. JQ-05/T-74 éprouve le stockage ; JQ-02/T-71 traite budgets/portes, sans reprise implicite PR12.
+
+## Correspondance historique de septembre
+
+Les prochaines étapes mentionnées dans cette section sont celles du calendrier conservé et ne lancent aucun nouveau lot.
+
+Le plan du 11 septembre ci-dessous est un calendrier historique conservé ; A–H porte le calendrier courant. Les anciens libellés V0.x/V1/V2 sont historiques ; aucune équivalence ci-dessous ne transfère automatiquement un acquis.
 
 | Actuel | Étapes | Ancien périmètre repris |
 |---|---|---|
