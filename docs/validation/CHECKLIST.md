@@ -4,15 +4,20 @@ Copier ce document pour chaque livraison. Remplacer tous les champs entre chevro
 
 ## 1. Livraison testée
 
-- Sous-étape : `<numéro et nom>`
+- Ticket et étape AT : `<T-n, colonne courante et mandat>`
+- Sous-étape/jalon : `<JQ-n / A–H>`
 - Périmètre annoncé : `<livrables inclus et exclusions>`
 - Critères d'acceptation : `<références précises>`
 - Branche : `<nom de branche>`
-- Commit testé : `<SHA complet>`
+- Commit réellement testé : `<SHA complet>`
+- Build testé : `<identifiant/empreinte ou non applicable justifié>`
+- Provenance : `<exécution locale/CI ; preuve reprise avec justification et SHA d’origine>`
 - Pull request : `<URL ou numéro>`
 - Développeur : `<agent, nom ou identifiant>`
 - Validateur utilisateur : `<humain pour les observations obligatoires, ou aucun essai humain requis selon le périmètre>`
-- Responsable de validation : `<agent développeur cumulant ce rôle selon le mandat de septembre>`
+- Revue distincte : `<agent/personne, distinct de l’auteur, décision et référence AT>`
+- Validation humaine AT : `<requise, décision ou attente et référence>`
+- Responsable de conclusion technique : `<nom, sans autorisation de fusion agent>`
 - Date et heure de début : `<date, heure et fuseau>`
 
 ## 2. Environnement testé
@@ -28,7 +33,7 @@ Copier ce document pour chaque livraison. Remplacer tous les champs entre chevro
 
 Attribuer `PASS`, `FAIL` ou `BLOCKED` selon le [protocole](README.md). Les commandes doivent être copiables ; leurs sorties peuvent être résumées si la preuve complète est liée.
 
-| ID | Obligatoire | Commande ou procédure | Résultat attendu | Résultat observé | Statut | Preuve |
+| ID | Obligatoire | Commande exacte, exit code, début/fin et durée | Résultat attendu | Résultat observé | Statut | Preuve |
 |---|---|---|---|---|---|---|
 | TECH-01 | Oui | `<commande>` | `<résultat observable>` | `<observation>` | `<PASS/FAIL/BLOCKED>` | `<lien, sortie ou référence>` |
 
@@ -66,8 +71,13 @@ Une dette proposée ne vaut pas acceptation. Le responsable de validation doit v
 - Vérifications manuelles encore attendues : `<aucune ou liste>`
 - Date et heure de fin : `<date, heure et fuseau>`
 - Conclusion proposée : `<VALIDÉE/À CORRIGER/BLOQUÉE/VALIDÉE AVEC DETTE>`
-- Décision : `<GO/NO-GO, appliqué par le responsable, pas choisi par l’utilisateur>`
+- Conclusion technique : `<GO/NO-GO selon preuves ; distincte de validation humaine AT>`
+- Décision humaine AT : `<attendue/validée/refusée, référence datée>`
 - Justification : `<application concise de la matrice de décision>`
 - Signature du responsable de validation : `<nom, date>`
 
 La décision officielle doit être consignée dans le [rapport final](VALIDATION_REPORT.md).
+
+## Traçabilité et limites
+
+Chaque contrôle fournit commande exacte, exit code, début/fin/durée, OS/runtime/pnpm/navigateur, données/empreintes, SHA/build et provenance. Une preuve reprise est explicitement justifiée, jamais présentée comme rejouée. Indiquer checks CI à la tête courante PR et lien des artefacts expurgés. Observation physique requise absente = BLOCKED ; headless ne remplace pas écoute/usage. Campagne produit none conserve validation humaine AT. Aucun agent ne fusionne, ne pousse main ou ne déploie.

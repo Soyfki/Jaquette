@@ -1,6 +1,6 @@
 # Jaquette
 
-Jaquette est le logiciel de production et de doublage audio de livres. Il permet d’associer des pistes **SFX**, **Ambiance** et **Musique** au texte d’un livre afin de préparer une expérience de lecture enrichie.
+Jaquette est le logiciel de production d’habillage sonore de livres. Il permet d’associer des pistes **SFX**, **Ambiance** et **Musique** au texte d’un livre afin de préparer une expérience de lecture enrichie.
 
 Jaquette ne doit pas être confondu avec **Jacques** : Jaquette est l’outil de production, tandis que Jacques est l’application propriétaire de lecture et la boutique de distribution.
 
@@ -8,35 +8,27 @@ Jaquette ne doit pas être confondu avec **Jacques** : Jaquette est l’outil de
 
 **Le texte est la timeline de Jaquette.** Les sons sont associés à des mots ou à des plages de mots, et non à une timeline temporelle classique.
 
-## État du projet
+## Reprise active — 6 octobre 2026
 
-Les acquis historiques sont l’ancienne phase 0, les anciennes sous-étapes 1.1 à 1.3 et le lot 1.4.1. Sur main à la base du lot 0.1, le prototype propose Sound Designer et Réviseur, avec simulation locale non persistée et Sound Designer initial.
+Gratuit sur invitation sans paywall, premier atelier Noémie seule sur Web et Desktop Windows, V1 pour au moins dix novices. Prototype à quatre rôles simulés ; import/audio/stockage/identité/MCP réels restent à construire, application **0.0.0**. [Plan A–H](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) et [matrice D70](docs/validation/T-70/README.md) sont la reprise courante.
 
-Les quatre rôles simulés et les correctifs de l’ancien **1.4.2 — Chef d’équipe et Admin Maison** ont reçu leur revalidation complète le 18 septembre 2026. Le lot 1.4.2 est acquis ; sa branche historique est conservée. La [PR 9](https://github.com/Soyfki/Jaquette/pull/9) réunit cet héritage et les correctifs 0.3.
+Atelier D : vrai EPUB2/3, banque intégrée ou fichiers/dossiers privés, SFX/Ambiance/Musique, réglages/écoute/undo, .jacq autonome rouvert offline après retrait des sources. C est une preuve verticale courte ; .jacko est au test suivant E et obligatoire V1 ; publication/signature réelle/boutique Jacques en F1. Aucune narration/TTS/clonage/génération ni coédition live.
 
-L’ancien 1.4.3 n’est plus une prochaine livraison autonome : aucun périmètre précis retrouvé dans l’ancien plan. Les reliquats réellement identifiables seront inventoriés en 0.3/0.5 et rattachés aux futures sous-étapes correspondantes. L’ancienne 1.4 et l’ancienne phase 1 restent non acquises ; aucune clôture rétroactive.
+Manuel complet sans API, BYOK personnel facultatif, aucune clé Noémie collective. Imports privés, partage volontaire, collaboration à tour de rôle et révision unanime. Cloud central administratif seulement ; livres/sons/commentaires/clés locaux ou infrastructure privée autorisée. Tests gratuits ; coût commun minimal chiffré séparément sans plafond inventé, aucun service/dépense adopté ici. Cinq jours offline, droits recontrôlés avant envoi et travail préservé à expiration/révocation. DA conservée, interactions bornées/accessibles.
 
-La nouvelle étape 0 de reprise est distincte de l’ancienne phase 0. 0.1 et 0.2 sont validées. **0.3 — Corriger les défauts du prototype** et la **revalidation historique 1.4.2** sont **VALIDÉES / GO**, décisions distinctes du 18 septembre 2026 après campagne technique et observations humaines complètes au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`. L’intégration et les contrôles au dernier SHA sont tracés dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9). Le [rapport](docs/validation/0.3-correctifs-prototype/VALIDATION_REPORT.md) distingue résultats techniques et humains et conserve les défauts corrigés. 0.4 n’est pas commencée.
+V1 : Web Chrome/Firefox/Safari réel sur Mac et Electron Windows x64/macOS M1 arm64. W18 aux étapes intermédiaires ; M1 final, Mac Intel hors cible active D04-04. Suggestions disponibles mais facultatives, routes qualifiées T-118 ; alternatives non retenues conditionnelles.
 
-Version : **0.0.0**, non publiée. Les [jalons actifs et leur correspondance historique](docs/VERSIONING.md) ne sont pas des versions applicatives ou de formats.
+Base intégrée de reprise : [main 4b183900a4a677c51c1d8150f7459f150c1ad033](https://github.com/Soyfki/Jaquette/commit/4b183900a4a677c51c1d8150f7459f150c1ad033). [PR12](https://github.com/Soyfki/Jaquette/pull/12) reste draft/non fusionnée, tête auditée 0c99b21f2d29d7152f6ad71adcfd6f040e96e5bb ; documents/outillage, aucun changement src. **H-W18 historique reste BLOCKED/inconnu et 0.4 BLOQUÉE/NO-GO**. La CI historique de PR12 n'établit ni écoute physique ni fonctionnalité métier. Les budgets adoptés ne sont pas des mesures obtenues ; leur reprise et la porte technique sont réservées à JQ-02/T-71. Aucun rapport historique rempli n'est réécrit.
 
-## Cible de lancement décidée en septembre 2026
+Flux AT : claim frais propre, heartbeat, tests/preuves, PR draft, revue distincte et validation humaine AT ; aucune fusion/push base/déploiement agent. Trois campagnes humaines D, E/G, H ; écoute physique T-103 obligatoire, jamais remplacée par headless. JQ-02/T-71 garde budgets et porte technique.
 
-Jaquette est un logiciel **gratuit sur invitation**, avec Web complet sur ordinateur dans Chrome, Firefox et Safari (Safari qualifié sur Mac), et Electron Windows/macOS au lancement. PC Windows 10 de génération 2018, MacBook Intel précédant le M1 et MacBook M1 sont les cibles matérielles ; leurs configurations et budgets restent à fixer en 0.4.
+## Acquis historiques conservés
 
-Après activation initiale en ligne et préparation de l’environnement, cinq jours de travail hors ligne sont prévus. À expiration, nouvelles modifications bloquées ; consultation, sauvegarde et archivage conservés. À reconnexion, les droits sont recontrôlés avant tout envoi. En cas de révocation : travail conservé, aucun envoi et archivage sur disque accompagné jusqu’à vérification, sans destruction si l’utilisateur annule.
+Ancienne phase 0, sous-étapes 1.1 à 1.3 et lot 1.4.1 acquis ; quatre rôles simulés et corrections 0.3/1.4.2 revalidés le 18 septembre 2026 au SHA 28cb5d943e0617de0b6fec9e50e76ca3b54c9c51. La [PR9](https://github.com/Soyfki/Jaquette/pull/9) et le [rapport](docs/validation/0.3-correctifs-prototype/VALIDATION_REPORT.md) conservent les preuves de recette/intégration. 0.1/0.2 sont intégrées ; ancienne 1.4 et phase 1 ne sont pas clôturées rétroactivement. Ancien 1.4.3 sans périmètre précis retrouvé, reliquats à rattacher sans exigences rétroactives. Aucune qualification produit issue d'une simulation.
 
-Contenus, commentaires de contenu et banques restent sur stockage local ou infrastructure privée choisie. Les services Jaquette se limitent à l’identité, aux invitations et aux données administratives explicitement autorisées. Les bibliothèques locales et banques privées embarquent dans le projet les médias utilisés.
+## Lancer le prototype Web intégré
 
-Le travail est local ; soumissions, transmission de commentaires/décisions et actualisation sont connectées, sans montage en direct. Une décision préparée hors ligne ne devient officielle qu’après acceptation autorisée. Le MCP fait partie du lancement avec agents externes, bibliothèques autorisées et brouillon protégeant le master, sans génération sonore. Hors ligne : agent et modèle locaux ; transfert distant : consentement et connexion. Desktop peut fournir la liaison MCP locale au navigateur, à qualifier.
-
-Export et contrôle préparent Jacques ; publication effective, boutique et dépublication sont reportées à **F1**. La signature de publication et la tâche automatique associée restent des règles de F1 ; un export de contrôle ou une signature avec clés de test n’authentifient pas une publication réelle.
-
-Le [plan complet](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) distingue les décisions produit des propositions de stockage (section 4, décision en 1.2) et des cibles de performance (section 5, adoption en 0.4). OPFS, ZIP et distinction espace de travail/copie portable ne sont pas validés. Développement prévu par GPT.6, budget limité et sans échéance imposée ; la gratuité ne couvre pas les coûts du stockage choisi ni des agents/appels IA tiers.
-
-## Lancer le prototype Web intermédiaire 1.4.1
-
-Ce mode d’emploi décrit le prototype historique 1.4.1 sur main. Le [guide de reproductibilité](docs/REPRODUCIBILITY.md) fixe Node 24.19.0 et pnpm 11.19.0 pour la campagne 0.2, avec installation propre, diagnostic et CI Chrome. La référence anglaise utilise une archive explicite des octets canoniques : voir le [dossier 0.2](docs/validation/0.2-base-reproductible/README.md).
+Ce mode d’emploi décrit le prototype intégré sur la base main auditée ; ses quatre rôles restent simulés. Le [guide de reproductibilité](docs/REPRODUCIBILITY.md) fixe Node 24.19.0 et pnpm 11.19.0 pour la campagne 0.2, avec installation propre, diagnostic et CI Chrome. La référence anglaise utilise une archive explicite des octets canoniques : voir le [dossier 0.2](docs/validation/0.2-base-reproductible/README.md).
 
 Pré-requis du prototype historique : Node.js 24 ou plus récent et Chrome. Le projet fixe pnpm 11.19.0 dans `package.json` et embarque les polices via des dépendances locales ; aucun service de polices distant n’est requis à l’exécution.
 
@@ -48,7 +40,7 @@ corepack pnpm dev
 
 Ouvrir ensuite <http://127.0.0.1:5173> dans Chrome.
 
-La route `/projet` démarre dans la vue Sound Designer héritée de la sous-étape 1.3. Un sélecteur permet de basculer localement vers la vue Réviseur, centrée sur le livre, la simulation, les commentaires, les candidates de chapitre et l’état de validation. Ce rôle simulé ne modifie ni l’URL ni l’historique du navigateur, n’est pas conservé après rechargement et n’implémente aucune authentification, permission, persistance ou action métier réelle.
+La route `/projet` démarre dans la vue Sound Designer héritée de la sous-étape 1.3. Un sélecteur permet de basculer localement vers Réviseur, Chef d’équipe et Admin Maison ; leurs vues adaptées restent simulées. Ce rôle simulé ne modifie ni l’URL ni l’historique du navigateur, n’est pas conservé après rechargement et n’implémente aucune authentification, permission, persistance ou action métier réelle.
 
 Vérifications techniques :
 
@@ -76,7 +68,7 @@ Avant toute contribution :
 
 1. vérifier la branche par défaut, le dernier commit et les changements déjà présents ;
 2. lire intégralement [`AGENTS.md`](AGENTS.md), puis le [cahier des charges](CAHIER_DES_CHARGES_JAQUETTE.md) et le [plan détaillé](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) ;
-3. reprendre le plan canonique actualisé sur main après chaque lot ; après les Go de 0.1, 0.2 et 0.3, la prochaine sous-étape est 0.4, non commencée ; respecter ses prérequis et le mandat du lot demandé ;
+3. suivre le ticket précis et ses dépendances AT vivantes, le plan A–H et le mandat courant ; préserver les copies modifiées et prendre un claim frais dans un clone isolé ;
 4. distinguer les règles produit validées des décisions techniques encore ouvertes ;
 5. documenter toute nouvelle décision technique sans en faire une règle métier implicite.
 

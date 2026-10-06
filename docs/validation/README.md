@@ -1,6 +1,6 @@
 # Protocole de validation
 
-Ce dossier définit la méthode commune pour valider chaque sous-étape de Jaquette. L’humain retrouve les scénarios et fournit ses observations ; l’agent développeur assume aussi la responsabilité de validation, applique la matrice Go/No-Go et signe la décision.
+Ce dossier définit la méthode de preuve de chaque ticket AT. Le développeur exécute les contrôles techniques ; une revue distincte et la validation humaine AT restent requises. Une campagne produit « none » ne supprime pas la validation humaine AT.
 
 ## Documents à utiliser
 
@@ -17,15 +17,30 @@ Les copies remplies peuvent être conservées dans la pull request ou dans l'out
 
 - **Développeur** : identifie exactement la livraison, exécute les contrôles automatiques ou techniques, fournit leurs résultats et prépare les préconditions nécessaires.
 - **Validateur utilisateur** : exécute les contrôles manuels sans modifier le résultat attendu, décrit ses observations et signale les défauts reproductibles.
-- **Responsable de validation** : rôle cumulé par l’agent développeur dans le mandat de septembre. Il interprète les observations humaines, vérifie les preuves du SHA testé, applique la matrice Go/No-Go et signe. L’utilisateur ne choisit pas Go/No-Go.
+- **Revue agent** : personne/agent distinct de l’auteur selon les instructions AT ; contrôle preuves/diff et rend son verdict, sans push.
+- **Validation humaine AT** : décision humaine de validation et éventuelle fusion ; distincte des observations produit et de la conclusion technique.
 
-L’agent crée les commits, pousse, prépare la PR en brouillon, puis après Go la passe prête et fusionne en squash vers main avec contrôle du SHA approuvé, sans contourner les protections GitHub ni inventer une revue indépendante. Il vérifie merged=true, le SHA de squash sur origin/main et les contrôles après fusion. L’ancienne PR 9 reste intacte dans le lot 0.1.
+Flux courant : whoami → protocole vivant atk://protocol complet → lecture du ticket précis → claim_ticket frais → heartbeat à l'intervalle fourni → travail de l'étape → preuves → une issue autorisée. Un claim visible dans whoami ne donne pas sa propriété ; ne jamais adopter ou renouveler le claim d'une autre conversation. Une conversation par ticket, une capacité/PR cohérente ; seuls les claims acquis ici sont mutés. Respecter dépôt, base et branche AT ; clone isolé si l'origine est modifiée, jamais checkout/reset/stash/clean destructif de l'origine.
 
-Un retour humain obligatoire absent ou incomplet vaut BLOCKED pour les points non couverts, donc BLOQUÉE et NO-GO. Une observation humaine ne peut pas être remplacée par une analyse automatique de capture. Le cumul de rôles ne dispense d’aucun test humain requis.
+Spécification : plan en commentaire AT ou docs/plans/T-<n>.md, puis rapport. Développement : suivre le plan, tests requis par l'étape, commit, branche publiée et **PR draft**, preuves et critères réellement vérifiés. Revue agent : contrôle distinct de l'auteur, sans push ; rapport et verdict. Validation humaine AT conservée ; la fusion éventuelle appartient à l'humain. **Aucun agent ne fusionne, ne pousse la base, ni ne déploie.** La CI est relue à la tête courante de la PR, sans succès hérité d'un ancien SHA. Préserver les autres tickets/claims, notamment T-2.
+
+Un seul propriétaire à la fois pour scheduler/routage/ProjectPage ; traitements dans des modules dédiés sur les contrats JQ-22/T-92. Ne pas lancer deux lots qui modifient le même cœur simultanément.
+
+Un retour humain obligatoire absent ou incomplet vaut BLOCKED pour les points non couverts, donc BLOQUÉE et NO-GO. Une observation humaine ne peut pas être remplacée par une analyse automatique de capture. La revue distincte ne dispense d’aucun test humain requis.
 
 Le développeur ne remplace pas un contrôle utilisateur obligatoire par un contrôle technique. Le validateur ne transforme pas un résultat inattendu en résultat attendu après l'exécution.
 
-## Périmètre de reprise du lot 0.1
+## T-70 et campagnes courantes
+
+JQ-01 est documentaire : [D70 et DOC-01 à DOC-06](T-70/README.md), suite complète exigée par Développement AT, campagne produit none ; validation humaine AT conservée. Aucune voix/live/paywall ni fonctionnalité livrée par rédaction.
+
+Base intégrée de reprise : [main 4b183900a4a677c51c1d8150f7459f150c1ad033](https://github.com/Soyfki/Jaquette/commit/4b183900a4a677c51c1d8150f7459f150c1ad033). [PR12](https://github.com/Soyfki/Jaquette/pull/12) reste draft/non fusionnée, tête auditée 0c99b21f2d29d7152f6ad71adcfd6f040e96e5bb ; documents/outillage, aucun changement src. **H-W18 historique reste BLOCKED/inconnu et 0.4 BLOQUÉE/NO-GO**. La CI historique de PR12 n'établit ni écoute physique ni fonctionnalité métier. Les budgets adoptés ne sont pas des mesures obtenues ; leur reprise et la porte technique sont réservées à JQ-02/T-71. Aucun rapport historique rempli n'est réécrit.
+
+Campagnes groupées : atelier D/T-103 (écoute physique obligatoire), écoute/presets/suggestions E/G, pilotes V1/collaboration/M1 H. Preuve technique automatisée distincte ; observation obligatoire manquante = BLOCKED.
+
+## Repères historiques du lot 0.1
+
+Les mandats 0.1/0.2/0.3 et PR9 ci-dessous gardent leurs dates et leurs preuves. Ils ne permettent pas une fusion agent actuelle ni ne remplacent A–H.
 
 La [campagne 0.1](0.1-harmonisation/README.md) est exclusivement documentaire et indépendante du Go humain de l’ancien 1.4.2. Aucun essai humain supplémentaire ni contrôle applicatif hors diff n’est obligatoire. Les décisions produit sont déjà fournies. Une contradiction non tranchée doit être isolée avec un texte proposé, sans nouvelle validation générale.
 
@@ -35,7 +50,7 @@ L’ancien 1.4.2 est acquis après sa revalidation technique et humaine du 18 se
 
 ## Préparer une validation
 
-Pour **0.3 — Corriger les défauts du prototype**, la PR 9 historique est reprise après intégration de main 0.2 : [checklist](0.3-correctifs-prototype/CHECKLIST.md), [rapport](0.3-correctifs-prototype/VALIDATION_REPORT.md) et [formulaire humain exhaustif](0.3-correctifs-prototype/HUMAN_REVIEW.md). Les correctifs 0.3 et la revalidation historique 1.4.2 donnent deux conclusions distinctes sur le même SHA. Les observations H03 et les dix points historiques sont obligatoires avant tout Go et fusion.
+Pour **0.3 — Corriger les défauts du prototype**, la PR 9 historique est reprise après intégration de main 0.2 : [checklist](0.3-correctifs-prototype/CHECKLIST.md), [rapport](0.3-correctifs-prototype/VALIDATION_REPORT.md) et [formulaire humain exhaustif](0.3-correctifs-prototype/HUMAN_REVIEW.md). Les correctifs 0.3 et la revalidation historique 1.4.2 donnent deux conclusions distinctes sur le même SHA. Les observations H03 et les dix points historiques sont obligatoires avant le Go historique de cette campagne.
 
 Pour **0.2 — Reproduire la base**, utiliser la [campagne technique dédiée](0.2-base-reproductible/README.md) et le [guide d'installation](../REPRODUCIBILITY.md). Aucun essai humain supplémentaire n'est requis pour ce lot. La récupération et la CI obligatoires doivent réussir avant acquisition ; la revalidation humaine de 1.4.2 reste distincte.
 
@@ -102,7 +117,7 @@ Une anomalie qui ne remplit pas toutes ces conditions conduit à `À CORRIGER` o
 | Tous `PASS` | Non | Oui | `VALIDÉE AVEC DETTE` |
 | Tous `PASS` | Non | Non | `VALIDÉE` |
 
-BLOQUÉE et À CORRIGER impliquent NO-GO et aucune fusion. VALIDÉE implique GO ; VALIDÉE AVEC DETTE permet GO seulement pour les dettes strictement admissibles, motivées et signées par le responsable. La revue indépendante éventuellement exigée par GitHub reste une condition distincte.
+BLOQUÉE et À CORRIGER impliquent NO-GO et aucune fusion. VALIDÉE implique GO ; VALIDÉE AVEC DETTE permet GO seulement pour les dettes strictement admissibles, motivées et signées par le responsable. Revue distincte et validation humaine AT sont des conditions séparées ; GO technique ne donne aucun droit de fusion à un agent.
 
 Dans tous les cas, l'absence du SHA complet réellement testé interdit `VALIDÉE` et `VALIDÉE AVEC DETTE`. La campagne doit être complétée avant décision.
 

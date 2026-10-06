@@ -10,7 +10,17 @@ Il sert de référence de reprise pour tout agent IA ou développeur intervenant
 
 Le cahier des charges complet reste la source de référence détaillée. `AGENTS.md` en extrait les invariants et règles à ne pas enfreindre.
 
-## État actuel du projet
+## État courant — 6 octobre 2026
+
+Décisions du **6 octobre 2026**, [epic T-69](https://tickets.soyfki.com/tickets/T-69) et [T-70/JQ-01](https://tickets.soyfki.com/tickets/T-70). Les jalons A–H remplacent le calendrier de septembre pour les travaux futurs ; les autres invariants restent actifs. La [matrice D70](docs/validation/T-70/README.md) relie décisions, exigences, lots et oracles. Rédiger une exigence ne livre pas sa capacité.
+
+Base intégrée de reprise : [main 4b183900a4a677c51c1d8150f7459f150c1ad033](https://github.com/Soyfki/Jaquette/commit/4b183900a4a677c51c1d8150f7459f150c1ad033). [PR12](https://github.com/Soyfki/Jaquette/pull/12) reste draft/non fusionnée, tête auditée 0c99b21f2d29d7152f6ad71adcfd6f040e96e5bb ; documents/outillage, aucun changement src. **H-W18 historique reste BLOCKED/inconnu et 0.4 BLOQUÉE/NO-GO**. La CI historique de PR12 n'établit ni écoute physique ni fonctionnalité métier. Les budgets adoptés ne sont pas des mesures obtenues ; leur reprise et la porte technique sont réservées à JQ-02/T-71. Aucun rapport historique rempli n'est réécrit.
+
+Le prototype React/TS/Vite présente quatre rôles et des données simulées. Import EPUB, ancres persistantes, audio, stockage, identité/permissions et MCP restent à construire. Version **0.0.0**.
+
+### Historique intégré — septembre 2026
+
+Les points suivants gardent leur date et leur portée ; les prochaines étapes mentionnées sont celles du calendrier historique, remplacé par A–H.
 
 - Le cadrage du **11 septembre 2026** dans le [plan](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) remplace l’ancien calendrier sur ses seuls sujets.
 - Acquis historiques : ancienne phase 0, anciennes sous-étapes 1.1, 1.2, 1.3 et lot 1.4.1.
@@ -27,6 +37,12 @@ Le cahier des charges complet reste la source de référence détaillée. `AGENT
 
 ### Règle de travail pour les futurs contributeurs
 
+Flux courant : whoami → protocole vivant atk://protocol complet → lecture du ticket précis → claim_ticket frais → heartbeat à l'intervalle fourni → travail de l'étape → preuves → une issue autorisée. Un claim visible dans whoami ne donne pas sa propriété ; ne jamais adopter ou renouveler le claim d'une autre conversation. Une conversation par ticket, une capacité/PR cohérente ; seuls les claims acquis ici sont mutés. Respecter dépôt, base et branche AT ; clone isolé si l'origine est modifiée, jamais checkout/reset/stash/clean destructif de l'origine.
+
+Spécification : plan en commentaire AT ou docs/plans/T-<n>.md, puis rapport. Développement : suivre le plan, tests requis par l'étape, commit, branche publiée et **PR draft**, preuves et critères réellement vérifiés. Revue agent : contrôle distinct de l'auteur, sans push ; rapport et verdict. Validation humaine AT conservée ; la fusion éventuelle appartient à l'humain. **Aucun agent ne fusionne, ne pousse la base, ni ne déploie.** La CI est relue à la tête courante de la PR, sans succès hérité d'un ancien SHA. Préserver les autres tickets/claims, notamment T-2.
+
+Un seul propriétaire à la fois pour scheduler/routage/ProjectPage ; traitements dans des modules dédiés sur les contrats JQ-22/T-92. Ne pas lancer deux lots qui modifient le même cœur simultanément.
+
 - Respecter les règles listées ici.
 - Ne pas modifier une règle métier implicitement pour simplifier une implémentation.
 - Ne pas inventer de convention technique, d’architecture ou de dépendance non encore validée.
@@ -37,6 +53,8 @@ Le cahier des charges complet reste la source de référence détaillée. `AGENT
 ---
 
 # 2. Produit et vocabulaire
+
+Dans ce mandat, « doublage » signifie habillage par **SFX, Ambiance et Musique**. Aucune narration, voix de personnage, TTS, clonage vocal ou génération sonore. Des brouhahas/murmures indistincts issus de médias existants sont permis en SFX/Ambiance. Aucune extension de génération n'est automatiquement autorisée.
 
 ## Jaquette et Jacques
 
@@ -65,6 +83,8 @@ Les sons sont associés à des mots ou à des plages de mots, et non à une time
 ---
 
 # 3. Formats de travail et de distribution
+
+Premier atelier D/T-103 : .jacq autonome, .jacko non requis. Test suivant E : export/contrôle .jacko, obligatoire V1. Signature de test, intégrité et authenticité de publication F1 sont distinctes.
 
 ## `.jacq`
 
@@ -102,6 +122,8 @@ Les sons sont associés à des mots ou à des plages de mots, et non à une time
 ---
 
 # 4. Import et texte du livre
+
+EPUB2/3 reflowable réel sans annotations sonores ; manuel complet sans API. Segmentation/identifiants persistés, aucune retokenisation silencieuse. Web et Desktop Windows dès l'atelier D ; noyau commun, sans monorepo imposé.
 
 ## Format source
 
@@ -228,6 +250,8 @@ Règles :
 ---
 
 # 10. Bibliothèque audio
+
+La bibliothèque intégrée porte provenance et licences. L'utilisateur peut importer explicitement fichiers et dossiers personnels, privés par défaut. Indexer conserve la hiérarchie sans copier toute la banque ; un son utilisé est intégré au projet. Partager vers équipe ou bibliothèque commune est volontaire : périmètre, autorisation, droits d'usage et confirmation explicites. Importer ne publie ni ne mutualise. Recherche, cache, MCP et diagnostics respectent le cloisonnement ; retirer un partage ne détruit pas les médias déjà utilisés dans un projet autorisé.
 
 ## Organisation
 
@@ -785,6 +809,10 @@ L’historique doit être conservé.
 
 # 27. Confidentialité, accès et données
 
+Tests gratuits avec mocks et fixtures licenciées ; aucun secret réel, compte, service payant ou achat implicite. Chaque utilisateur apporte son accès API personnel et paie ses usages ; aucune clé Noémie collective. Le parcours manuel reste complet sans API. Les coûts communs d'identité, invitations, hébergement et exploitation sont chiffrés au minimum pour au moins dix utilisateurs, séparément de BYOK, sans plafond mensuel inventé. Toute adoption de service, évolution du contrat de confidentialité ou dépense demande une décision utilisateur distincte regroupée, avant engagement.
+
+Cloud central administratif seulement ; aucun upload implicite de livre, son, commentaire de contenu ou clé. Tout transport privé respecte ce contrat ou nécessite décision utilisateur distincte avant adoption.
+
 - Jaquette est gratuit sur invitation. Activation initiale, première authentification et préparation de l’environnement exigent une connexion.
 - L’autonomie est de cinq jours sans reconnexion. À expiration, nouvelles modifications et application de propositions IA sont bloquées ; consultation, sauvegarde et archivage du travail existant restent possibles.
 - Une simple disponibilité du réseau ne renouvelle pas les droits. À reconnexion, droits recontrôlés avant tout envoi de soumission, commentaire ou décision, y compris ceux préparés hors ligne.
@@ -797,6 +825,8 @@ L’historique doit être conservé.
 ---
 
 # 28. Collaboration offline et conflits
+
+La V1 fonctionne à tour de rôle : prise en main et passage de relais explicites, version reçue et état local non transmis visibles. L'offline ne garantit pas une exclusion globale instantanée. Deux copies divergentes restent des candidates distinctes sans écrasement. Pas de coédition live, CRDT, présence/curseurs distants ni merge détaillé des annotations. L'unanimité des Réviseurs affectés reste requise ; Réviseur et Chef ne montent jamais l'audio, y compris par commandes directes ou MCP. Les informations communes divergentes sont arbitrées explicitement et journalisées.
 
 - L’ancien modèle de collaboration temps réel est abandonné.
 - Aucun utilisateur ne voit en direct le travail des autres : Jaquette n’affiche ni présence distante, ni curseur ou sélection distante, ni modification live.
@@ -842,6 +872,10 @@ Les événements importants à journaliser incluent notamment :
 
 # 30. IA et MCP
 
+JQ-68/T-118 qualifie les routes BYOK et leur modèle de menace. Le Web exige une route sûre réellement qualifiée ou une limitation explicitement acceptée par l'utilisateur. JQ-43/T-121 exige les routes retenues, pas JQ-61/T-135 ET JQ-62/T-136 ; les alternatives non retenues restent conditionnelles, sans faux DONE. JQ-49/T-119 réalise le BYOK direct Electron si cette route est retenue. Aucun proxy, hébergeur, fournisseur ou chiffrement navigateur n'est adopté par ce document. Un chiffrement local accessible au même code ne protège pas d'un script compromis.
+
+Suggestions disponibles V1 mais facultatives ON/OFF ; manuel intégral sans API. OFF zéro appel/exposition. Rejet, timeout et résultat tardif préservent le master ; acceptation autorisée par commandes ordinaires avec undo/audit. BYOK individuel, jamais clé collective ni secret dans renderer, formats, bundles, logs, diagnostics, prompts, MCP ou échanges.
+
 ## Principe
 
 Le MCP sert à permettre à des agents IA de lire les informations explicitement exposées par Jaquette et de proposer un premier doublage.
@@ -866,13 +900,15 @@ Le MCP sert à permettre à des agents IA de lire les informations explicitement
   - l’ensemble des propositions.
 - Après acceptation, les changements rejoignent le projet normal et son historique.
 
-## Génération externe
+## Exclusions sonores
 
-La génération de nouveaux sons par des services externes est envisagée pour une version ultérieure et n’appartient pas au premier périmètre IA.
+Dans ce mandat, « doublage » signifie habillage par **SFX, Ambiance et Musique**. Aucune narration, voix de personnage, TTS, clonage vocal ou génération sonore. Des brouhahas/murmures indistincts issus de médias existants sont permis en SFX/Ambiance. Aucune extension de génération n'est automatiquement autorisée.
 
 ---
 
 # 31. Consentement IA
+
+ON ne vaut pas consentement distant. Fournisseur et périmètre affichés, certification explicite avant transmission ; révocation contrôlée sur propositions tardives. Cache, recherche et ressources respectent les imports privés et leur partage volontaire.
 
 Chaque projet possède un état :
 
@@ -898,6 +934,8 @@ Une Maison d’édition peut interdire certains fournisseurs IA.
 ---
 
 # 32. Règles d’interface et design déjà figées
+
+Conserver la DA jusque polices, couleurs et formes. Rendre sélection, placement, préécoute, undo et sauvegarde compréhensibles et satisfaisants : interactions courtes, bornées et annulables, clavier, reduced motion, absence de flash et accessibilité. L'animation ne modifie ni ancres ni horloge audio. Aucun succès de sauvegarde avant confirmation durable récupérable.
 
 ## Typographies
 
@@ -962,21 +1000,17 @@ La page du livre doit visuellement se distinguer de l’interface sombre de Jaqu
 
 ---
 
-# 33. Périmètre de lancement et jalons
+# 33. Périmètre et jalons courants
 
-Le lancement comprend **Web complet sur ordinateur : Chrome, Firefox, Safari (qualifié sur macOS)** et **Electron Windows/macOS**. Les cibles matérielles sont un PC Windows 10 de génération 2018, un MacBook Intel précédant le M1 et un MacBook M1. Les configurations exactes et budgets proposés attendent 0.4 ; aucune qualification multi-plateforme n’est acquise par les campagnes historiques Chrome.
+Gratuit sur invitation, sans inscription ouverte ni paywall. Premier atelier Noémie seule D/JQ-29/T-103 sur Web et Desktop Windows : vrai EPUB, bibliothèque intégrée/fichiers/dossiers privés, trois familles, réglages/écoute/undo, .jacq fermé et rouvert offline après retrait des sources. C/T-86 avec un son ne vaut pas atelier complet. .jacko au test suivant E et obligatoire V1.
 
-La production locale, les comptes/invitations, les cinq jours offline, les bibliothèques locales et banques privées, les échanges connectés, la révision et le MCP sont inclus au lancement. Export et contrôle .jacko préparent Jacques ; publication réelle, boutique et dépublication restent en **F1**, avec droits, tâche automatique et signature de publication conservés.
+V1 pour au moins dix novices de métiers variés : Web complet Chrome/Firefox/Safari réel sur Mac, Electron Windows x64 et macOS arm64 M1. W18 aux développements/validations intermédiaires, M1 aux qualifications finales H ; Mac Intel hors cible active D04-04, références historiques conservées. Production manuelle sans API ; invitations/rôles/cinq jours, collaboration à tour de rôle et révision unanime, suggestions facultatives disponibles selon routes qualifiées, récupération et distribution.
 
-Le [plan](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) porte les jalons actifs : J0 (étapes 0–1), J1 (2–3), atelier complet (4–7), J2 (8–10), banques et IA (11–12), J3 (13), première version distribuée (14–16), puis F1. La [correspondance historique](docs/VERSIONING.md) remplace les anciens jalons V0.x/V1/V2 sans effacer les acquis.
-
-La section 4 du plan propose un parcours de sauvegarde ; OPFS, ZIP et distinction espace de travail/copie portable ne sont pas adoptés. Décision en nouvelle 1.2 après preuves physiques d’écriture, récupération et portabilité. La section 5 propose des performances, à fixer en 0.4 avant mesure. Aucun monorepo, backend, conteneur ou nouvelle bibliothèque métier n’est imposé par 0.1.
-
-Développement prévu par GPT.6, budget limité, sans échéance imposée : lots courts et réutilisation du socle. La gratuité ne couvre pas les éventuels coûts du stockage choisi, des agents externes et de leurs appels IA ; aucun abonnement Jaquette n’est introduit.
-
----
+Le [plan](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) porte A–H/F1 ; [D70](docs/validation/T-70/README.md) relie exigences/lots/oracles. Stockage physique/conteneur, fournisseurs/transports/routes restent à éprouver ; aucune architecture nouvelle imposée. JQ-02 garde budgets/portes détaillés. H-W18 historique BLOCKED/inconnu ; preuve technique distincte de l'écoute physique obligatoire T-103. Campagnes D, E/G, H regroupées sans supprimer validation humaine AT. F1 publication/boutique/signature réelle hors V1.
 
 # 34. Critère fondamental de stabilité
+
+État durable confirmé = récupérable. Espace navigateur et copie portable indépendante distincts ; E/S physiques requises pour démontrer la non-réécriture des autres chapitres, pas seulement noms, seek ou empreintes. Undo/redo 50 commandes, versions nommées durables distinctes. Les contrats restent à implémenter/qualifier.
 
 Avant de complexifier Jaquette avec l’IA ou la publication, le socle suivant doit fonctionner de manière robuste :
 
