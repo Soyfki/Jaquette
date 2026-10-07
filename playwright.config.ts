@@ -7,6 +7,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: 0,
   workers: process.env.CI ? 2 : undefined,
+  globalSetup: './scripts/e2e-server.mjs',
   use: {
     baseURL: 'http://127.0.0.1:4173',
     browserName: 'chromium',
@@ -24,9 +25,4 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'], viewport: { width: 768, height: 1024 } },
     },
   ],
-  webServer: {
-    command: 'vite --host 127.0.0.1 --port 4173',
-    url: 'http://127.0.0.1:4173',
-    reuseExistingServer: false,
-  },
 })

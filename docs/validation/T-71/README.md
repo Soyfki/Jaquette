@@ -14,6 +14,14 @@ Commande ciblée créée par ce lot :
 
 Les mêmes tests sont inclus dans test:tooling puis validate:all. Ce sont des tests de dispositif, pas une mesure des performances ni une écoute matérielle. test:measurement de PR12 n'est pas repris. Aucun collecteur/générateur/encodeur/script matériel lancé ici.
 
+## Cycle de vie du serveur de tests — 7 octobre 2026
+
+Les campagnes du 6 octobre ont affiché les 28 assertions E2E réussies, puis attendu indéfiniment dans la fermeture du serveur enfant Windows de Playwright. Elles restent incomplètes, sans PASS global. Le diagnostic identifie cette frontière d'attente ; il ne prouve pas la cause système exacte et n'exige aucun inventaire de processus.
+
+`scripts/e2e-server.mjs` ouvre désormais une instance Vite dans le processus de setup Playwright et retourne sa fermeture asynchrone pour le teardown. Les commandes existantes, Chrome, les deux profils, les workers, assertions et timeouts restent inchangés. L'instance écoute uniquement sur 127.0.0.1:4173, avec port strict et sans ouvrir de navigateur personnel ; un port occupé échoue sans réutiliser ni fermer un serveur existant. Aucun serveur enfant à terminer, dépendance ou configuration réseau nouvelle.
+
+Les deux tests de cycle de vie, inclus dans `test:tooling`, vérifient le service du projet, la libération du port et le refus d'une collision sans altérer le serveur déjà présent. Les E2E doivent aussi finir avec code et rapport JSON : les seuls messages « ok » ne constituent pas la preuve finale. APIs documentées : [globalSetup/teardown Playwright](https://playwright.dev/docs/test-global-setup-teardown), [createServer/close Vite](https://vite.dev/guide/api-javascript.html).
+
 ## Checklist préparatoire JQ-29 (non exécutée)
 
 1. Build Web/Desktop Windows identifié, tests techniques applicables au SHA/build passés et preuves conservées.
