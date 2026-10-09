@@ -1,5 +1,11 @@
 # AGENTS.md — Jaquette
 
+## Porte de qualification courante — D71-01, 6 octobre 2026
+
+Sur les mesures et leur calendrier seulement, [JQ-02/T-71](docs/measurement/T-71-BUDGETS-ET-GATES.md) fixe les renvois B06/B12/B13 et distingue preuve technique courante au SHA, écoute physique obligatoire au premier atelier JQ-29, puis qualification finale H/M1. Les seuils adoptés restent inchangés. H-W18 historique reste BLOCKED/inconnu et 0.4 NO_GO ; aucune réécriture ni validation rétrospective. W18 aux étapes intermédiaires, M1/Safari réel/macOS arm64 à H, Intel hors cible active selon D04-04. Aucun questionnaire inconnu reposé par routine ; observations utiles regroupées à l'atelier. Un test DOM/headless ne vaut pas sortie/écoute physique. Cette note ciblée ne présume pas l'intégration de PR12 ou PR14.
+
+Respecter l'étape AT et les autorisations courantes : développement local quand la publication est suspendue, puis publication/PR draft seulement après autorisation, revue distincte et validation humaine. Jamais push base, merge ou deploy par agent. Aucun critère produit acquis par simple document.
+
 ## 1. Rôle de ce fichier
 
 Ce fichier définit les règles métier, produit et logicielles déjà validées pour **Jaquette**.

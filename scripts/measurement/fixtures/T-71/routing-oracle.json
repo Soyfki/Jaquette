@@ -1,0 +1,12 @@
+{
+  "source": {
+    "main": "4b183900a4a677c51c1d8150f7459f150c1ad033",
+    "plan": "PLAN_DE_DEVELOPPEMENT_JAQUETTE.md",
+    "approvedManifest": "LOTS_JACQUETTE_DRAFT.json, audit 2026-10-06, epic T-69"
+  },
+  "routing": {
+    "B06": { "protocol": "P06", "name": "Search after indexing", "phase": "5.3; 15-16", "lots": ["JQ-50"], "tickets": ["T-90"], "milestone": "D", "qualificationMilestones": ["H"], "planTitle": "5.3 Recherche et classement" },
+    "B12": { "protocol": "P12", "name": "Metadata indexing", "phase": "5.1-5.2; 15-16", "lots": ["JQ-19", "JQ-20"], "tickets": ["T-88", "T-89"], "milestone": "D", "qualificationMilestones": ["H"], "planTitle": "5.1 Dossiers et accès navigateur" },
+    "B13": { "protocol": "P13", "name": "Balanced export", "phase": "13.2-13.3; 15-16", "lots": ["JQ-31"], "tickets": ["T-105"], "milestone": "E", "qualificationMilestones": ["H"], "planTitle": "13.3 Encoder et dédupliquer" }
+  }
+}

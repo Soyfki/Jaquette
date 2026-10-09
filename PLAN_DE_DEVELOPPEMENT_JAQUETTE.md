@@ -1,5 +1,11 @@
 # Jaquette — Plan de développement jusqu’à la mise en production
 
+## Raccord JQ-02 / D71-01 — 6 octobre 2026
+
+La [page active des budgets et gates](docs/measurement/T-71-BUDGETS-ET-GATES.md) corrige B06 vers recherche 5.3/JQ-50/T-90, B12 vers indexation 5.1–5.2/JQ-19+20/T-88+89 et B13 vers presets/encodage 13.2–13.3/JQ-31/T-105. Les lots/jalons A–H sont actifs ; les nombres de phase ci-dessous sont des repères historiques. Seuils/paramètres adoptés inchangés, mesures produit PLANNED tant que non exécutées.
+
+Porte A : tests techniques courants au SHA avant fonctionnalités, pas un PASS produit. Porte D/JQ-29 : tests automatiques avant recette puis écoute physique obligatoire sur matériel réellement disponible, observations utiles regroupées ; pas de questionnaire H-W18 reposé par routine. Portes E/G : écoute/presets/suggestions ; H : pilotes et M1 réel/Safari/natif arm64. W18 intermédiaire, Intel hors cible active selon D04-04. Historique H-W18 BLOCKED/inconnu et 0.4 BLOQUÉE/NO_GO conservé sans requalification. Cette note remplace les portes/calendriers anciens sur ces seuls sujets, sans présumer main/PR14 intégrés ni acquisition d'une capacité. Voir [matrice T-71](docs/validation/T-71/README.md).
+
 Date de cadrage : **11 septembre 2026**.
 
 Destination : **logiciel gratuit sur invitation**, pour maisons d’édition et auteurs indépendants.
