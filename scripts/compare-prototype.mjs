@@ -28,7 +28,7 @@ let caseIndex = 0
 
 async function renderedProfile(page) {
   return page.evaluate(() => {
-    const styleProfile = style => Object.fromEntries([...style].map(key => [key, style.getPropertyValue(key).replaceAll(globalThis.location.origin, '<origin>')]))
+    const styleProfile = style => Object.fromEntries([...style].sort().map(key => [key, style.getPropertyValue(key).replaceAll(globalThis.location.origin, '<origin>')]))
     return [globalThis.document.body, ...globalThis.document.body.querySelectorAll('*')].map(element => {
       const bounds = element.getBoundingClientRect()
       const pseudo = name => {
@@ -37,6 +37,7 @@ async function renderedProfile(page) {
       }
       return {
         tag: element.tagName, id: element.id, class: element.getAttribute('class'),
+        attributes: Object.fromEntries([...element.attributes].sort((a, b) => a.name.localeCompare(b.name)).map(attribute => [attribute.name, attribute.value.replaceAll(globalThis.location.origin, '<origin>')])),
         text: [...element.childNodes].filter(node => node.nodeType === 3).map(node => node.textContent),
         rect: [bounds.x, bounds.y, bounds.width, bounds.height],
         style: styleProfile(globalThis.getComputedStyle(element)), before: pseudo('::before'), after: pseudo('::after'),
@@ -48,6 +49,15 @@ async function renderedProfile(page) {
 async function stableScreenshot(page, path) {
   await page.mouse.move(0, 0)
   await page.evaluate(async () => {
+    const fonts = [
+      ['400 16px Manrope', 'Aaé'], ['600 16px Manrope', 'Aaé'], ['700 16px Manrope', 'Aaé'],
+      ['400 16px Literata', 'Aaé'], ['700 16px Literata', 'Aaé'],
+      ['400 16px "Noto Naskh Arabic"', 'العربية'], ['700 16px "Noto Naskh Arabic"', 'العربية'],
+    ]
+    for (const [font, text] of fonts) {
+      const faces = await globalThis.document.fonts.load(font, text)
+      if (!faces.length || faces.some(face => face.status !== 'loaded')) throw new Error(`Required local font not loaded: ${font}`)
+    }
     await globalThis.document.fonts.ready
     await new Promise(resolve => globalThis.requestAnimationFrame(() => globalThis.requestAnimationFrame(resolve)))
   })

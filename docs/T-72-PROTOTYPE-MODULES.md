@@ -43,7 +43,10 @@ dépendances ; aucun téléchargement, checkout ou installation n'est fait par c
 Le comparateur utilise le même Chrome, les polices locales chargées, deux viewports
 (1440×1000 et 768×1024), dark/reduced-motion et un pointeur au même endroit. Il attend
 deux captures consécutives identiques avant chaque comparaison. Les 14 états couvrent
-les quatre rôles, menu, historique et tiroirs. Géométries, texte et styles calculés
+les quatre rôles, menu, historique et tiroirs. Les sept variantes locales Manrope,
+Literata et Noto Naskh Arabic sont explicitement chargées et contrôlées ; une police
+manquante rend l'essai non qualifiant, même si le navigateur utilise un fallback.
+Géométries, attributs (dont chemins SVG), texte et styles calculés
 de tous les éléments du body et de leurs pseudo-éléments doivent être exactement
 égaux, sans tolérance ni suppression de propriétés. Seule l'origine de chargement
 est normalisée. Les profils complets compressés et leurs hashes sont conservés.
