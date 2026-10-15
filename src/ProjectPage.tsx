@@ -1,39 +1,22 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { expectedValidations, submittedProject } from './demoScenario'
+import { chapters, simulatedRoleOptions, simulatedRolePresentation, type SimulatedProjectRole } from './project/demoData'
+import { SimulationControls } from './project/SimulationControls'
+import { useSoundDesignerPanels } from './project/useSoundDesignerPanels'
+
+export type { SimulatedProjectRole } from './project/demoData'
 
 type TrackName = 'SFX' | 'Ambiance' | 'Musique'
 type AudioFolder = { name: string; files: string[] }
 type LibraryFamily = { name: TrackName; token: string; icon: ReactNode; folders: AudioFolder[] }
 type LocalFileMetadata = { name: string; size: number; type: string }
-type SimulationState = 'inactive' | 'paused' | 'playing'
-type WorkspacePanel = 'library' | 'inspector' | 'simulation'
-type ResponsiveDrawer = WorkspacePanel | null
-type DesktopPanelState = Record<WorkspacePanel, boolean>
 type FinalValidationState = 'Non soumis' | 'En attente Chef' | 'À corriger' | 'Validé' | 'Prêt à publier' | 'Publié'
 
-export type SimulatedProjectRole = 'sound-designer' | 'reviewer' | 'team-lead' | 'publishing-house-admin'
-
-const REDUCED_WORKSPACE_QUERY = '(max-width: 56rem)'
-const BASE_WORDS_PER_MINUTE = 180
 const TEAM_LEAD_DEMO_FINAL_VALIDATION_STATE: FinalValidationState = submittedProject.finalValidationState
 const PUBLICATION_PREPARATION_STATES: readonly FinalValidationState[] = ['Validé', 'Prêt à publier']
 
 function canShowPublicationPreparation(state: FinalValidationState) {
   return PUBLICATION_PREPARATION_STATES.includes(state)
-}
-
-const simulatedRoleOptions: ReadonlyArray<{ value: SimulatedProjectRole; label: string }> = [
-  { value: 'sound-designer', label: 'Sound Designer' },
-  { value: 'reviewer', label: 'Réviseur' },
-  { value: 'team-lead', label: 'Chef d’équipe' },
-  { value: 'publishing-house-admin', label: 'Admin Maison' },
-]
-
-const simulatedRolePresentation: Record<SimulatedProjectRole, { label: string; title: string }> = {
-  'sound-designer': { label: 'Sound Designer', title: 'Le livre attend sa scène.' },
-  reviewer: { label: 'Réviseur', title: 'Le livre passe en révision.' },
-  'team-lead': { label: 'Chef d’équipe', title: 'Le projet garde son cap.' },
-  'publishing-house-admin': { label: 'Admin Maison', title: 'La maison organise ses équipes.' },
 }
 
 const libraryFamilies: LibraryFamily[] = [
@@ -54,36 +37,6 @@ const libraryFamilies: LibraryFamily[] = [
     token: '--color-track-music',
     icon: <MusicIcon />,
     folders: [{ name: 'Thèmes narratifs', files: ['heure-bleue.opus', 'aube-piano.wav', 'minuit-cordes.opus'] }],
-  },
-]
-
-const chapters = [
-  {
-    title: 'L’heure bleue',
-    label: 'Chapitre 1 — L’heure bleue',
-    pages: 12,
-    paragraphs: [
-      'À l’instant où la ville retenait son souffle, Alma poussa la grille du jardin. Sous ses pas, le gravier humide racontait un chemin que personne n’avait emprunté depuis l’hiver.',
-      'Les feuilles frémirent au-dessus d’elle. Quelque part derrière les murs, une cloche très douce sembla répondre à la pluie.',
-    ],
-  },
-  {
-    title: 'Le pavillon fermé',
-    label: 'Chapitre 2 — Le pavillon fermé',
-    pages: 9,
-    paragraphs: [
-      'Au bout de l’allée, le pavillon gardait ses volets clos. Une lumière fine dessinait pourtant le contour de la porte.',
-      'Alma posa la main sur le bois froid et entendit, de l’autre côté, le froissement patient d’une page.',
-    ],
-  },
-  {
-    title: 'La dernière cloche',
-    label: 'Chapitre 3 — La dernière cloche',
-    pages: 14,
-    paragraphs: [
-      'La pluie s’était tue lorsque la cloche sonna de nouveau. Cette fois, le jardin entier parut écouter avec elle.',
-      'Au premier rayon du jour, le chemin de gravier avait disparu sous une poussière de fleurs pâles.',
-    ],
   },
 ]
 
@@ -143,22 +96,6 @@ function LibraryIcon() {
       <path d="M3.5 9h17" />
     </svg>
   )
-}
-
-function useMediaQuery(query: string) {
-  const getMatches = () => typeof window.matchMedia === 'function' && window.matchMedia(query).matches
-  const [matches, setMatches] = useState(getMatches)
-
-  useEffect(() => {
-    if (typeof window.matchMedia !== 'function') return
-    const mediaQuery = window.matchMedia(query)
-    const updateMatches = () => setMatches(mediaQuery.matches)
-    updateMatches()
-    mediaQuery.addEventListener('change', updateMatches)
-    return () => mediaQuery.removeEventListener('change', updateMatches)
-  }, [query])
-
-  return matches
 }
 
 function normalizeSearch(value: string) {
@@ -365,257 +302,18 @@ function InspectorPanel({ id }: { id?: string }) {
   )
 }
 
-function SimulationControls({
-  id,
-  activeWordIndex,
-  chapterIndex,
-  historyOpen,
-  page,
-  setActiveWordIndex,
-  setChapterIndex,
-  setHistoryOpen,
-  setPage,
-  historyButtonRef,
-}: {
-  id?: string
-  activeWordIndex: number | null
-  chapterIndex: number
-  historyOpen: boolean
-  page: number
-  setActiveWordIndex: React.Dispatch<React.SetStateAction<number | null>>
-  setChapterIndex: (value: number) => void
-  setHistoryOpen: (value: boolean) => void
-  setPage: (value: number) => void
-  historyButtonRef: React.RefObject<HTMLButtonElement | null>
-}) {
-  const chapter = chapters[chapterIndex]
-  const [simulationState, setSimulationState] = useState<SimulationState>('inactive')
-  const [speedMultiplier, setSpeedMultiplier] = useState(1)
-  const wordCount = useMemo(() => chapter.paragraphs.join(' ').match(/\S+/g)?.length ?? 0, [chapter])
-  const lastWordIndex = Math.max(0, wordCount - 1)
-  const moveChapter = (next: number) => {
-    setChapterIndex(next)
-    setPage(1)
-    setActiveWordIndex(null)
-    setSimulationState('inactive')
-  }
-
-  useEffect(() => {
-    if (simulationState !== 'playing') return
-    const timer = window.setTimeout(() => {
-      const next = Math.min(lastWordIndex, activeWordIndex === null ? 0 : activeWordIndex + 1)
-      setActiveWordIndex(next)
-      if (next === lastWordIndex) setSimulationState('inactive')
-    }, 60_000 / (BASE_WORDS_PER_MINUTE * speedMultiplier))
-    return () => window.clearTimeout(timer)
-  }, [activeWordIndex, lastWordIndex, setActiveWordIndex, simulationState, speedMultiplier])
-
-  const toggleSimulation = () => {
-    if (simulationState === 'playing') {
-      setSimulationState('paused')
-      return
-    }
-    if (activeWordIndex === null || activeWordIndex >= lastWordIndex) setActiveWordIndex(0)
-    setSimulationState('playing')
-  }
-  const moveActiveWord = (direction: -1 | 1) => {
-    const next = Math.min(lastWordIndex, Math.max(0, (activeWordIndex ?? (direction > 0 ? -1 : 1)) + direction))
-    setActiveWordIndex(next)
-    if (next === lastWordIndex) setSimulationState('inactive')
-  }
-  const simulationLabel = simulationState === 'playing' ? 'En cours' : simulationState === 'paused' ? 'En pause' : 'Inactive'
-  const simulationButtonLabel = simulationState === 'playing'
-    ? 'Mettre en pause'
-    : simulationState === 'paused'
-      ? 'Reprendre la simulation'
-      : 'Lancer la simulation'
-
-  return (
-    <section id={id} className="sound-panel sound-controls" aria-labelledby="sound-controls-title" data-workspace-region="simulation">
-      <div className="controls-title">
-        <div><span className="sound-panel__index">04 · Démonstrations locales</span><h2 id="sound-controls-title">Simulation/Navigation</h2></div>
-      </div>
-      <div className="control-demonstrations">
-        <div className="book-navigation" aria-labelledby="book-navigation-title">
-          <h3 id="book-navigation-title">Navigation fictive du livre</h3>
-          <div className="chapter-history-row">
-            <label className="chapter-select">Chapitre
-              <select value={chapterIndex} onChange={(event) => moveChapter(Number(event.target.value))}>
-                {chapters.map((item, index) => <option key={item.label} value={index}>{item.label}</option>)}
-              </select>
-            </label>
-            <button ref={historyButtonRef} type="button" className="history-button" aria-expanded={historyOpen} aria-controls="project-history" onClick={() => setHistoryOpen(!historyOpen)}>Historique</button>
-          </div>
-          <div className="page-navigation-group" role="group" aria-label="Pagination fictive du livre">
-            <button type="button" className="icon-button" aria-label="Page précédente" disabled={page === 1} onClick={() => setPage(page - 1)}>←</button>
-            <label className="page-slider" htmlFor="book-page-slider">Page fictive
-              <input
-                id="book-page-slider"
-                aria-label="Page fictive"
-                type="range"
-                min="1"
-                max={chapter.pages}
-                value={page}
-                aria-valuetext={`Page ${page} sur ${chapter.pages}`}
-                onChange={(event) => setPage(Number(event.target.value))}
-              />
-              <output className="page-output" htmlFor="book-page-slider" aria-live="polite">Page {page} sur {chapter.pages}</output>
-            </label>
-            <button type="button" className="icon-button" aria-label="Page suivante" disabled={page === chapter.pages} onClick={() => setPage(page + 1)}>→</button>
-          </div>
-        </div>
-        <div className="text-simulation" aria-labelledby="text-simulation-title">
-          <div className="text-simulation__heading">
-            <h3 id="text-simulation-title">Simulation fictive du texte</h3>
-            <span className={`simulation-status simulation-status--${simulationState}`} role="status" aria-live="polite" aria-label={`État de la simulation : ${simulationLabel}`}>
-              <span aria-hidden="true" /><strong>{simulationLabel}</strong>
-            </span>
-          </div>
-          <div className="simulation-actions">
-            <button type="button" className="simulation-toggle" onClick={toggleSimulation}>{simulationButtonLabel}</button>
-            <button type="button" className="simulation-step" disabled={activeWordIndex === null || activeWordIndex === 0} onClick={() => moveActiveWord(-1)}>Mot précédent</button>
-            <button type="button" className="simulation-step" disabled={activeWordIndex === lastWordIndex} onClick={() => moveActiveWord(1)}>Mot suivant</button>
-          </div>
-          <div className="simulation-speed" aria-label="Vitesse de la simulation">
-            <span>Base : {BASE_WORDS_PER_MINUTE} mots par minute</span>
-            <div className="speed-buttons" role="group" aria-label="Multiplicateur de vitesse">
-              {[1, 2, 4].map((multiplier) => (
-                <button
-                  type="button"
-                  key={multiplier}
-                  aria-pressed={speedMultiplier === multiplier}
-                  onClick={() => setSpeedMultiplier(multiplier)}
-                >x{multiplier}</button>
-              ))}
-            </div>
-            <strong>Multiplicateur actif : x{speedMultiplier}</strong>
-          </div>
-        </div>
-      </div>
-      {historyOpen && (
-        <div id="project-history" className="project-history" role="region" aria-label="Historique fictif du projet">
-          <div><strong>Version de repérage</strong><span>Aujourd’hui · 09:42 · démonstration</span></div>
-          <div><strong>Structure du livre préparée</strong><span>Hier · 17:18 · démonstration</span></div>
-          <div><strong>Projet fictif créé</strong><span>12 août · 11:03 · démonstration</span></div>
-        </div>
-      )}
-      <p className="controls-disclaimer">Démonstration locale uniquement : aucun son joué, aucune pagination EPUB définie et aucune donnée persistée.</p>
-    </section>
-  )
-}
-
 function SoundDesignerWorkspace() {
   const [chapterIndex, setChapterIndex] = useState(0)
   const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null)
   const [page, setPage] = useState(1)
   const [historyOpen, setHistoryOpen] = useState(false)
-  const [desktopPanels, setDesktopPanels] = useState<DesktopPanelState>({
-    library: true,
-    inspector: true,
-    simulation: true,
-  })
-  const [responsiveDrawer, setResponsiveDrawer] = useState<ResponsiveDrawer>(null)
-  const isReducedWorkspace = useMediaQuery(REDUCED_WORKSPACE_QUERY)
   const historyButtonRef = useRef<HTMLButtonElement>(null)
-  const libraryButtonRef = useRef<HTMLButtonElement>(null)
-  const inspectorButtonRef = useRef<HTMLButtonElement>(null)
-  const simulationButtonRef = useRef<HTMLButtonElement>(null)
-  const libraryCloseButtonRef = useRef<HTMLButtonElement>(null)
-  const inspectorCloseButtonRef = useRef<HTMLButtonElement>(null)
-  const simulationCloseButtonRef = useRef<HTMLButtonElement>(null)
-
-  const resetSimulation = () => {
-    setActiveWordIndex(null)
-    setHistoryOpen(false)
-  }
-
-  const closeResponsiveDrawer = (restoreFocus = true) => {
-    const drawerToClose = responsiveDrawer
-    if (drawerToClose === 'simulation') resetSimulation()
-    setResponsiveDrawer(null)
-    if (!restoreFocus) return
-    if (drawerToClose === 'library') libraryButtonRef.current?.focus()
-    if (drawerToClose === 'inspector') inspectorButtonRef.current?.focus()
-    if (drawerToClose === 'simulation') simulationButtonRef.current?.focus()
-  }
-
-  useEffect(() => {
-    if (typeof window.matchMedia !== 'function') return
-    const mediaQuery = window.matchMedia(REDUCED_WORKSPACE_QUERY)
-    const resetPanelsAtBreakpoint = (event: MediaQueryListEvent) => {
-      setResponsiveDrawer(null)
-      setActiveWordIndex(null)
-      setHistoryOpen(false)
-      if (!event.matches) {
-        setDesktopPanels({ library: true, inspector: true, simulation: true })
-      }
-    }
-    mediaQuery.addEventListener('change', resetPanelsAtBreakpoint)
-    return () => mediaQuery.removeEventListener('change', resetPanelsAtBreakpoint)
-  }, [])
-
-  useEffect(() => {
-    if (!isReducedWorkspace || !responsiveDrawer) return
-    const focusTarget = responsiveDrawer === 'library'
-      ? libraryCloseButtonRef
-      : responsiveDrawer === 'inspector'
-        ? inspectorCloseButtonRef
-        : simulationCloseButtonRef
-    focusTarget.current?.focus()
-  }, [isReducedWorkspace, responsiveDrawer])
-
-  useEffect(() => {
-    const closeOverlay = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return
-      if (historyOpen) {
-        setHistoryOpen(false)
-        historyButtonRef.current?.focus()
-        return
-      }
-      if (responsiveDrawer) {
-        setResponsiveDrawer(null)
-        if (responsiveDrawer === 'library') libraryButtonRef.current?.focus()
-        if (responsiveDrawer === 'inspector') inspectorButtonRef.current?.focus()
-        if (responsiveDrawer === 'simulation') {
-          resetSimulation()
-          simulationButtonRef.current?.focus()
-        }
-        return
-      }
-    }
-    window.addEventListener('keydown', closeOverlay)
-    return () => window.removeEventListener('keydown', closeOverlay)
-  }, [historyOpen, responsiveDrawer])
-
-  const isPanelOpen = (panel: WorkspacePanel) => isReducedWorkspace
-    ? responsiveDrawer === panel
-    : desktopPanels[panel]
-  const togglePanel = (panel: WorkspacePanel) => {
-    if (isReducedWorkspace) {
-      if (responsiveDrawer === panel) {
-        closeResponsiveDrawer(false)
-      } else {
-        if (responsiveDrawer === 'simulation') resetSimulation()
-        setResponsiveDrawer(panel)
-      }
-      return
-    }
-    if (panel === 'simulation' && desktopPanels.simulation) resetSimulation()
-    setDesktopPanels((current) => ({ ...current, [panel]: !current[panel] }))
-  }
-  const panelAction = (panel: WorkspacePanel, name: string) => {
-    if (isReducedWorkspace) return `${isPanelOpen(panel) ? 'Fermer' : 'Ouvrir'} ${name}`
-    return `${isPanelOpen(panel) ? 'Masquer' : 'Afficher'} ${name}`
-  }
-  const panelControlId = (panel: WorkspacePanel) => isReducedWorkspace
-    ? `sound-${panel}-drawer`
-    : `sound-${panel}-panel`
-  const workspaceClasses = [
-    'sound-workspace',
-    `sound-workspace--library-${desktopPanels.library ? 'open' : 'closed'}`,
-    `sound-workspace--inspector-${desktopPanels.inspector ? 'open' : 'closed'}`,
-    `sound-workspace--simulation-${desktopPanels.simulation ? 'open' : 'closed'}`,
-  ].join(' ')
+  const {
+    desktopPanels, responsiveDrawer, isReducedWorkspace,
+    libraryButtonRef, inspectorButtonRef, simulationButtonRef,
+    libraryCloseButtonRef, inspectorCloseButtonRef, simulationCloseButtonRef,
+    closeResponsiveDrawer, isPanelOpen, togglePanel, panelAction, panelControlId, workspaceClasses,
+  } = useSoundDesignerPanels({ setActiveWordIndex, historyOpen, setHistoryOpen, historyButtonRef })
 
   const toolbar = (
     <div className="responsive-panel-toolbar" aria-label="Panneaux de l’atelier">

@@ -1,31 +1,10 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import type { MouseEvent } from 'react'
 import { FoundationsPage } from './App'
-import { MaterialSymbol, type MaterialSymbolName } from './MaterialSymbol'
+import { MaterialSymbol } from './MaterialSymbol'
+import { routes, foundationsRoute, type RouteDefinition, type Navigate } from './shell/routes'
+import { useShellNavigation } from './shell/useShellNavigation'
 import { ProjectPage, type SimulatedProjectRole } from './ProjectPage'
 import { expectedValidations, submittedProject } from './demoScenario'
-
-type Navigate = (path: string) => void
-
-type RouteDefinition = {
-  label: string
-  path: string
-  title: string
-  icon: MaterialSymbolName
-}
-
-const routes: RouteDefinition[] = [
-  { label: 'Connexion', path: '/connexion', title: 'Connexion', icon: 'login' },
-  { label: 'Accueil', path: '/accueil', title: 'Accueil', icon: 'home' },
-  { label: 'Projet', path: '/projet', title: 'Projet', icon: 'book_2' },
-  { label: 'Paramètres', path: '/parametres', title: 'Paramètres', icon: 'settings' },
-]
-
-const foundationsRoute: RouteDefinition = {
-  label: 'Fondations 1.1',
-  path: '/fondations',
-  title: 'Fondations',
-  icon: 'palette',
-}
 
 const projectRoleLabels: Record<SimulatedProjectRole, string> = {
   'sound-designer': 'Sound Designer',
@@ -110,20 +89,6 @@ const demoProjects: DemoProject[] = [
     progressMax: 8,
   },
 ]
-
-function normalizePath(pathname: string) {
-  if (pathname === '/') return pathname
-  return pathname.replace(/\/+$/, '') || '/'
-}
-
-function initialPath() {
-  const path = normalizePath(window.location.pathname)
-  if (path === '/') {
-    window.history.replaceState(null, '', '/accueil')
-    return '/accueil'
-  }
-  return path
-}
 
 function RouteLink({
   route,
@@ -388,51 +353,7 @@ function InternalBrand({ navigate }: { navigate: Navigate }) {
 }
 
 export function AppShell() {
-  const [path, setPath] = useState(initialPath)
-  const [projectRole, setProjectRole] = useState<SimulatedProjectRole>('sound-designer')
-  const [projectMenuOpen, setProjectMenuOpen] = useState(false)
-  const mainRef = useRef<HTMLElement>(null)
-  const projectMenuButtonRef = useRef<HTMLButtonElement>(null)
-  const projectMenuRef = useRef<HTMLElement>(null)
-
-  const navigate: Navigate = (nextPath) => {
-    setProjectMenuOpen(false)
-    if (nextPath === path) return
-    if (nextPath === '/projet') setProjectRole('sound-designer')
-    window.history.pushState(null, '', nextPath)
-    setPath(nextPath)
-  }
-
-  useEffect(() => {
-    const handlePopState = () => {
-      const nextPath = normalizePath(window.location.pathname)
-      if (nextPath === '/projet') setProjectRole('sound-designer')
-      setPath(nextPath)
-    }
-    window.addEventListener('popstate', handlePopState)
-    return () => window.removeEventListener('popstate', handlePopState)
-  }, [])
-
-  useEffect(() => {
-    const route = [...routes, foundationsRoute].find((candidate) => candidate.path === path)
-    document.title = `Jaquette — ${route?.title ?? 'Écran introuvable'}`
-    const frame = window.requestAnimationFrame(() => {
-      mainRef.current?.querySelector<HTMLElement>('h1')?.focus()
-    })
-    return () => window.cancelAnimationFrame(frame)
-  }, [path])
-
-  useEffect(() => {
-    if (!projectMenuOpen) return
-    projectMenuRef.current?.querySelector<HTMLAnchorElement>('a')?.focus()
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return
-      setProjectMenuOpen(false)
-      projectMenuButtonRef.current?.focus()
-    }
-    window.addEventListener('keydown', closeOnEscape)
-    return () => window.removeEventListener('keydown', closeOnEscape)
-  }, [projectMenuOpen])
+  const { path, projectRole, setProjectRole, projectMenuOpen, setProjectMenuOpen, mainRef, projectMenuButtonRef, projectMenuRef, navigate } = useShellNavigation()
 
   return (
     <div className={path === '/projet' ? 'app-shell app-shell--project' : 'app-shell'}>
