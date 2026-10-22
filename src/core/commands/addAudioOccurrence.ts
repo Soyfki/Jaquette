@@ -7,6 +7,15 @@ export function dataRecord(value: unknown): value is Record<string, unknown> {
     && (Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null)
     && Object.values(Object.getOwnPropertyDescriptors(value)).every(d => 'value' in d)
 }
+function onlyKeys(value: Record<string, unknown>, keys: string[]): boolean {
+  return Object.getOwnPropertySymbols(value).length === 0
+    && Object.getOwnPropertyNames(value).sort().join(',') === keys.sort().join(',')
+}
+function dataArray(value: unknown): value is unknown[] {
+  return Array.isArray(value) && Object.getPrototypeOf(value) === Array.prototype
+    && Reflect.ownKeys(value).every(key => key === 'length' || (typeof key === 'string' && /^(0|[1-9][0-9]*)$/.test(key)))
+    && Object.values(Object.getOwnPropertyDescriptors(value)).every(d => 'value' in d)
+}
 export function parseCommand(input: unknown): Result<Command> {
   try { return parseDataCommand(input) } catch { return failure('invalid-input') }
 }
@@ -47,22 +56,26 @@ export function parseSnapshot(value: unknown): Result<Snapshot> {
   try { return parseSnapshotData(value) } catch { return failure('invalid-input') }
 }
 function parseSnapshotData(value: unknown): Result<Snapshot> {
-  if (!dataRecord(value) || !isId(value.projectId) || !isId(value.bookId) || !isId(value.revision)
-    || !dataRecord(value.common) || !Array.isArray(value.common.text) || !Array.isArray(value.common.media)
-    || !Array.isArray(value.chapters) || !value.chapters.length) return failure('invalid-input')
+  if (!dataRecord(value) || !onlyKeys(value, ['projectId', 'bookId', 'revision', 'common', 'chapters'])
+    || !isId(value.projectId) || !isId(value.bookId) || !isId(value.revision)
+    || !dataRecord(value.common) || !onlyKeys(value.common, ['text', 'media'])
+    || !dataArray(value.common.text) || !dataArray(value.common.media)
+    || !dataArray(value.chapters) || !value.chapters.length) return failure('invalid-input')
   const chapterIds = new Set<string>(), tokenIds = new Set<string>(), occurrenceIds = new Set<string>()
   for (const c of value.chapters) {
-    if (!dataRecord(c) || !isId(c.id) || chapterIds.has(c.id) || typeof c.activeValidations !== 'boolean'
-      || !Array.isArray(c.occurrences)) return failure('invalid-input')
+    if (!dataRecord(c) || !onlyKeys(c, ['id', 'activeValidations', 'occurrences'])
+      || !isId(c.id) || chapterIds.has(c.id) || typeof c.activeValidations !== 'boolean'
+      || !dataArray(c.occurrences)) return failure('invalid-input')
     chapterIds.add(c.id)
   }
   const textChapters = new Set<string>()
   for (const c of value.common.text) {
-    if (!dataRecord(c) || !isId(c.chapterId) || !chapterIds.has(c.chapterId) || textChapters.has(c.chapterId)
-      || !Array.isArray(c.tokens)) return failure('invalid-input')
+    if (!dataRecord(c) || !onlyKeys(c, ['chapterId', 'tokens'])
+      || !isId(c.chapterId) || !chapterIds.has(c.chapterId) || textChapters.has(c.chapterId)
+      || !dataArray(c.tokens)) return failure('invalid-input')
     textChapters.add(c.chapterId)
     for (const t of c.tokens) {
-      if (!dataRecord(t) || !isId(t.id) || tokenIds.has(t.id) || typeof t.text !== 'string') return failure('invalid-input')
+      if (!dataRecord(t) || !onlyKeys(t, ['id', 'text']) || !isId(t.id) || tokenIds.has(t.id) || typeof t.text !== 'string') return failure('invalid-input')
       tokenIds.add(t.id)
     }
   }

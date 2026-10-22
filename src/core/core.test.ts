@@ -1,7 +1,17 @@
 import { describe, expect, it } from 'vitest'
-import { parseCommand, prepareChange } from './commands/addAudioOccurrence'
+import { parseCommand, parseSnapshot, prepareChange } from './commands/addAudioOccurrence'
 import { command, fixture } from './testing/fixtures'
 describe('pure command', () => {
+  it('refuses unknown fixture fields and serialization hooks without invoking them', () => {
+    let called = false
+    const initial = fixture()
+    expect(parseSnapshot({ ...initial, unknownFormatVersion: 999 }).ok).toBe(false)
+    expect(parseSnapshot({ ...initial, toJSON() { called = true; return initial } }).ok).toBe(false)
+    const text = [...initial.common.text]
+    Object.defineProperty(text, 'toJSON', { value: () => { called = true; return [] } })
+    expect(parseSnapshot({ ...initial, common: { ...initial.common, text } }).ok).toBe(false)
+    expect(called).toBe(false)
+  })
   it('validates without DOM and does not mutate frozen inputs', () => {
     expect(typeof window).toBe('undefined')
     const snapshot = fixture()
