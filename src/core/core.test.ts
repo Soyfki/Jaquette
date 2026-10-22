@@ -11,6 +11,13 @@ describe('pure command', () => {
     Object.defineProperty(text, 'toJSON', { value: () => { called = true; return [] } })
     expect(parseSnapshot({ ...initial, common: { ...initial.common, text } }).ok).toBe(false)
     expect(called).toBe(false)
+    const occurrence = command()
+    Object.defineProperty(occurrence, 'toJSON', { value: () => { called = true; return command() } })
+    expect(parseCommand(occurrence).ok).toBe(false)
+    expect(parseSnapshot({ ...initial, chapters: [
+      { ...initial.chapters[0], occurrences: [occurrence] }, initial.chapters[1],
+    ] }).ok).toBe(false)
+    expect(called).toBe(false)
   })
   it('validates without DOM and does not mutate frozen inputs', () => {
     expect(typeof window).toBe('undefined')

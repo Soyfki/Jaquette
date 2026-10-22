@@ -21,8 +21,8 @@ export function parseCommand(input: unknown): Result<Command> {
 }
 function parseDataCommand(input: unknown): Result<Command> {
   if (!dataRecord(input) || !dataRecord(input.range)) return failure('invalid-input')
-  if (Object.keys(input).sort().join(',') !== 'bookId,chapterId,family,mediaId,occurrenceId,projectId,range'
-    || Object.keys(input.range).sort().join(',') !== 'endTokenId,startTokenId') return failure('invalid-input')
+  if (!onlyKeys(input, ['bookId', 'chapterId', 'family', 'mediaId', 'occurrenceId', 'projectId', 'range'])
+    || !onlyKeys(input.range, ['endTokenId', 'startTokenId'])) return failure('invalid-input')
   if (![input.projectId, input.bookId, input.chapterId, input.occurrenceId, input.mediaId,
     input.range.startTokenId, input.range.endTokenId].every(isId)
     || typeof input.family !== 'string' || !['SFX', 'Ambiance', 'Musique'].includes(input.family)) return failure('invalid-input')
