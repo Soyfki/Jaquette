@@ -5,7 +5,7 @@ import { isId } from '../ids'
 export function dataRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
     && (Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null)
-    && Object.values(Object.getOwnPropertyDescriptors(value)).every(d => 'value' in d)
+    && Object.values(Object.getOwnPropertyDescriptors(value)).every(d => 'value' in d && d.enumerable)
 }
 function onlyKeys(value: Record<string, unknown>, keys: string[]): boolean {
   return Object.getOwnPropertySymbols(value).length === 0
@@ -13,8 +13,10 @@ function onlyKeys(value: Record<string, unknown>, keys: string[]): boolean {
 }
 function dataArray(value: unknown): value is unknown[] {
   return Array.isArray(value) && Object.getPrototypeOf(value) === Array.prototype
-    && Reflect.ownKeys(value).every(key => key === 'length' || (typeof key === 'string' && /^(0|[1-9][0-9]*)$/.test(key)))
-    && Object.values(Object.getOwnPropertyDescriptors(value)).every(d => 'value' in d)
+    && Reflect.ownKeys(value).length === value.length + 1
+    && Reflect.ownKeys(value).every(key => key === 'length'
+      || (typeof key === 'string' && /^(0|[1-9][0-9]*)$/.test(key) && Number(key) < value.length))
+    && Object.entries(Object.getOwnPropertyDescriptors(value)).every(([key, d]) => 'value' in d && (key === 'length' || d.enumerable))
 }
 export function parseCommand(input: unknown): Result<Command> {
   try { return parseDataCommand(input) } catch { return failure('invalid-input') }
