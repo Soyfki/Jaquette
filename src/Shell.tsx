@@ -3,6 +3,7 @@ import { FoundationsPage } from './App'
 import { MaterialSymbol, type MaterialSymbolName } from './MaterialSymbol'
 import { ProjectPage, type SimulatedProjectRole } from './ProjectPage'
 import { expectedValidations, submittedProject } from './demoScenario'
+import { OfflineQualification } from './offline/OfflineQualification'
 
 type Navigate = (path: string) => void
 
@@ -304,10 +305,11 @@ function SettingsPage() {
   return (
     <div className="prototype-page">
       <PageIntro
-        eyebrow="Prototype local · sans persistance"
+        eyebrow="Prototype local · démonstration hors ligne"
         title="Paramètres du prototype"
         description="Ces repères décrivent l’environnement actuel sans créer de compte cloud, de permissions ou de préférences persistantes."
       />
+      <OfflineQualification settings />
       <section className="settings-list" aria-label="Configuration locale démonstrative">
         <article>
           <span className="settings-list__icon" aria-hidden="true">◐</span>
@@ -506,6 +508,7 @@ export function AppShell() {
         tabIndex={-1}
         ref={mainRef}
       >
+        {path !== '/parametres' && <OfflineQualification />}
         <CurrentPage
           path={path}
           navigate={navigate}

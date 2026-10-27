@@ -1,5 +1,8 @@
 # T-75 — tentative de préparation, développement bloqué
 
+Historique du23octobre. La [reprise Web du27octobre](T75-WEB-OFFLINE.md) est indépendante ; elle ne lève pas
+le refus de scripts ni ne fournit un host ou installateur Windows.
+
 Base : `main` `4b183900a4a677c51c1d8150f7459f150c1ad033`. Branche isolée T75, sans PR17 implicite.
 Le plan AT reste le commentaire `01a169b3-5649-70f7-a881-d4ff0627e3c4`.
 Ce document ne vaut ni implémentation du host/cache, ni qualification offline ou renderer.
