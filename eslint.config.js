@@ -17,6 +17,14 @@ export default tseslint.config(
     },
   },
   {
+    files: ['scripts/storage-research/opfs.mjs'],
+    languageOptions: { globals: { navigator: 'readonly' } },
+  },
+  {
+    files: ['scripts/storage-research/opfs-worker.js'],
+    languageOptions: { globals: { self: 'readonly', navigator: 'readonly', TextEncoder: 'readonly', Uint8Array: 'readonly', crypto: 'readonly' } },
+  },
+  {
     files: ['**/*.{ts,tsx}'],
     plugins: {
       'react-hooks': reactHooks,

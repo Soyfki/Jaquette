@@ -40,4 +40,10 @@ Ce dossier rassemble la documentation complémentaire et les décisions techniqu
 
 La nouvelle étape 0 est distincte de l’ancienne phase 0 acquise. 0.1 et 0.2 sont validées : [preuves 0.1](validation/0.1-harmonisation/README.md), [preuves 0.2](validation/0.2-base-reproductible/README.md). **0.3 — Corriger les défauts du prototype** et la **revalidation historique 1.4.2** sont **VALIDÉES / GO**, décisions distinctes du 18 septembre 2026 après campagne technique et observations humaines complètes au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`. L’intégration et les contrôles au dernier SHA sont tracés dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9). Voir la [checklist](validation/0.3-correctifs-prototype/CHECKLIST.md), les [défauts corrigés](validation/0.3-correctifs-prototype/BUG_REPORT.md), le [rapport à deux conclusions](validation/0.3-correctifs-prototype/VALIDATION_REPORT.md) et les [observations humaines](validation/0.3-correctifs-prototype/HUMAN_REVIEW.md). 0.4 n’est pas commencée.
 
-Cet index n’ajoute aucune règle métier et ne remplace pas les documents de référence.
+## Recherche de stockage T74
+
+- [Laboratoire et protocole expérimental](T74-STORAGE-RESEARCH.md).
+- [Décision du 28 octobre : adoption refusée](T74-STORAGE-DECISION.md) — résultats et garanties
+  non prouvées, conditions de réexamen et dépendances aval conservées. Aucun format de production adopté.
+
+Cet index n'ajoute aucune règle métier et ne remplace pas les documents de référence.
