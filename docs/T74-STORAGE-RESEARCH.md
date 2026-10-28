@@ -3,7 +3,9 @@
 Ce lot R&D compare des mécanismes isolés depuis `main` `4b183900a4a677c51c1d8150f7459f150c1ad033`.
 Il ne choisit aucun format `.jacq` ou `.chpt`, ne sérialise pas un projet réel et ne modifie pas l'application.
 La PR17/T73 n'est pas intégrée implicitement. Les fixtures sont entièrement synthétiques et sans audio réel.
-Le plan canonique reste le commentaire AT du 23 octobre 2026, `01a169ae-71eb-7282-b950-c45e3fd434c8`.
+Le protocole expérimental reste le commentaire AT du 23 octobre 2026, `01a169ae-71eb-7282-b950-c45e3fd434c8`.
+La [décision du 28 octobre et ses conséquences](T74-STORAGE-DECISION.md) documentent le recadrage
+R&D NO-GO, les preuves réutilisées et les préalables conservés pour les tickets aval.
 
 ## Décision expérimentale
 
