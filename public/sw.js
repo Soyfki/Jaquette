@@ -20,14 +20,14 @@ async function verify(cache, manifest) {
   }
   return true
 }
-async function ready(verifyAll = false) {
+async function ready() {
   for (const name of (await caches.keys()).filter((n) => n.startsWith(prefix)).reverse()) {
     const cache = await caches.open(name)
     const saved = await cache.match(marker)
     if (!saved) continue
     try {
       const manifest = await saved.json()
-      if (valid(manifest) && (!verifyAll || await verify(cache, manifest))) return { cache, manifest }
+      if (await verify(cache, manifest)) return { cache, manifest }
     } catch { /* Partial/corrupt generations are never ready. */ }
   }
   return null
@@ -63,7 +63,7 @@ self.addEventListener('message', (event) => {
       if (event.data.command === 'prepare') {
         if (!preparing) preparing = prepare().finally(() => { preparing = null })
         port.postMessage({ ok: true, buildId: await preparing })
-      } else port.postMessage({ ok: true, buildId: (await ready(true))?.manifest.buildId ?? null })
+      } else port.postMessage({ ok: true, buildId: (await ready())?.manifest.buildId ?? null })
     } catch { port.postMessage({ ok: false, error: 'OFFLINE_PREPARATION_UNAVAILABLE' }) }
   })())
 })
@@ -73,7 +73,9 @@ self.addEventListener('fetch', (event) => {
   event.respondWith((async () => {
     const navigation = event.request.mode === 'navigate'
     const path = url.pathname.replace(/\/+$/, '') || '/'
-    const current = await ready(navigation)
+    // HTML and assets must select a complete verified generation by the same rule.
+    // A marker alone cannot authorize bytes from a newer damaged generation.
+    const current = await ready()
     if (current) {
       if (navigation && routes.has(path)) return current.cache.match('/index.html')
       if (!url.search && current.manifest.assets.some((a) => a.url === url.pathname)) {

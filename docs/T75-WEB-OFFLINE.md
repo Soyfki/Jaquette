@@ -23,6 +23,11 @@ Les requêtes inconnues ne reçoivent pas arbitrairement index.html. Seules les 
 vers son HTML ; aucun réseau extérieur n'est ajouté. L'installation/activation et la confirmation ont des délais bornés.
 Après une issue incertaine, l'interface invite à vérifier l'état, sans rejouer automatiquement une écriture.
 
+La correction du 28 octobre applique la même vérification complète de génération au statut, aux navigations
+et aux ressources. Un marqueur prêt ne suffit jamais pour servir un asset : si la génération la plus récente
+est altérée ou incomplète, HTML et ressources retiennent l'ancienne génération encore vérifiée. Cette lecture
+revalide le cache ; elle ne supprime ni la génération défectueuse ni le projet privé.
+
 La préparation crée une nouvelle génération de cache. Les générations anciennes/partielles sont conservées,
 sans nettoyage automatique des données ; l'espace peut donc croître et atteindre le quota navigateur. La préparation
 refuse alors sans supprimer la dernière copie valide. Quota estimé et conservation par le navigateur ne sont pas des
@@ -40,6 +45,8 @@ pnpm validate:all
 Le smoke exige Chrome installé et utilise uniquement ses propres profils/serveurs sur loopback, sandbox activée.
 Il refuse une cible explicite existante ; sans argument il crée un répertoire unique sous test-results.
 Il ferme ses propres ressources après succès ou erreur et conserve rapport/captures pour diagnostic.
+Les profils Chrome sont conservés dans une racine temporaire courte créée pour le run ; `profileRoot`
+indique son chemin dans le rapport, avec l'empreinte du worker servi. Les captures et rapports restent dans la cible.
 `validate:all` inclut le smoke après la suite existante, sans ajout de dépendance ou tâche distante supplémentaire.
 
 Oracles réels du build :
@@ -54,6 +61,9 @@ Oracles réels du build :
 - QuotaExceededError injecté dans Cache.put du seul worker de test : ancienne copie prête et projet conservés.
 - Fermeture du navigateur pendant une réponse retenue par le serveur de test : ancienne génération complète
   relue après réouverture. Ce n'est ni un arrêt brutal OS ni une preuve de durabilité physique.
+- Deux générations complètes distinctes, puis JavaScript altéré ou absent dans la plus récente : statut,
+  HTML et JavaScript doivent retrouver l'ancienne génération vérifiée, serveur arrêté et contexte offline ;
+  leurs empreintes sont comparées, le projet et la génération défectueuse restent présents.
 
 Chaque run écrit report.json : SHA/arbre modifié, buildID, commande/dates/durée, Node/OS/user agent,
 requêtes du serveur possédé, réponses cache et résultats détaillés. Les mesures avant commit sont intermédiaires ;
