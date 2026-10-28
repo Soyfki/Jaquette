@@ -10,17 +10,20 @@ function valid(value) {
       !['/sw.js', '/offline-manifest.json', marker].includes(a.url) && Number.isSafeInteger(a.bytes) && a.bytes > 0 &&
       a.bytes <= 20 * 1024 ** 2 && /^[a-f0-9]{64}$/.test(a.sha256))
 }
+async function verifiedAsset(cache, asset) {
+  const response = await cache.match(asset.url)
+  if (!response?.ok) return null
+  const bytes = await response.arrayBuffer()
+  if (bytes.byteLength !== asset.bytes || await digest(bytes) !== asset.sha256) return null
+  // Serve the bytes just checked, even if the cache entry changes afterwards.
+  return new Response(bytes, { status: response.status, statusText: response.statusText, headers: response.headers })
+}
 async function verify(cache, manifest) {
   if (!valid(manifest) || await digest(new TextEncoder().encode(JSON.stringify(manifest.assets))) !== manifest.buildId) return false
-  for (const asset of manifest.assets) {
-    const response = await cache.match(asset.url)
-    if (!response?.ok) return false
-    const bytes = await response.arrayBuffer()
-    if (bytes.byteLength !== asset.bytes || await digest(bytes) !== asset.sha256) return false
-  }
+  for (const asset of manifest.assets) if (!await verifiedAsset(cache, asset)) return false
   return true
 }
-async function ready() {
+async function findReady() {
   for (const name of (await caches.keys()).filter((n) => n.startsWith(prefix)).reverse()) {
     const cache = await caches.open(name)
     const saved = await cache.match(marker)
@@ -31,6 +34,15 @@ async function ready() {
     } catch { /* Partial/corrupt generations are never ready. */ }
   }
   return null
+}
+let selecting = null
+function ready() {
+  // Share only overlapping scans. Never retain a settled integrity result.
+  if (!selecting) {
+    const pending = findReady().finally(() => { if (selecting === pending) selecting = null })
+    selecting = pending
+  }
+  return selecting
 }
 let preparing = null
 async function prepare() {
@@ -49,6 +61,7 @@ async function prepare() {
   if (!await verify(candidate, manifest)) throw new Error('CACHE_INCOMPLETE')
   // Only public application assets. Keep private IndexedDB and previous ready generations intact.
   await candidate.put(marker, new Response(JSON.stringify(manifest), { headers: { 'Content-Type': 'application/json' } }))
+  selecting = null // A newly published generation must be visible to the next scan.
   return manifest.buildId
 }
 self.addEventListener('install', (event) => event.waitUntil(self.skipWaiting()))
@@ -75,13 +88,15 @@ self.addEventListener('fetch', (event) => {
     const path = url.pathname.replace(/\/+$/, '') || '/'
     // HTML and assets must select a complete verified generation by the same rule.
     // A marker alone cannot authorize bytes from a newer damaged generation.
-    const current = await ready()
-    if (current) {
-      if (navigation && routes.has(path)) return current.cache.match('/index.html')
-      if (!url.search && current.manifest.assets.some((a) => a.url === url.pathname)) {
-        const response = await current.cache.match(url.pathname)
-        if (response) return response
-      }
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const current = await ready()
+      if (!current) break
+      const resource = navigation && routes.has(path) ? '/index.html' : !url.search ? url.pathname : null
+      const asset = current.manifest.assets.find((asset) => asset.url === resource)
+      if (!asset) break
+      const response = await verifiedAsset(current.cache, asset)
+      if (response) return response
+      // An eviction/change raced the scan: re-read once, never serve unchecked bytes.
     }
     return fetch(event.request)
   })())

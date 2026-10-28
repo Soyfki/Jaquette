@@ -27,6 +27,10 @@ La correction du 28 octobre applique la même vérification complète de génér
 et aux ressources. Un marqueur prêt ne suffit jamais pour servir un asset : si la génération la plus récente
 est altérée ou incomplète, HTML et ressources retiennent l'ancienne génération encore vérifiée. Cette lecture
 revalide le cache ; elle ne supprime ni la génération défectueuse ni le projet privé.
+Les requêtes simultanées partagent seulement l'analyse encore en cours ; aucun résultat terminé n'est
+mémorisé. La publication d'une nouvelle génération invalide la sélection en cours pour les requêtes suivantes.
+L'asset demandé est également relu et vérifié avant de servir les octets capturés : si une éviction ou modification
+a suivi l'analyse, une seule nouvelle sélection est tentée, puis l'échec reste explicite sans servir de cache non vérifié.
 
 La préparation crée une nouvelle génération de cache. Les générations anciennes/partielles sont conservées,
 sans nettoyage automatique des données ; l'espace peut donc croître et atteindre le quota navigateur. La préparation
@@ -39,6 +43,7 @@ garanties d'éviction impossible, de stockage durable, ni d'activation métier c
 pnpm build
 pnpm test:offline --help
 pnpm test:offline --output test-results/tickets/T-75/NEW_RUN
+node --test scripts/offline/cache-integrity.test.mjs
 pnpm validate:all
 ```
 
@@ -70,6 +75,12 @@ requêtes du serveur possédé, réponses cache et résultats détaillés. Les m
 les preuves finales doivent viser le SHA effectivement construit. Les captures servent à la revue visuelle technique,
 pas à une validation artistique/humaine. Les rapports d'échec sont conservés, notamment la première attente de titre
 incorrecte corrigée pour respecter le titre original de Jaquette.
+
+Les quatre contrats Node exécutent le vrai worker dans un hôte de test en mémoire : réponses cohérentes
+après altération/absence, partage d'une analyse pour une rafale de six requêtes, nouvelle vérification après
+corruption ultérieure et modification pendant l'analyse. Ils ne qualifient ni Chrome ni son stockage physique ;
+les huit scénarios sur build réel restent requis. Les anciennes sources peuvent être examinées explicitement
+avec `T75_WORKER_SOURCE` pour les contrôles négatifs, sans remplacer le worker de l'application.
 
 ## Limites conservées
 
