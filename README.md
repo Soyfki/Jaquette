@@ -42,7 +42,6 @@ Pré-requis du prototype historique : Node.js 24 ou plus récent et Chrome. Le p
 
 ```powershell
 corepack pnpm install --frozen-lockfile
-corepack pnpm prepare:references
 corepack pnpm dev
 ```
 
@@ -50,15 +49,14 @@ Ouvrir ensuite <http://127.0.0.1:5173> dans Chrome.
 
 La route `/projet` démarre dans la vue Sound Designer héritée de la sous-étape 1.3. Un sélecteur permet de basculer localement vers la vue Réviseur, centrée sur le livre, la simulation, les commentaires, les candidates de chapitre et l’état de validation. Ce rôle simulé ne modifie ni l’URL ni l’historique du navigateur, n’est pas conservé après rechargement et n’implémente aucune authentification, permission, persistance ou action métier réelle.
 
-Vérifications techniques :
+Vérifications techniques (les mêmes que la CI) :
 
 ```powershell
-corepack pnpm validate:diagnostic
-corepack pnpm validate:all
-git diff --check
+corepack pnpm validate     # typecheck, lint, tests unitaires, build
+corepack pnpm test:smoke   # test E2E de fumée : l'application démarre et affiche l'accueil
 ```
 
-Si Corepack est absent, utiliser directement pnpm 11.19.0. Préparer Chrome avec `pnpm exec playwright install chrome` avant les E2E. `validate:all` inclut `validate`, les tests d'outillage et `test:e2e`, avec propagation des échecs. Les E2E utilisent Google Chrome 1440 × 1000 et 768 × 1024, Vite dev et `reuseExistingServer=false` ; cela ne qualifie ni le build distribué ni toute la matrice produit. Les contrôles historiques restent dans la [validation 1.4.1](docs/validation/1.4-role-variants.md) et la [validation 1.1](docs/validation/1.1-design-system.md).
+Si Corepack est absent, utiliser directement pnpm 11.19.0. Les E2E utilisent Google Chrome (`pnpm exec playwright install chrome` s'il manque). La suite E2E complète du prototype reste disponible localement avec `pnpm test:e2e`, hors CI. `pnpm check:links` et `pnpm check:secrets` restent disponibles à la demande. Les scripts de qualification, de diagnostic et de références de la campagne 0.2 ont été retirés (JV-0.2) ; ils restent consultables dans l'historique Git.
 
 ## Sources de vérité
 
