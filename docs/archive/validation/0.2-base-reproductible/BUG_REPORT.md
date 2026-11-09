@@ -41,7 +41,7 @@ Preuves historiques : prepare-initial.log, canonical-en-recovery.json et reprodu
 
 ## Correction de l'acquisition
 
-Le 11 septembre 2026, à la demande de correction de la CI, la seule copie anglaise canonique a été publiée à l'identique dans une [Release dédiée aux fixtures](../../../reference-data/ARCHIVE.md). Le contrôle préalable porte sur les 379445 octets et SHA e8372766… attendus, les crédits, l'en-tête, la licence complète embarquée et les conditions de redistribution. Les binaires restent hors de l'historique Git ; cette Release n'est pas une version de l'application.
+Le 11 septembre 2026, à la demande de correction de la CI, la seule copie anglaise canonique a été publiée à l'identique dans une [Release dédiée aux fixtures](../../../../reference-data/ARCHIVE.md). Le contrôle préalable porte sur les 379445 octets et SHA e8372766… attendus, les crédits, l'en-tête, la licence complète embarquée et les conditions de redistribution. Les binaires restent hors de l'historique Git ; cette Release n'est pas une version de l'application.
 
 Le mapping d'acquisition choisit explicitement cette archive pour l'anglais et conserve les cinq autres URL. La source d'origine reste dans le manifeste inchangé et dans les logs. Tout échec de l'archive reste non nul, sans fallback à Gutenberg ; aucun fichier local invalide n'est remplacé. Les tests de régression couvrent ces comportements dans des processus isolés. Le téléchargement anonyme réel des six fichiers a réussi pendant le développement ; seul le rapport final de PR au SHA courant atteste la qualification locale/CI et la clôture de l'incident.
 
