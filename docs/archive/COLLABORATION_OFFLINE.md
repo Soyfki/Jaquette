@@ -2,7 +2,7 @@
 
 > **Document secondaire REC-01 — 2026-08-23**
 >
-> Cette synthèse facilite la lecture et les tests. Elle ne remplace pas les trois sources de vérité : [`AGENTS.md`](../AGENTS.md), le [cahier des charges](../CAHIER_DES_CHARGES_JAQUETTE.md) et le [plan de développement](../PLAN_DE_DEVELOPPEMENT_JAQUETTE.md).
+> Cette synthèse facilite la lecture et les tests. Elle ne remplace pas les trois sources de vérité : [`AGENTS.md`](AGENTS_2026-09.md), le [cahier des charges](CAHIER_DES_CHARGES_JAQUETTE.md) et le [plan de développement](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md).
 
 ## Cadrage de lancement — 11 septembre 2026
 

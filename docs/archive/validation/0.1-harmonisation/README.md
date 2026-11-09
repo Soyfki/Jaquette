@@ -26,7 +26,7 @@ Date : 11 septembre 2026. Périmètre exclusivement documentaire selon le mandat
 
 ## Décision → documents corrigés → preuve de cohérence
 
-Abréviations : [Cahier](../../../CAHIER_DES_CHARGES_JAQUETTE.md), [AGENTS](../../../AGENTS.md), [Plan](../../../PLAN_DE_DEVELOPPEMENT_JAQUETTE.md), [Accueil](../../../README.md), [Index](../../README.md), [Versions](../../VERSIONING.md), [Offline](../../COLLABORATION_OFFLINE.md), [Protocole](../README.md).
+Abréviations : [Cahier](../../CAHIER_DES_CHARGES_JAQUETTE.md), [AGENTS](../../AGENTS_2026-09.md), [Plan](../../PLAN_DE_DEVELOPPEMENT_JAQUETTE.md), [Accueil](../../README_2026-09.md), [Index](../../DOCS_INDEX_2026-09.md), [Versions](../../VERSIONING.md), [Offline](../../COLLABORATION_OFFLINE.md), [Protocole](../README.md).
 
 | Décision du plan | Documents corrigés | Preuve de cohérence à vérifier sur le SHA de campagne |
 |---|---|---|

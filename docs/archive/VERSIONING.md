@@ -28,7 +28,7 @@ Avant une première version stable, la série `0.y.z` signale un produit en dév
 
 ## Jalons produit actifs et correspondance historique
 
-Le [plan du 11 septembre 2026](../PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) porte seul le calendrier actif. Les anciens libellés V0.x/V1/V2 sont historiques ; aucune équivalence ci-dessous ne transfère automatiquement un acquis.
+Le [plan du 11 septembre 2026](PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) porte seul le calendrier actif. Les anciens libellés V0.x/V1/V2 sont historiques ; aucune équivalence ci-dessous ne transfère automatiquement un acquis.
 
 | Actuel | Étapes | Ancien périmètre repris |
 |---|---|---|
@@ -51,7 +51,7 @@ L’export .jacko de contrôle, les checksums et la signature avec clés de test
 
 ## Versions des formats `.jacq`, `.chpt` et `.jacko`
 
-Les formats de travail `.jacq`, d’échange de chapitre `.chpt` et de distribution `.jacko` devront disposer des informations de compatibilité nécessaires, distinctes de la version de l’application et des jalons produit. Le [cahier des charges, section 5.3](../CAHIER_DES_CHARGES_JAQUETTE.md) prévoit un futur champ `formatVersion` pour `.jacko`.
+Les formats de travail `.jacq`, d’échange de chapitre `.chpt` et de distribution `.jacko` devront disposer des informations de compatibilité nécessaires, distinctes de la version de l’application et des jalons produit. Le [cahier des charges, section 5.3](CAHIER_DES_CHARGES_JAQUETTE.md) prévoit un futur champ `formatVersion` pour `.jacko`.
 
 Pour `.jacq` et `.chpt`, aucun nom de champ, numéro de format, schéma physique, valeur initiale ni règle de compatibilité n’est décidé. Ces choix restent **à définir dans les sous-étapes qui leur sont consacrées**, après validation de la sauvegarde physique partielle par chapitre.
 

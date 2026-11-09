@@ -8,7 +8,7 @@ Livrable de cet audit : ce plan unique. Les correctifs applicatifs identifiés s
 
 ## 1. Décisions produit retenues
 
-Les réponses de cadrage de septembre 2026 remplacent l’ancien calendrier « Web, puis Electron, puis IA, puis collaboration ». Les autres invariants du [cahier des charges](CAHIER_DES_CHARGES_JAQUETTE.md) et d’[AGENTS.md](AGENTS.md) sont conservés. Leur harmonisation est la première sous-étape de reprise.
+Les réponses de cadrage de septembre 2026 remplacent l’ancien calendrier « Web, puis Electron, puis IA, puis collaboration ». Les autres invariants du [cahier des charges](CAHIER_DES_CHARGES_JAQUETTE.md) et d’[AGENTS.md](AGENTS_2026-09.md) sont conservés. Leur harmonisation est la première sous-étape de reprise.
 
 | Sujet | Cible à livrer |
 |---|---|
@@ -34,7 +34,7 @@ La gratuité de Jaquette n’implique pas la gratuité du stockage choisi par l�
 Référence locale auditée : **5cabbb016d3ce5480b165512c1aa7814b8367802**, branche **codex/phase-1-4-2-team-lead-admin-variants**. La [PR 9](https://github.com/Soyfki/Jaquette/pull/9) est ouverte, en brouillon et non fusionnée au moment de l’audit.
 
 - Acquis historiques : phase 0, sous-étapes 1.1 à 1.3 et lot 1.4.1.
-- Lot 1.4.2 : initialement en attente au SHA historique indiqué ; désormais acquis après revalidation technique et humaine complète du 18 septembre 2026 au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`, consignée dans le [rapport 0.3/1.4.2](docs/validation/0.3-correctifs-prototype/VALIDATION_REPORT.md) et la PR 9.
+- Lot 1.4.2 : initialement en attente au SHA historique indiqué ; désormais acquis après revalidation technique et humaine complète du 18 septembre 2026 au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`, consignée dans le [rapport 0.3/1.4.2](validation/0.3-correctifs-prototype/VALIDATION_REPORT.md) et la PR 9.
 - Ancien lot 1.4.3 : non commencé et plus de prochaine livraison autonome. Aucun périmètre précis retrouvé dans l’ancien plan ; inventaire en 0.3/0.5 des reliquats réellement identifiables, puis rattachement aux futures sous-étapes correspondantes, sans exigences inventées rétrospectivement. Aucune clôture rétroactive de l’ancienne 1.4 ni de l’ancienne phase 1 ; anciennes phases suivantes non commencées.
 - Version applicative conservée : **0.0.0**. Les numéros des étapes ci-dessous ne sont pas des versions de l’application ou des formats.
 - À réutiliser : React/TypeScript, design system, polices embarquées, navigation, panneaux et variantes Sound Designer/Réviseur sur main à 8a9e9a7ed692f26e3969641a4584669bfa1d93a9. Les variantes Chef/Admin et leurs tests restent sur la PR 9 tant qu’elle n’est pas fusionnée ; 0.1 n’importe aucun de ses changements applicatifs.
@@ -45,15 +45,15 @@ Référence locale auditée : **5cabbb016d3ce5480b165512c1aa7814b8367802**, bran
 
 La nouvelle numérotation s’applique aux travaux à venir. Elle n’efface pas l’historique et ne demande pas de reconstruire les éléments déjà validés. L’ancienne phase 0 acquise et la nouvelle étape 0 sont distinctes.
 
-La version locale complète de ce plan reçue pour 0.1 le 11 septembre a été copiée depuis le checkout PR 9 avant harmonisation : SHA-256 ECBAAA8B5EA7A3130B4880FAB8D3A01AA022848DF7E5A38CC0D1F99B4AE65C09. La provenance et les modifications documentaires sont tracées dans le [dossier 0.1](docs/validation/0.1-harmonisation/README.md). Dès 0.2, utiliser ce plan canonique actualisé sur main ; ne pas restaurer le snapshot initial par-dessus les harmonisations ou budgets adoptés.
+La version locale complète de ce plan reçue pour 0.1 le 11 septembre a été copiée depuis le checkout PR 9 avant harmonisation : SHA-256 ECBAAA8B5EA7A3130B4880FAB8D3A01AA022848DF7E5A38CC0D1F99B4AE65C09. La provenance et les modifications documentaires sont tracées dans le [dossier 0.1](validation/0.1-harmonisation/README.md). Dès 0.2, utiliser ce plan canonique actualisé sur main ; ne pas restaurer le snapshot initial par-dessus les harmonisations ou budgets adoptés.
 
-**Suivi de la reprise :** 0.1 validée et intégrée par la PR 10 ; 0.2 validée avec preuves dans la PR 11. **0.3 — Corriger les défauts du prototype** et la **revalidation historique 1.4.2** sont **VALIDÉES / GO**, décisions distinctes du 18 septembre 2026 après campagne technique et observations humaines complètes au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`. L’intégration et les contrôles au dernier SHA sont tracés dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9). La [campagne commune](docs/validation/0.3-correctifs-prototype/CHECKLIST.md) est complète ; l’ancienne 1.4 et la phase 1 ne sont pas clôturées. 0.4 n’est pas commencée.
+**Suivi de la reprise :** 0.1 validée et intégrée par la PR 10 ; 0.2 validée avec preuves dans la PR 11. **0.3 — Corriger les défauts du prototype** et la **revalidation historique 1.4.2** sont **VALIDÉES / GO**, décisions distinctes du 18 septembre 2026 après campagne technique et observations humaines complètes au SHA `28cb5d943e0617de0b6fec9e50e76ca3b54c9c51`. L’intégration et les contrôles au dernier SHA sont tracés dans la [PR 9](https://github.com/Soyfki/Jaquette/pull/9). La [campagne commune](validation/0.3-correctifs-prototype/CHECKLIST.md) est complète ; l’ancienne 1.4 et la phase 1 ne sont pas clôturées. 0.4 n’est pas commencée.
 
 ## 3. Règles d’exécution et de validation
 
 Chaque sous-étape ci-dessous constitue un lot démontrable. Son dossier de preuve contient : identifiant, commit exact, environnement, jeux de données, commande ou scénario, résultat observé et preuve adaptée.
 
-Conserver le [protocole de validation](docs/validation/README.md) : PASS, FAIL ou BLOCKED ; un test empêché n’est jamais réussi. L’humain fournit les observations des essais humains requis ; l’agent développeur assume aussi le rôle de responsable de validation, applique la matrice Go/No-Go et fusionne après Go conforme aux protections GitHub. Ce cumul ne dispense d’aucun essai humain obligatoire. Pour le lot documentaire 0.1, aucun essai humain supplémentaire n’est obligatoire.
+Conserver le [protocole de validation](validation/README.md) : PASS, FAIL ou BLOCKED ; un test empêché n’est jamais réussi. L’humain fournit les observations des essais humains requis ; l’agent développeur assume aussi le rôle de responsable de validation, applique la matrice Go/No-Go et fusionne après Go conforme aux protections GitHub. Ce cumul ne dispense d’aucun essai humain obligatoire. Pour le lot documentaire 0.1, aucun essai humain supplémentaire n’est obligatoire.
 
 Une étape dépendante commence seulement lorsque ses prérequis nommés passent. Les travaux indépendants peuvent avancer en parallèle. Toute extension du modèle ajoute immédiatement son test de sauvegarde/réouverture ; la recette complète n’est pas repoussée à la fin.
 

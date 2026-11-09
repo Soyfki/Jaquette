@@ -1,7 +1,7 @@
 # Décision d’implémentation 0001 — Socle Web de la démonstration 1.1
 
 - Statut : retenue pour l’ancienne sous-étape 1.1, révisable
-- Portée historique : les numéros de cette décision visent l’ancien plan. Chrome décrit la campagne du prototype ; Electron hors de ce lot ne signifie pas après lancement. Voir le [plan actif](../../PLAN_DE_DEVELOPPEMENT_JAQUETTE.md).
+- Portée historique : les numéros de cette décision visent l’ancien plan. Chrome décrit la campagne du prototype ; Electron hors de ce lot ne signifie pas après lancement. Ancien plan archivé : [plan de septembre](../archive/PLAN_DE_DEVELOPPEMENT_JAQUETTE.md) ; plan actif : [PLAN_V1](../PLAN_V1.md).
 - Date : 2026-08-23
 - Version de l’application : `0.0.0`
 
