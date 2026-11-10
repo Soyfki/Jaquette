@@ -56,7 +56,7 @@ corepack pnpm validate     # typecheck, lint, tests unitaires, build
 corepack pnpm test:smoke   # test E2E de fumée : l'application démarre et affiche l'accueil
 ```
 
-Si Corepack est absent, utiliser directement pnpm 11.19.0. Les E2E utilisent Google Chrome (`pnpm exec playwright install chrome` s'il manque). La suite E2E complète du prototype reste disponible localement avec `pnpm test:e2e`, hors CI. `pnpm check:links` et `pnpm check:secrets` restent disponibles à la demande. Les scripts de qualification, de diagnostic et de références de la campagne 0.2 ont été retirés (JV-0.2) ; ils restent consultables dans l'historique Git.
+Si Corepack est absent, utiliser directement pnpm 11.19.0. Les E2E utilisent Google Chrome (`pnpm exec playwright install chrome` s'il manque). La suite E2E complète du prototype reste disponible localement avec `pnpm test:e2e`, hors CI. `pnpm check:secrets` tourne aussi en CI ; `pnpm check:links` reste disponible à la demande. Les scripts de qualification, de diagnostic et de références de la campagne 0.2 ont été retirés (JV-0.2) ; ils restent consultables dans l'historique Git.
 
 ## Sources de vérité
 

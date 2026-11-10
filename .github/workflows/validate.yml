@@ -31,6 +31,8 @@ jobs:
           cache: pnpm
       - name: Installation
         run: pnpm install --frozen-lockfile
+      - name: Recherche de secrets
+        run: pnpm check:secrets
       - name: Typecheck, lint, tests unitaires et build
         run: pnpm validate
       # Google Chrome est préinstallé sur les runners ubuntu-24.04 : aucun téléchargement de navigateur.
